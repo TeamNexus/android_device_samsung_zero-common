@@ -70,3 +70,7 @@ TARGET_NO_SENSOR_PERMISSION_CHECK := true
 ########################################
 # Sepolicy
 BOARD_SEPOLICY_DIRS := $(LOCAL_PATH)/sepolicy
+
+########################################
+# Seccomp filters
+BOARD_SECCOMP_POLICY += $(LOCAL_PATH)/configs/seccomp
