@@ -218,7 +218,7 @@ PRODUCT_PACKAGES += \
 
 # Wifi
 PRODUCT_PACKAGES += \
-    init.sec.boot.sh \
+    bcmdhd-loader \
     hostapd \
     libnetcmdiface \
     macloader \
