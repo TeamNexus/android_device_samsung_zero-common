@@ -212,6 +212,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     SamsungServiceMode
 
+# Shims
+PRODUCT_PACKAGES += \
+    libshim_gpsd
+
 # Wifi
 PRODUCT_PACKAGES += \
     init.sec.boot.sh \
