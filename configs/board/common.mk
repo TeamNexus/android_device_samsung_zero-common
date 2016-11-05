@@ -53,3 +53,7 @@ BOARD_RIL_CLASS := ../../../$(LOCAL_PATH)/ril
 ########################################
 # Sensors
 TARGET_NO_SENSOR_PERMISSION_CHECK := true
+
+########################################
+# Widevine
+PRODUCT_PACKAGES += libshim_wvm
