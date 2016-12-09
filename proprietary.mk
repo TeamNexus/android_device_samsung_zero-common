@@ -149,8 +149,8 @@ PRODUCT_COPY_FILES += \
     $(BLOB_PATH)/lib64/hw/camera.goldfish.so:system/lib64/hw/camera.goldfish.so.so \
     $(BLOB_PATH)/lib/hw/camera.goldfish.jpeg.so:system/lib/hw/camera.goldfish.jpeg.so \
     $(BLOB_PATH)/lib64/hw/camera.goldfish.jpeg.so:system/lib64/hw/camera.goldfish.jpeg.so \
-    $(BLOB_PATH)/lib/hw/camera.universal7420.so:system/lib/hw/camera.universal7420.so \
-    $(BLOB_PATH)/lib64/hw/camera.universal7420.so:system/lib64/hw/camera.universal7420.so \
+    $(BLOB_PATH)/lib/hw/camera.vendor.universal7420.so:system/lib/hw/camera.vendor.universal7420.so \
+    $(BLOB_PATH)/lib64/hw/camera.vendor.universal7420.so:system/lib64/hw/camera.vendor.universal7420.so \
     $(BLOB_PATH)/lib/libexynoscamera3.so:system/lib/libexynoscamera3.so \
     $(BLOB_PATH)/lib64/libexynoscamera3.so:system/lib64/libexynoscamera3.so \
     $(BLOB_PATH)/lib/libexynoscamera.so:system/lib/libexynoscamera.so \

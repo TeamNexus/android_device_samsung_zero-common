@@ -99,6 +99,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Gello
 
+# Camera
+PRODUCT_PACKAGES += \
+   camera.universal7420
+
 # CM Camera app
 PRODUCT_PACKAGES += \
     Snap
