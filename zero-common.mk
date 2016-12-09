@@ -104,8 +104,8 @@ PRODUCT_PACKAGES += \
    camera.universal7420
 
 # CM Camera app
-PRODUCT_PACKAGES += \
-    Snap
+#PRODUCT_PACKAGES += \
+#    Snap
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
