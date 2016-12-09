@@ -105,6 +105,7 @@ static int camera_get_number_of_cameras(void)
     return gVendorModule->get_number_of_cameras();
 }
 
+#if 0
 // Camera characteristics
 camera_metadata_t *initStaticInfo(int camera_id)
 {
@@ -266,6 +267,7 @@ camera_metadata_t *initStaticInfo(int camera_id)
     /* End of static camera characteristics */
     return clone_camera_metadata(m.get());
 }
+#endif
 
 static int camera_get_camera_info(int camera_id, struct camera_info *info)
 {
@@ -276,7 +278,7 @@ static int camera_get_camera_info(int camera_id, struct camera_info *info)
     gVendorModule->get_camera_info(camera_id, info);
 
     // Hack missing metadata into camera info
-    info->static_camera_characteristics = initStaticInfo(camera_id);
+//    info->static_camera_characteristics = initStaticInfo(camera_id);
     
     return 0;
 }

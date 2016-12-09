@@ -56,7 +56,7 @@ static int check_vendor_module()
     return rv;
 }
 
-const static char * iso_values[] = {"auto,ISO50,ISO100,ISO150,ISO200,ISO250,ISO300,ISO350,ISO400,ISO450,ISO500,ISO600,ISO700,ISO800,ISO1000,ISO1500,ISO2000,ISO2700,auto","auto"};
+//const static char * iso_values[] = {"auto,ISO50,ISO100,ISO150,ISO200,ISO250,ISO300,ISO350,ISO400,ISO450,ISO500,ISO600,ISO700,ISO800,ISO1000,ISO1500,ISO2000,ISO2700,auto","auto"};
 
 static char * camera2_fixup_getparams(int id, const char * settings)
 {
@@ -77,6 +77,7 @@ static char * camera2_fixup_getparams(int id, const char * settings)
         videoMode = (!strcmp(params.get(android::CameraParameters::KEY_RECORDING_HINT), "true"));
     }
 
+#if 0
     params.set(android::CameraParameters::KEY_SUPPORTED_ISO_MODES, iso_values[id]);
 
     /* lge-iso to iso */
@@ -122,7 +123,7 @@ static char * camera2_fixup_getparams(int id, const char * settings)
             params.set(android::CameraParameters::KEY_ISO_MODE, "ISO2700");
         }
     }
-
+#endif
     /* Add hdr to supported scene-modes */
     if (!videoMode) {
         manipBuf = strdup(params.get(android::CameraParameters::KEY_SUPPORTED_SCENE_MODES));
@@ -164,7 +165,7 @@ static char * camera2_fixup_setparams(int id __unused, const char * settings)
     }
     
     /* Set lge-camera */
-    params.set(android::CameraParameters::KEY_LGE_CAMERA, "1");
+//    params.set(android::CameraParameters::KEY_LGE_CAMERA, "1");
 
     /* Enable ZSL (also needed for HDR) */
     if (!videoMode) {
@@ -173,6 +174,7 @@ static char * camera2_fixup_setparams(int id __unused, const char * settings)
         params.set("zsl", "off");
     }
 
+#if 0
     /* iso to lge-iso */
     if(params.get(android::CameraParameters::KEY_ISO_MODE)) {
         isoMode = params.get(android::CameraParameters::KEY_ISO_MODE);
@@ -218,7 +220,7 @@ static char * camera2_fixup_setparams(int id __unused, const char * settings)
             params.set(android::CameraParameters::KEY_LGE_ISO_MODE, "2700");
         }
     }
-
+#endif
     /* Set hdr-mode */
     if (!videoMode && !strncmp(params.get(android::CameraParameters::KEY_SCENE_MODE),"hdr",3)) {
         params.set("hdr-mode", "1");
