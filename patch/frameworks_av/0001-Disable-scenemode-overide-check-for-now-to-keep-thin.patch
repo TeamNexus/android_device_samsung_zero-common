@@ -1,0 +1,25 @@
+From 58d2cc20d9ea65dcccd3584d02253c87d856974e Mon Sep 17 00:00:00 2001
+From: maniacx <macs18max@gmail.com>
+Date: Sun, 4 Dec 2016 06:29:27 +0400
+Subject: [PATCH] Disable scenemode overide check for now to keep thing moving
+
+---
+ services/camera/libcameraservice/api1/client2/Parameters.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/services/camera/libcameraservice/api1/client2/Parameters.cpp b/services/camera/libcameraservice/api1/client2/Parameters.cpp
+index 44447b4..b1d1e02 100644
+--- a/services/camera/libcameraservice/api1/client2/Parameters.cpp
++++ b/services/camera/libcameraservice/api1/client2/Parameters.cpp
+@@ -1041,7 +1041,7 @@ status_t Parameters::buildFastInfo() {
+                     "unexpected size: %zu (expected %zu)", __FUNCTION__,
+                     cameraId, sceneModeOverrides.count,
+                     availableSceneModes.count);
+-            return NO_INIT;
++//            return NO_INIT;
+         }
+         for (size_t i = 0; i < availableSceneModes.count; i++) {
+             DeviceInfo::OverrideModes modes;
+-- 
+2.7.4
+
