@@ -99,10 +99,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
    camera.universal7420
 
-# CM Camera app
-#PRODUCT_PACKAGES += \
-#    Snap
-
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     make_ext4fs \
