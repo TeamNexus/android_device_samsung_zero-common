@@ -155,9 +155,6 @@ ifneq ($(strip $(wildcard $(TOP)/bootable/recovery/variables.h)),)
 -include device/samsung/zero-common/twrp.mk
 endif
 
-# WEBGL
-ENABLE_WEBGL := true
-
 # Wifi
 BOARD_HAVE_SAMSUNG_WIFI          := true
 BOARD_WLAN_DEVICE                := bcmdhd
