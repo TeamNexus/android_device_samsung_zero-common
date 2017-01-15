@@ -83,6 +83,7 @@ BOARD_HARDWARE_CLASS += device/samsung/zero-common/cmhw
 
 # HWCServices
 BOARD_USES_HWC_SERVICES := true
+BOARD_USES_WFD := true
 
 # HDMI
 BOARD_HDMI_INCAPABLE := true
