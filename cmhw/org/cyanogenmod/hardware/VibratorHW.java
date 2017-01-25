@@ -39,11 +39,8 @@ public class VibratorHW {
     }
 
     public static int getCurIntensity()  {
-        if (FileUtils.isFileReadable(LEVEL_PATH)) {
-            String actualIntensity = FileUtils.readOneLine(LEVEL_PATH).replace("intensity: ", "");
-            return Integer.parseInt(actualIntensity);
-        }
-        return 0;
+        String actualIntensity = FileUtils.readOneLine(LEVEL_PATH).replace("intensity: ", "");
+        return Integer.parseInt(actualIntensity);
     }
 
     public static int getDefaultIntensity()  {
@@ -51,9 +48,6 @@ public class VibratorHW {
     }
 
     public static boolean setIntensity(int intensity)  {
-        if (FileUtils.isFileWritable(LEVEL_PATH)) {
-            return FileUtils.writeLine(LEVEL_PATH, String.valueOf(intensity));
-        }
-        return false;
+        return FileUtils.writeLine(LEVEL_PATH, String.valueOf(intensity));
     }
 }
