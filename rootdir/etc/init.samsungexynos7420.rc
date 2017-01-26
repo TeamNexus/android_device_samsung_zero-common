@@ -202,19 +202,15 @@ on boot
     write /sys/devices/system/cpu/cpu7/online 1
 
     # Configure foreground and background cpuset
-    write /dev/cpuset/foreground/cpus 0-7
+    write /dev/cpuset/foreground/cpus 0-2,4-7
     write /dev/cpuset/foreground/boost/cpus 4-7
     write /dev/cpuset/background/cpus 0
-    write /dev/cpuset/system-background/cpus 0-3
+    write /dev/cpuset/system-background/cpus 0-2
+    write /dev/cpuset/top-app/cpus 0-7
+
 
     # Set vibrator intensity 75%
     write /sys/devices/virtual/timed_output/vibrator/intensity 7500
-
-    # update foreground cpuset now that processors are up
-    write /dev/cpuset/foreground/cpus 0-7
-    write /dev/cpuset/foreground/boost/cpus 4-7
-    write /dev/cpuset/background/cpus 0
-    write /dev/cpuset/system-background/cpus 0-3
 
     # Memory managements
     write /proc/sys/vm/min_free_kbytes 32768
