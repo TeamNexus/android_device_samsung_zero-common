@@ -99,6 +99,8 @@
 /sys/devices/10f24000.mipi-lli/lli_control  u:object_r:sysfs_mipi_writable:s0
 
 # rild
+/data/data/com.android.providers.telephony/databases(/.*)?     u:object_r:radio_data_file:s0
+/data/data/com.android.providers.telephony/shared_prefs(/.*)?  u:object_r:radio_data_file:s0
 /sys/devices/virtual/misc/multipdp(/.*)     u:object_r:sysfs_multipdp_writable:s0
 
 # mDNIe
