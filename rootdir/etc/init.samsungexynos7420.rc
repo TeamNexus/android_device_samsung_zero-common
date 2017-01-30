@@ -32,20 +32,20 @@ on post-fs-data
     chown system radio /sys/class/audio/earjack/key_state
     chown system radio /sys/class/audio/earjack/state
     chown system radio /sys/class/audio/earjack/mic_adc
-    chown system radio /sys/class/dsm/max98505/dsm_log
-    chown system radio /sys/class/dsm/maxdsm_cal/max
-    chown system radio /sys/class/dsm/maxdsm_cal/min
-    chown system radio /sys/class/dsm/maxdsm_cal/status
-    chown system radio /sys/class/dsm/maxdsm_cal/duration
-    chown system radio /sys/class/dsm/maxdsm_cal/temp
-    chown system radio /sys/class/dsm/maxdsm_cal/rdc
-    mkdir /data/firmware 0770 media system
-    mkdir /efs/maxim 0770 radio system
-    chown system radio /efs/maxim/temp_cal
-    chown system radio /efs/maxim/rdc_cal
+    chown system audio /sys/class/dsm/max98505/dsm_log
+    chown system audio /sys/class/dsm/maxdsm_cal/max
+    chown system audio /sys/class/dsm/maxdsm_cal/min
+    chown system audio /sys/class/dsm/maxdsm_cal/status
+    chown system audio /sys/class/dsm/maxdsm_cal/duration
+    chown system audio /sys/class/dsm/maxdsm_cal/temp
+    chown system audio /sys/class/dsm/maxdsm_cal/rdc
+    mkdir /data/firmware 0770 audioserver system
+    mkdir /efs/maxim 0770 audio system
+    chown system audio /efs/maxim/temp_cal
+    chown system audio /efs/maxim/rdc_cal
     chmod 0660 /efs/maxim/temp_cal
     chmod 0660 /efs/maxim/rdc_cal
-    chown media system /data/firmware
+    chown audio system /data/firmware
 
     # Permissions Camera
     mkdir /data/camera 0770 cameraserver system

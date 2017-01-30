@@ -86,7 +86,6 @@ PRODUCT_PACKAGES += \
     audio.usb.default \
     tinymix
 
-
 # MobiCore
 PRODUCT_PACKAGES += \
     mcDriverDaemon
