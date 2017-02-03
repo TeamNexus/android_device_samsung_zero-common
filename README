@@ -1,4 +1,5 @@
-#Common device configurations for the Samsung Galaxy S6 (G92{0/5} variants)
+## Common device configurations for the Samsung Galaxy S6 (G92{0/5} variants)
+
 
 Copyright (C) 2016 Brandon McAnsh <brandon.mcansh@gmail.com>
 
@@ -14,6 +15,9 @@ Copyright (C) 2016 RakuDEV <rakudev@::1>
 
 Copyright (C) 2016 TheSickness <thesickness@::1>
 
+
+Special thanks to:
+- macs18max
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the
