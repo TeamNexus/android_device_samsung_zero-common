@@ -84,6 +84,7 @@ BOARD_USES_DT := true
 
 # Hardware
 BOARD_HARDWARE_CLASS += device/samsung/zero-common/cmhw
+BOARD_HARDWARE_CLASS += hardware/samsung/cmhw
 
 # HWCServices
 BOARD_USES_HWC_SERVICES := true
