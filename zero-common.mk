@@ -77,6 +77,10 @@ PRODUCT_PACKAGES += \
     audio.r_submix.default \
     audio.usb.default
 
+# Dbthtool
+PRODUCT_PACKAGES += \
+    dtbhtoolExynos
+
 # MobiCore
 PRODUCT_PACKAGES += \
     mcDriverDaemon
