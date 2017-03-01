@@ -53,6 +53,8 @@ public class SlteRIL extends RIL {
 
     private static final int RIL_UNSOL_DEVICE_READY_NOTI = 11008;
     private static final int RIL_UNSOL_AM = 11010;
+    private static final int RIL_UNSOL_DUN_PIN_CONTROL_SIGNAL = 11011;
+    private static final int RIL_UNSOL_DATA_SUSPEND_RESUME = 11012;
     private static final int RIL_UNSOL_SIM_PB_READY = 11021;
     private static final int RIL_UNSOL_SIM_SWAP_STATE_CHANGED = 11057;
     private static final int RIL_UNSOL_DUN = 11060;
@@ -441,8 +443,12 @@ public class SlteRIL extends RIL {
             case RIL_UNSOL_AM:
                 ret = responseString(p);
                 break;
+            case RIL_UNSOL_DATA_SUSPEND_RESUME:
             case RIL_UNSOL_STK_SEND_SMS_RESULT:
                 ret = responseInts(p);
+                break;
+            case RIL_UNSOL_DUN_PIN_CONTROL_SIGNAL:
+                ret = responseVoid(p);
                 break;
             default:
                 // Rewind the Parcel
