@@ -178,6 +178,17 @@ PRODUCT_PROPERTY_OVERRIDES += \
     debug.hwc.force_gpu=1 \
     ro.bq.gpu_to_cpu_unsupported=1
 
+PRODUCT_PROPERTY_OVERRIDES += \
+    rild.libpath=/system/lib64/libsec-ril.so \
+    rild.libargs=-d /dev/ttyS0 \
+    ro.telephony.ril_class=zeroRIL \
+    telephony.lteOnGsmDevice=1 \
+    ro.telephony.default_network=9 \
+    ro.use_data_netmgrd=false \
+    persist.data.netmgrd.qos.enable=false \
+    ro.ril.hsxpa=1 \
+    ro.ril.gprsclass=10
+
 # Radio
 PRODUCT_PACKAGES += \
     libxml2 \
