@@ -208,13 +208,11 @@ PRODUCT_PACKAGES += \
 
 # Shims
 PRODUCT_PACKAGES += \
-    libshim_bauthtzcommon \
-    libshim_gpsd
+    libshim_bauthtzcommon
    
 # Torch
 PRODUCT_PACKAGES += \
     Torch
-
 
 # Widevine
 PRODUCT_PACKAGES += \
