@@ -90,11 +90,16 @@ PRODUCT_PACKAGES += \
     audio.usb.default \
     tinymix
 
+
+# MobiCore
+PRODUCT_PACKAGES += \
+    mcDriverDaemon
+
 # Browser
 PRODUCT_PACKAGES += \
     Gello
 
-# Camera
+# CM Camera app
 PRODUCT_PACKAGES += \
     Snap
 
@@ -111,6 +116,19 @@ PRODUCT_COPY_FILES += \
 # Graphics
 PRODUCT_PACKAGES += \
     gralloc.exynos5
+
+# hw composer HAL
+PRODUCT_PACKAGES += \
+    hwcomposer.exynos5
+
+# Memory Tracker HAL
+PRODUCT_PACKAGES += \
+    memtrack.exynos5
+
+# stagefright and device specific modules
+PRODUCT_PACKAGES += \
+    libstagefrighthw \
+    libExynosOMX_Core
 
 # Keylayouts
 PRODUCT_COPY_FILES += \
@@ -206,10 +224,6 @@ PRODUCT_COPY_FILES += \
 # Set default USB interface
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mtp
-
-# call Samsung LSI board support package
-$(call inherit-product, hardware/samsung_slsi-cm/exynos5/exynos5.mk)
-$(call inherit-product, hardware/samsung_slsi-cm/exynos7420/exynos7420.mk)
 
 # Get non-open-source specific aspects
 $(call inherit-product-if-exists, vendor/samsung/zero-common/zero-common-vendor.mk)
