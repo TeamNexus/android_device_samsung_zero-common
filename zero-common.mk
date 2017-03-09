@@ -214,10 +214,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Torch
 
-# Widevine
-PRODUCT_PACKAGES += \
-    libshim_wvm
-
 # Wifi
 PRODUCT_PACKAGES += \
     hostapd \
