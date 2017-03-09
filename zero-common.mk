@@ -94,6 +94,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Gello
 
+# Snap
+PRODUCT_PACKAGES += \
+    Snap
+
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     make_ext4fs \
