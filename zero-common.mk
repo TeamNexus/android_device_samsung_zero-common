@@ -95,10 +95,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     Gello
 
-# Camera
-PRODUCT_PACKAGES += \
-   camera.universal7420
-
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     make_ext4fs \
@@ -187,8 +183,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.nfc.sec_hal=true \
     wifi.interface=wlan0 \
     debug.hwc.force_gpu=1 \
-    ro.bq.gpu_to_cpu_unsupported=1 \
-    persist.camera.HAL3.enabled=1
+    ro.bq.gpu_to_cpu_unsupported=1
 
 # Radio
 PRODUCT_PACKAGES += \
