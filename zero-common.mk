@@ -21,7 +21,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 # Common Overlays
 DEVICE_PACKAGE_OVERLAYS += device/samsung/zero-common/overlay
 
-ifneq ($(filter zerofltespr zeroltespr,$(TARGET_DEVICE)),)
+ifneq ($(filter zerofltespr zeroltespr,$(TARGET_DEVICE)))
 DEVICE_PACKAGE_OVERLAYS += device/samsung/zero-common/overlay-cdma
 else
 DEVICE_PACKAGE_OVERLAYS += device/samsung/zero-common/overlay-gsm
@@ -113,10 +113,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/gps.xml:system/etc/gps.xml \
     $(LOCAL_PATH)/configs/lhd.conf:system/etc/lhd.conf
 
-# Graphics
-#PRODUCT_PACKAGES += \
-#    gralloc.exynos5
-
 # hw composer HAL
 PRODUCT_PACKAGES += \
     hwcomposer.exynos5
@@ -178,7 +174,7 @@ PRODUCT_PACKAGES += \
 
 # common build properties
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.sf.lcd_density=640 \
+    ro.sf.lcd_density=560 \
     ro.opengles.version=196609 \
     ro.chipname=exynos7420 \
     af.fast_track_multiplier=1 \
