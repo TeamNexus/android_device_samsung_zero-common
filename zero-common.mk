@@ -114,8 +114,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/lhd.conf:system/etc/lhd.conf
 
 # Graphics
-PRODUCT_PACKAGES += \
-    gralloc.exynos5
+#PRODUCT_PACKAGES += \
+#    gralloc.exynos5
 
 # hw composer HAL
 PRODUCT_PACKAGES += \
