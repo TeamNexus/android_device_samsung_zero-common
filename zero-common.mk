@@ -21,12 +21,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 # Common Overlays
 DEVICE_PACKAGE_OVERLAYS += device/samsung/zero-common/overlay
 
-ifneq ($(filter zerofltespr zeroltespr,$(TARGET_DEVICE)))
-DEVICE_PACKAGE_OVERLAYS += device/samsung/zero-common/overlay-cdma
-else
-DEVICE_PACKAGE_OVERLAYS += device/samsung/zero-common/overlay-gsm
-endif
-
 PRODUCT_AAPT_CONFIG := xlarge
 PRODUCT_AAPT_PREF_CONFIG := xhdpi
 # A list of dpis to select prebuilt apk, in precedence order.
