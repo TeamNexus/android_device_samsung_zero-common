@@ -18,7 +18,6 @@
 ########################################
 # Graphics
 USE_OPENGL_RENDERER := true
-NUM_FRAMEBUFFER_SURFACE_BUFFERS := 5
 BOARD_USES_VIRTUAL_DISPLAY := true
 
 ########################################
