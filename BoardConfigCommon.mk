@@ -46,8 +46,8 @@ TARGET_USES_64_BIT_BINDER := true
 
 ########################################
 # Bluetooth
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
-BOARD_CUSTOM_BT_CONFIG := $(LOCAL_PATH)/bluetooth/libbt_vndcfg.txt
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/include/hardware
+BOARD_CUSTOM_BT_CONFIG := $(LOCAL_PATH)/configs/bluetooth/libbt_vndcfg.txt
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
 BOARD_HAVE_SAMSUNG_BLUETOOTH := true
@@ -67,7 +67,7 @@ TARGET_NO_BOOTLOADER := true
 BACKLIGHT_PATH := /sys/devices/13900000.dsim/backlight/panel/brightness
 BOARD_BATTERY_DEVICE_NAME := battery
 BOARD_CHARGER_ENABLE_SUSPEND := true
-BOARD_CHARGING_MODE_BOOTING_LPM := /sys/class/power_supply/battery/batt_lp_charging
+BOARD_CHARGING_MODE_BOOTING_LPM := "/sys/class/power_supply/battery/batt_lp_charging"
 CHARGING_ENABLED_PATH := "/sys/class/power_supply/battery/batt_lp_charging"
 
 ########################################
