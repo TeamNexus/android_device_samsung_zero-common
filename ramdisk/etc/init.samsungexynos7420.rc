@@ -27,6 +27,41 @@ on post-fs
 on post-fs-data
     setprop vold.post_fs_data_done 1
 
+# cpuset permissions
+    chmod 0664 /dev/cpuset/foreground/cpus
+    chown system system /dev/cpuset/foreground/cpus
+    chmod 0664 /dev/cpuset/foreground/boost/cpus
+    chown system system /dev/cpuset/foreground/boost/cpus
+    chmod 0664 /dev/cpuset/background/cpus
+    chown system system /dev/cpuset/background/cpus
+    chmod 0664 /dev/cpuset/system-background/cpus
+    chown system system /dev/cpuset/system-background/cpus
+    chmod 0664 /dev/cpuset/top-app/cpus
+    chown system system /dev/cpuset/top-app/cpus
+    chmod 0664 /dev/cpuset/camera-daemon/cpus
+    chown system system /dev/cpuset/camera-daemon/cpus
+
+# cpuset setup for camera-daemon
+    mkdir /dev/cpuset/camera-daemon
+    chown system system /dev/cpuset/camera-daemon
+    chmod 0664 /dev/cpuset/camera-daemon
+    chown system system /dev/cpuset/camera-daemon/cpus
+    chmod 0664 /dev/cpuset/camera-daemon/cpus
+    chown system system /dev/cpuset/camera-daemon/mems
+    chmod 0664 /dev/cpuset/camera-daemon/mems
+    chown system system /dev/cpuset/camera-daemon/tasks
+    chmod 0664 /dev/cpuset/camera-daemon/tasks
+    write /dev/cpuset/camera-daemon/cpus 0
+    write /dev/cpuset/camera-daemon/mems 0
+
+# cpuset settings
+    write /dev/cpuset/foreground/cpus 0-2,4-7
+    write /dev/cpuset/foreground/boost/cpus 4-7
+    write /dev/cpuset/background/cpus 0
+    write /dev/cpuset/system-background/cpus 0-2
+    write /dev/cpuset/top-app/cpus 0-7
+    write /dev/cpuset/camera-daemon/cpus 0-3
+
 # Permissions for audio
     chown system radio /sys/class/audio/earjack/select_jack
     chown system radio /sys/class/audio/earjack/key_state
