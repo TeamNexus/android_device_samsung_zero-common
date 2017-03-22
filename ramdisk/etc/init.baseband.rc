@@ -16,11 +16,14 @@ on init
     write /proc/sys/net/core/netdev_max_backlog 5000
 
 on fs
+
+################################################
 # MIF
     chown radio radio sys/devices/virtual/misc/multipdp/waketime
     chmod 0660 /sys/devices/virtual/misc/umts_dm0/dm_state
     chown radio system /sys/devices/virtual/misc/umts_dm0/dm_state
 
+################################################
 # CP Boot Daemon (CBD)
 service cpboot-daemon /sbin/cbd -d -t ss333 -b s -m l -P platform/15570000.ufs/by-name/RADIO
     class main
@@ -31,14 +34,14 @@ service cpboot-daemon /sbin/cbd -d -t ss333 -b s -m l -P platform/15570000.ufs/b
 on property:persist.sys.cpboot=disable
     stop cpboot-daemon
 
-#RIL diagexe for CP
+################################################
+# RIL diagexe for CP
 service DIAG-daemon /system/bin/diagexe
     class main
     user root
     group system radio inet net_raw
 
 on property:ro.debuggable=1
-	write /sys/kernel/debug/tracing/buffer_size_kb 1408
-	write /sys/kernel/debug/tracing/set_event modem_if:mif_log
-	write /sys/kernel/debug/tracing/tracing_on 1
-
+    write /sys/kernel/debug/tracing/buffer_size_kb 1408
+    write /sys/kernel/debug/tracing/set_event modem_if:mif_log
+    write /sys/kernel/debug/tracing/tracing_on 1

@@ -1,4 +1,6 @@
 on fs
+
+################################################
 # GPS
     chown root system /sys/class/sec/gps/GPS_PWR_EN/value
     chmod 0664 /sys/class/sec/gps/GPS_PWR_EN/value
@@ -14,20 +16,22 @@ on fs
 
     setprop ro.gps.chip.vendor BCM4773_EXERCISE
 
+################################################
 # SensorHub Debugging File Node
-chown gps system /sys/devices/platform/bbd.0/BBD
-chown gps system /sys/devices/platform/bbd.0/DEV
-chown gps system /sys/devices/platform/bbd.0/ESW
-chown gps system /sys/devices/platform/bbd.0/baud
-chown gps system /sys/devices/platform/bbd.0/debug
-chown gps system /sys/devices/platform/bbd.0/buf
-chown gps system /sys/devices/platform/bbd.0/pl
-chown gps system /sys/devices/platform/bbd.0/passthru
-chown gps system /sys/devices/platform/bbd.0/ssi_xfer
-chown gps system /sys/devices/platform/bbd.0/ssi_count
-chown gps system /sys/devices/platform/bbd.0/ssi_trace
-chown gps system /sys/devices/platform/bbd.0/shmd
+    chown gps system /sys/devices/platform/bbd.0/BBD
+    chown gps system /sys/devices/platform/bbd.0/DEV
+    chown gps system /sys/devices/platform/bbd.0/ESW
+    chown gps system /sys/devices/platform/bbd.0/baud
+    chown gps system /sys/devices/platform/bbd.0/debug
+    chown gps system /sys/devices/platform/bbd.0/buf
+    chown gps system /sys/devices/platform/bbd.0/pl
+    chown gps system /sys/devices/platform/bbd.0/passthru
+    chown gps system /sys/devices/platform/bbd.0/ssi_xfer
+    chown gps system /sys/devices/platform/bbd.0/ssi_count
+    chown gps system /sys/devices/platform/bbd.0/ssi_trace
+    chown gps system /sys/devices/platform/bbd.0/shmd
 
+################################################
 # SensorHub (Location Hub)
 service lhd /system/bin/lhd /system/etc/lhd.conf
     class main
@@ -35,6 +39,7 @@ service lhd /system/bin/lhd /system/etc/lhd.conf
     group system inet net_raw
     seclabel u:r:lhd:s0
 
+################################################
 # GPS
 service gpsd /system/bin/gpsd -c /system/etc/gps.xml
     class main
@@ -42,6 +47,9 @@ service gpsd /system/bin/gpsd -c /system/etc/gps.xml
     group system wakelock inet net_raw
     disabled
 
+################################################
 on property:init.svc.bootanim=stopped
-    # start gpsd late to prevent it from changing /data/system
+
+################################################
+# start gpsd late to prevent it from changing /data/system
     start gpsd

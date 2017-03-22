@@ -1,44 +1,56 @@
+################################################
 # Wi-Fi init file
 
-    #Create directory for hostapd
+on post-fs
+
+    ################################################
+    # Create directory for hostapd
     mkdir /data/hostapd 0770 system wifi
 
 on post-fs-data
-    # give system access to wpa_supplicant.conf for backup and restore
+
+################################################
+# give system access to wpa_supplicant.conf for backup and restore
     mkdir /data/misc/wifi 0770 wifi system
     chmod 0660 /data/misc/wifi/wpa_supplicant.conf
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/dhcp 0775 dhcp dhcp
     chown dhcp dhcp /data/misc/dhcp
 
-    # for WIFI TRP/TIS
+################################################
+# for WIFI TRP/TIS
     chown system root /data/.psm.info
     chmod 0664 /data/.psm.info
 
-    # for WIFI Antenna Selection
+################################################
+# for WIFI Antenna Selection
     chown system root /data/.ant.info
     chmod 0664 /data/.ant.info
 
-    # for WIFI Version
+################################################
+# for WIFI Version
     write /data/.wifiver.info 0
     chown system root /data/.wifiver.info
     chmod 0666 /data/.wifiver.info
 
-    # for WIFI Cert
+################################################
+# for WIFI Cert
     chmod 0664 /data/.bustxglom.info
     chmod 0664 /data/.roamoff.info
     chmod 0664 /data/.frameburst.info
     chmod 0664 /data/.txbf.info
-    # for WIFI MAC address
+
+################################################
+# for WIFI MAC address
     mkdir /efs/wifi 0775 radio system
     chown system wifi /efs/wifi/.mac.info
     chmod 0660 /efs/wifi/.mac.info
 
 on boot
-	setprop wifi.interface wlan0
+    setprop wifi.interface wlan0
 
     # Pcie WiFi T-put setting
-	write /sys/class/net/wlan0/queues/rx-0/rps_cpus 00
+    write /sys/class/net/wlan0/queues/rx-0/rps_cpus 00
 
 service p2p_supplicant /system/bin/wpa_supplicant \
     -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf \
