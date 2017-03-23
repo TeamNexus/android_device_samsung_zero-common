@@ -61,7 +61,7 @@ TARGET_UNIFIED_DEVICE := true
 
 ########################################
 # PowerHAL
-TARGET_POWERHAL_VARIANT := samsung
+# TARGET_POWERHAL_VARIANT := samsung
 
 ########################################
 # Radio

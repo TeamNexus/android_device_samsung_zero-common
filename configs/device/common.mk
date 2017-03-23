@@ -58,7 +58,7 @@ PRODUCT_PACKAGES += \
 
 # Power
 PRODUCT_PACKAGES += \
-    power.universal7420
+    power.nexus7420
 
 # Radio
 PRODUCT_PACKAGES += \
