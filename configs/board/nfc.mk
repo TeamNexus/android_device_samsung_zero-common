@@ -15,13 +15,6 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/samsung/zero-common
-BOARD_VENDOR := samsung
-
 ########################################
-# inherit splitted configs
-include $(LOCAL_PATH)/configs/board/*.mk
-
-########################################
-# inherit from the proprietary version
--include vendor/samsung/zero-common/BoardConfigVendor.mk
+# NFC
+BOARD_NFC_HAL_SUFFIX := universal7420

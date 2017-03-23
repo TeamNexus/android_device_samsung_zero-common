@@ -15,13 +15,10 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/samsung/zero-common
-BOARD_VENDOR := samsung
-
 ########################################
-# inherit splitted configs
-include $(LOCAL_PATH)/configs/board/*.mk
-
-########################################
-# inherit from the proprietary version
--include vendor/samsung/zero-common/BoardConfigVendor.mk
+# Bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/include/hardware
+BOARD_CUSTOM_BT_CONFIG := $(LOCAL_PATH)/configs/bluetooth/libbt_vndcfg.txt
+BOARD_HAVE_BLUETOOTH := true
+BOARD_HAVE_BLUETOOTH_BCM := true
+BOARD_HAVE_SAMSUNG_BLUETOOTH := true

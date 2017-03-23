@@ -15,13 +15,12 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/samsung/zero-common
-BOARD_VENDOR := samsung
-
 ########################################
-# inherit splitted configs
-include $(LOCAL_PATH)/configs/board/*.mk
-
-########################################
-# inherit from the proprietary version
--include vendor/samsung/zero-common/BoardConfigVendor.mk
+# Recovery
+BOARD_HAS_NO_SELECT_BUTTON := true
+BOARD_HAS_LARGE_FILESYSTEM := true
+BOARD_HAS_NO_MISC_PARTITION := true
+BOARD_USE_CUSTOM_RECOVERY_FONT := \"roboto_23x41.h\"
+TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/ramdisk/etc/fstab.samsungexynos7420
+BOARD_SUPPRESS_SECURE_ERASE := true
+BOARD_HAS_DOWNLOAD_MODE := true

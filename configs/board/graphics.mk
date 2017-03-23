@@ -15,13 +15,22 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/samsung/zero-common
-BOARD_VENDOR := samsung
+########################################
+# Graphics
+USE_OPENGL_RENDERER := true
+NUM_FRAMEBUFFER_SURFACE_BUFFERS := 5
+BOARD_USES_VIRTUAL_DISPLAY := true
 
 ########################################
-# inherit splitted configs
-include $(LOCAL_PATH)/configs/board/*.mk
+# OpenMAX video
+BOARD_USE_DMA_BUF := true
+BOARD_USE_METADATABUFFERTYPE := true
 
 ########################################
-# inherit from the proprietary version
--include vendor/samsung/zero-common/BoardConfigVendor.mk
+# Renderscript
+BOARD_OVERRIDE_RS_CPU_VARIANT_32 := cortex-a53
+BOARD_OVERRIDE_RS_CPU_VARIANT_64 := exynos-a57
+
+########################################
+# Video scaling issue workaround
+TARGET_OMX_LEGACY_RESCALING := true

@@ -15,13 +15,12 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/samsung/zero-common
-BOARD_VENDOR := samsung
-
 ########################################
-# inherit splitted configs
-include $(LOCAL_PATH)/configs/board/*.mk
-
-########################################
-# inherit from the proprietary version
--include vendor/samsung/zero-common/BoardConfigVendor.mk
+# Partitions
+TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_USE_F2FS := true
+BOARD_FLASH_BLOCK_SIZE := 131072
+BOARD_BOOTIMAGE_PARTITION_SIZE := 29360128
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 35651584
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3656552448
+# BOARD_USERDATAIMAGE_PARTITION_SIZE := 59183980544 #64GB

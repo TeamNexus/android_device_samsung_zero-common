@@ -15,13 +15,8 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/samsung/zero-common
-BOARD_VENDOR := samsung
-
 ########################################
-# inherit splitted configs
-include $(LOCAL_PATH)/configs/board/*.mk
-
-########################################
-# inherit from the proprietary version
--include vendor/samsung/zero-common/BoardConfigVendor.mk
+# TWRP
+ifneq ($(strip $(wildcard $(TOP)/bootable/recovery/variables.h)),)
+-include device/samsung/zero-common/twrp.mk
+endif
