@@ -32,3 +32,9 @@ allow system_server sysfs_mdnie_writable:file rw_file_perms;
 # app efs
 allow system_server app_efs_file:file read;
 allow system_server batch_io_device:chr_file { open read write ioctl };
+
+####################################
+# Nexus7420 Power HAL
+#
+allow system_server power_hal_devfs:file rw_file_perms;
+allow system_server power_hal_sysfs:file rw_file_perms;

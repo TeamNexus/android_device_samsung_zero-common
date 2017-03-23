@@ -125,3 +125,20 @@
 /sbin/cbd                    -- u:object_r:rootfs:s0
 /system/bin/gpsd             -- u:object_r:gpsd_exec:s0
 /system/bin/lhd               -- u:object_r:lhd_exec:s0
+
+####################################
+# Nexus7420 Power HAL
+#
+/dev/cpuset/foreground/cpus                                        u:object_r:devfs_power_hal:s0
+/dev/cpuset/foreground/boost/cpus                                  u:object_r:devfs_power_hal:s0
+/dev/cpuset/background/cpus                                        u:object_r:devfs_power_hal:s0
+/dev/cpuset/system-background/cpus                                 u:object_r:devfs_power_hal:s0
+/dev/cpuset/top-app/cpus                                           u:object_r:devfs_power_hal:s0
+/dev/cpuset/camera-daemon/cpus                                     u:object_r:devfs_power_hal:s0
+/sys/class/input/input[0-9]*/enabled                               u:object_r:sysfs_power_hal:s0
+/sys/class/misc/mali0/device/dvfs(.*)?                             u:object_r:sysfs_power_hal:s0
+/sys/devices/system/cpu/cpu[0-9]*/online                           u:object_r:sysfs_power_hal:s0
+/sys/devices/system/cpu/cpu[0-9]*/cpufreq/cpuinfo_(.*)             u:object_r:sysfs_power_hal:s0
+/sys/devices/system/cpu/cpu[0-9]*/cpufreq/interactive(/.*)?        u:object_r:sysfs_power_hal:s0
+/sys/power/ipa/big_max_freq                                        u:object_r:sysfs_power_hal:s0
+/sys/power/ipa/little_max_freq                                     u:object_r:sysfs_power_hal:s0

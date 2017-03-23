@@ -13,3 +13,9 @@ allow kernel sysfs:file { setattr };
 
 allow kernel app_efs_file:dir search;
 allow kernel app_efs_file:file write;
+
+####################################
+# Nexus7420 Power HAL
+#
+allow kernel power_hal_devfs:file rw_file_perms;
+allow kernel power_hal_sysfs:file rw_file_perms;
