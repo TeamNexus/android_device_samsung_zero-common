@@ -129,16 +129,16 @@
 ####################################
 # Nexus7420 Power HAL
 #
-/dev/cpuset/foreground/cpus                                        u:object_r:devfs_power_hal:s0
-/dev/cpuset/foreground/boost/cpus                                  u:object_r:devfs_power_hal:s0
-/dev/cpuset/background/cpus                                        u:object_r:devfs_power_hal:s0
-/dev/cpuset/system-background/cpus                                 u:object_r:devfs_power_hal:s0
-/dev/cpuset/top-app/cpus                                           u:object_r:devfs_power_hal:s0
-/dev/cpuset/camera-daemon/cpus                                     u:object_r:devfs_power_hal:s0
-/sys/class/input/input[0-9]*/enabled                               u:object_r:sysfs_power_hal:s0
-/sys/class/misc/mali0/device/dvfs(.*)?                             u:object_r:sysfs_power_hal:s0
-/sys/devices/system/cpu/cpu[0-9]*/online                           u:object_r:sysfs_power_hal:s0
-/sys/devices/system/cpu/cpu[0-9]*/cpufreq/cpuinfo_(.*)             u:object_r:sysfs_power_hal:s0
-/sys/devices/system/cpu/cpu[0-9]*/cpufreq/interactive(/.*)?        u:object_r:sysfs_power_hal:s0
-/sys/power/ipa/big_max_freq                                        u:object_r:sysfs_power_hal:s0
-/sys/power/ipa/little_max_freq                                     u:object_r:sysfs_power_hal:s0
+/dev/cpuset/foreground/cpus                                        u:object_r:power_hal_devfs:s0
+/dev/cpuset/foreground/boost/cpus                                  u:object_r:power_hal_devfs:s0
+/dev/cpuset/background/cpus                                        u:object_r:power_hal_devfs:s0
+/dev/cpuset/system-background/cpus                                 u:object_r:power_hal_devfs:s0
+/dev/cpuset/top-app/cpus                                           u:object_r:power_hal_devfs:s0
+/dev/cpuset/camera-daemon/cpus                                     u:object_r:power_hal_devfs:s0
+/sys/class/input/input[0-9]*/enabled                               u:object_r:power_hal_sysfs:s0
+/sys/class/misc/mali0/device/dvfs(.*)?                             u:object_r:power_hal_sysfs:s0
+/sys/devices/system/cpu/cpu[0-9]*/online                           u:object_r:power_hal_sysfs:s0
+/sys/devices/system/cpu/cpu[0-9]*/cpufreq/cpuinfo_(.*)             u:object_r:power_hal_sysfs:s0
+/sys/devices/system/cpu/cpu[0-9]*/cpufreq/interactive(/.*)?        u:object_r:power_hal_sysfs:s0
+/sys/power/ipa/big_max_freq                                        u:object_r:power_hal_sysfs:s0
+/sys/power/ipa/little_max_freq                                     u:object_r:power_hal_sysfs:s0
