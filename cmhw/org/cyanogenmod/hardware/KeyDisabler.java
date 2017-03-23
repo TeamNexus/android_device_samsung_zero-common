@@ -29,7 +29,7 @@ import org.cyanogenmod.hardware.util.FileUtils;
 
 public class KeyDisabler {
 
-    private static String CONTROL_PATH = "/sys/class/sec/sec_touchkey/input/enabled";
+    private static String CONTROL_PATH = "/sys/class/input/input0/enabled";
 
     public static boolean isSupported() {
         return true;
