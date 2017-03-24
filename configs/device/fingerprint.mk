@@ -18,4 +18,5 @@
 # Fingerprint
 PRODUCT_PACKAGES += \
     fingerprint.exynos5 \
-    fingerprintd
+    fingerprintd \
+    libbauthtzcommon_shim

@@ -65,10 +65,6 @@ PRODUCT_PACKAGES += \
     libxml2 \
     libprotobuf-cpp-full
 
-# Shims
-PRODUCT_PACKAGES += \
-    libshim_bauthtzcommon
-
 # Torch
 PRODUCT_PACKAGES += \
     Torch
