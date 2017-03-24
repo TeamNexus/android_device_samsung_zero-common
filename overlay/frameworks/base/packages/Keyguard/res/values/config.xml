@@ -25,4 +25,7 @@
          the sensor embedded in the power key and listening all the time
          causes a poor experience. -->
     <bool name="config_fingerprintWakeAndUnlock">false</bool>
+
+    <!-- Threshold in micro watts below which a charger is rated as "slow"; 1A @ 5V -->
+    <integer name="config_chargingSlowlyThreshold">0</integer>
 </resources>
