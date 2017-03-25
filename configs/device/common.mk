@@ -58,7 +58,7 @@ PRODUCT_PACKAGES += \
 
 # Power
 PRODUCT_PACKAGES += \
-    power.nexus7420
+    power.exynos5
 
 # Radio
 PRODUCT_PACKAGES += \
