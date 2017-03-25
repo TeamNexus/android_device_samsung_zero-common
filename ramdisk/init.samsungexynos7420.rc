@@ -40,6 +40,12 @@ on init
 
 on post-fs
 ################################################
+# Set I/O-scheduler to BFQ
+    write /sys/block/sda/queue/scheduler "bfq"
+    write /sys/block/sdb/queue/scheduler "bfq"
+    write /sys/block/sdc/queue/scheduler "bfq"
+
+################################################
 # Increase max readahead size to 3072 KB
     write /sys/block/sda/queue/read_ahead_kb 3072
     write /sys/block/sdb/queue/read_ahead_kb 3072
