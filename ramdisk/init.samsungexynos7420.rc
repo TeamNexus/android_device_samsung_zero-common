@@ -160,6 +160,11 @@ on post-fs-data
     write /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads "87 1100000:85 1600000:90"
 
 ################################################
+# cpuctl permissions
+    chown system system /dev/cpuctl
+    chmod 0660 /dev/cpuctl
+
+################################################
 # cpuset permissions
     chmod 0664 /dev/cpuset/foreground/cpus
     chown system system /dev/cpuset/foreground/cpus
