@@ -89,24 +89,48 @@ on post-fs-data
 
 ################################################
 # cpufreq permissions
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
     chmod 0664 /sys/power/ipa/little_max_freq
     chown system system /sys/power/ipa/little_max_freq
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq
     chmod 0664 /sys/power/ipa/big_max_freq
     chown system system /sys/power/ipa/big_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 
 ################################################
 # cpufreq settings
-    write /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq 600000
     write /sys/power/ipa/little_max_freq 1500000
-    write /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq 1600000
     write /sys/power/ipa/big_max_freq 2100000
+    write /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq 400000
+    write /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq 1500000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 400000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1500000
+    write /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq 800000
+    write /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq 2100000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 800000
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 2100000
 
 ################################################
-# cpugov permissions: apollo
+# cpugov generic permissions: apollo
+    write 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    write system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
+
+################################################
+# cpugov permissions: interactive/apollo
     write 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
     write system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
     write 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
@@ -123,17 +147,23 @@ on post-fs-data
     write system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 
 ################################################
-# cpugov settings: apollo
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay "19000 500000:49000 600000:19000"
+# cpugov settings: interactive/apollo
+    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay "19000 1000000:69000 1500000:39000"
     write /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost 0
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode 0
+    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode 1
     write /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load 89
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq 600000
+    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq 1500000
     write /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy 0
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads "75 500000:85 600000:90"
+    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads "75 500000:85 1000000:90 1500000:99"
 
 ################################################
-# cpugov permissions: atlas
+# cpugov generic permissions: apollo
+    write 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+    write system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "interactive"
+
+################################################
+# cpugov permissions: interactive/atlas
     write 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
     write system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
     write 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost
@@ -150,14 +180,14 @@ on post-fs-data
     write system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
 
 ################################################
-# cpugov settings: atlas
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay "79000 900000:49000 1000000:19000"
+# cpugov settings: interactive/atlas
+    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay "79000 900000:69000 1400000:49000 2100000:29000"
     write /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost 0
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode 0
+    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode 1
     write /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load 99
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq 1600000
+    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq 2100000
     write /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy 0
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads "87 1100000:85 1600000:90"
+    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads "80 1100000:85 1600000:90 2100000:99"
 
 ################################################
 # cpuctl permissions

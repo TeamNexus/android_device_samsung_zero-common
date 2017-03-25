@@ -42,6 +42,14 @@
 #define STATE_ENABLE 1
 
 /*
+ * index of mali GPU governors
+ */
+#define MALI_DVFS_GOV_DEFAULT "0"
+#define MALI_DVFS_GOV_INTERACTIVE "1"
+#define MALI_DVFS_GOV_STATIC "2"
+#define MALI_DVFS_GOV_BOOSTER "3"
+
+/*
  * paths of input devices
  */
 // input:

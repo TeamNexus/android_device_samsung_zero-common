@@ -83,7 +83,7 @@ struct sec_power_profile {
 	{
 		/* .mali = */ {
 			/* .dvfs          = */ "0",
-			/* .dvfs_governor = */ "Interactive",
+			/* .dvfs_governor = */ MALI_DVFS_GOV_STATIC,
 			/* .dvfs_min_lock = */ "266",
 			/* .dvfs_max_lock = */ "266"
 		},
@@ -151,7 +151,7 @@ struct sec_power_profile {
 	{
 		/* .mali = */ {
 			/* .dvfs          = */ "0",
-			/* .dvfs_governor = */ "Interactive",
+			/* .dvfs_governor = */ MALI_DVFS_GOV_INTERACTIVE,
 			/* .dvfs_min_lock = */ "266",
 			/* .dvfs_max_lock = */ "420"
 		},
@@ -219,7 +219,7 @@ struct sec_power_profile {
 	{
 		/* .mali = */ {
 			/* .dvfs          = */ "1",
-			/* .dvfs_governor = */ "Interactive",
+			/* .dvfs_governor = */ MALI_DVFS_GOV_INTERACTIVE,
 			/* .dvfs_min_lock = */ "266",
 			/* .dvfs_max_lock = */ "700"
 		},
@@ -287,7 +287,7 @@ struct sec_power_profile {
 	{
 		/* .mali = */ {
 			/* .dvfs          = */ "1",
-			/* .dvfs_governor = */ "Boost",
+			/* .dvfs_governor = */ MALI_DVFS_GOV_BOOSTER,
 			/* .dvfs_min_lock = */ "420",
 			/* .dvfs_max_lock = */ "772"
 		},
