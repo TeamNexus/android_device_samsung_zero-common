@@ -16,5 +16,6 @@
 
 # Scripts
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/scripts/cpusets-debug.sh:system/scripts/cpusets-debug.sh \
     $(LOCAL_PATH)/scripts/deep-sleep-fix.sh:system/scripts/deep-sleep-fix.sh \
     $(LOCAL_PATH)/scripts/perf-energy-save.sh:system/scripts/perf-energy-save.sh
