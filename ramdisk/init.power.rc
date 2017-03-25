@@ -131,7 +131,7 @@ on post-fs-data
 	#
 
 	# CPU_PATH_B_MAX_FREQ
-	chown root system /sys/power/ipa/big_max_freq/sys/power/ipa/big_max_freq
+	chown root system /sys/power/ipa/big_max_freq
 	chmod 0664 /sys/power/ipa/big_max_freq
 
 	# CPU_PATH_B1_ONLINE
