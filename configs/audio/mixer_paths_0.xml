@@ -274,6 +274,28 @@
 		<ctl name="AIF1TX2 Input 2" value="ASRC1IN2L" />
 	</path>
 
+	<path name="incall_nb-bt-sco-headset">
+		<path name="mute-headset" />
+		<ctl name="AIF2 Mode" value="Slave" />
+		<ctl name="Sample Rate 2" value="8kHz" />
+		<ctl name="ASRC1 Rate 1" value="SYNCCLK rate 1" />
+		<ctl name="ISRC2 FSL" value="SYNCCLK rate 2" />
+		<ctl name="ISRC2 FSH" value="SYNCCLK rate 1" />
+		<ctl name="AIF3TX1 Input 1" value="ISRC2DEC3" />
+		<ctl name="AIF3TX2 Input 1" value="ISRC2DEC4" />
+		<ctl name="AIF3TX1 Input 2" value="ISRC2DEC1" />
+		<ctl name="AIF3TX2 Input 2" value="ISRC2DEC2" />
+		<ctl name="ISRC2DEC1 Input" value="ASRC1IN2L" />
+		<ctl name="ISRC2DEC2 Input" value="ASRC1IN2R" />
+		<ctl name="ISRC2DEC3 Input" value="AIF1RX1" />
+		<ctl name="ISRC2DEC4 Input" value="AIF1RX2" />
+		<ctl name="ASRC1IN2L Input" value="AIF2RX1" />
+		<ctl name="ASRC1IN2R Input" value="AIF2RX2" />
+		<!-- Call recording route -->
+		<ctl name="AIF1TX1 Input 2" value="ASRC1IN2L" />
+		<ctl name="AIF1TX2 Input 2" value="ASRC1IN2R" />
+	</path>
+
     <!-- WB -->
 	<path name="incall_wb-handset">
 		<path name="mute-headset" />
@@ -778,7 +800,9 @@
     <!-- END - Stock Audio Gains -->
 
 	<!-- OSS Audio HAL Paths -->
-	<path name="none"/>
+	<path name="none">
+		<!-- Empty path -->
+	</path>
 
 	<!-- Output -->
 	<path name="earpiece">
@@ -833,8 +857,13 @@
 	</path>
 
 	<path name="bt-sco-headset">
-		<path name="media-bt-sco-headset"/>
+		<path name="incall_nb-bt-sco-headset"/>
 		<path name="gain-incall_nb-bt-sco-headset"/>
+	</path>
+
+	<path name="bt-sco-headset-wb">
+		<path name="incall_wb-bt-sco-headset"/>
+		<path name="gain-incall_wb-bt-sco-headset"/>
 	</path>
 
 	<!-- Input -->
@@ -894,6 +923,11 @@
 	<path name="bt-sco-mic">
 		<path name="incall_nb-bt-sco-headset-in"/>
 		<path name="gain-incall_nb-bt-sco-headset-in"/>
+	</path>
+
+	<path name="bt-sco-mic-wb">
+		<path name="incall_wb-bt-sco-headset-in"/>
+		<path name="gain-incall_wb-bt-sco-headset-in"/>
 	</path>
 
 	<path name="camcorder-mic">
