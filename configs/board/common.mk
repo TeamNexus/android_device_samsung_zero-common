@@ -60,10 +60,6 @@ TARGET_INIT_VENDOR_LIB := libinit_sec
 TARGET_UNIFIED_DEVICE := true
 
 ########################################
-# PowerHAL
-# TARGET_POWERHAL_VARIANT := samsung
-
-########################################
 # Radio
 BOARD_RIL_CLASS := ../../../$(LOCAL_PATH)/ril
 

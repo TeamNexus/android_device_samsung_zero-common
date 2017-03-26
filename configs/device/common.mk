@@ -56,10 +56,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     mcDriverDaemon
 
-# Power
-PRODUCT_PACKAGES += \
-    power.exynos5
-
 # Radio
 PRODUCT_PACKAGES += \
     libxml2 \
