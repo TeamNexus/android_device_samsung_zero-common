@@ -48,10 +48,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libstlport
 
-# MDNIE
-PRODUCT_PACKAGES += \
-    AdvancedDisplay
-
 # MobiCore
 PRODUCT_PACKAGES += \
     mcDriverDaemon
