@@ -17,7 +17,7 @@
 
 # common build properties
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.sf.lcd_density=560 \
+    ro.sf.lcd_density=640 \
     ro.opengles.version=196609 \
     ro.chipname=exynos7420 \
     af.fast_track_multiplier=1 \
