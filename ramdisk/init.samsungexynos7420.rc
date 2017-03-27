@@ -18,7 +18,6 @@
 import init.samsungexynos7420.usb.rc
 import init.wifi.rc
 import init.baseband.rc
-import init.carrier.rc
 import init.power.rc
 
 on early-init
