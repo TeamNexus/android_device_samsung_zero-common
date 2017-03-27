@@ -30,7 +30,10 @@ PRODUCT_PROPERTY_OVERRIDES += \
     qcom.bluetooth.soc=rome
 
 PRODUCT_PROPERTY_OVERRIDES += \
+    persist.radio.add_power_save=1 \
+    persist.radio.apm_sim_not_pwdn=1 \
     rild.libpath=/system/lib64/libsec-ril.so \
+    rild.libpath2=/system/lib64/libsec-ril-dsds.so \
     rild.libargs=-d /dev/ttyS0 \
     ro.telephony.ril_class=zeroRIL \
     telephony.lteOnGsmDevice=1 \
