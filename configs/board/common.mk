@@ -24,7 +24,7 @@ TARGET_USES_64_BIT_BINDER := true
 
 ########################################
 # CPU sets
-ENABLE_CPUSETS := true
+ENABLE_CPUSETS := false
 
 ########################################
 # FIMG2D

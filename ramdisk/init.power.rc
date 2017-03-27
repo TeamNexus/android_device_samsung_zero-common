@@ -63,28 +63,28 @@ on post-fs-data
 	#
 
 	# CPUSET_PATH_FOREGROUND
-	chown root system /dev/cpuset/foreground/cpus
-	chmod 0664 /dev/cpuset/foreground/cpus
+	# chown root system /dev/cpuset/foreground/cpus
+	# chmod 0664 /dev/cpuset/foreground/cpus
 
 	# CPUSET_PATH_FOREGROUND_BOOST
-	chown root system /dev/cpuset/foreground/boost/cpus
-	chmod 0664 /dev/cpuset/foreground/boost/cpus
+	# chown root system /dev/cpuset/foreground/boost/cpus
+	# chmod 0664 /dev/cpuset/foreground/boost/cpus
 
 	# CPUSET_PATH_BACKGROUND
-	chown root system /dev/cpuset/background/cpus
-	chmod 0664 /dev/cpuset/background/cpus
+	# chown root system /dev/cpuset/background/cpus
+	# chmod 0664 /dev/cpuset/background/cpus
 
 	# CPUSET_PATH_SYSTEM_BACKGROUND
-	chown root system /dev/cpuset/system-background/cpus
-	chmod 0664 /dev/cpuset/system-background/cpus
+	# chown root system /dev/cpuset/system-background/cpus
+	# chmod 0664 /dev/cpuset/system-background/cpus
 
 	# CPUSET_PATH_TOP_APP
-	chown root system /dev/cpuset/top-app/cpus
-	chmod 0664 /dev/cpuset/top-app/cpus/dev/cpuset/top-app/cpus
+	# chown root system /dev/cpuset/top-app/cpus
+	# chmod 0664 /dev/cpuset/top-app/cpus/dev/cpuset/top-app/cpus
 
 	# CPUSET_PATH_CAMERA_DAEMON
-	chown root system /dev/cpuset/camera-daemon/cpus
-	chmod 0664 /dev/cpuset/camera-daemon/cpus
+	# chown root system /dev/cpuset/camera-daemon/cpus
+	# chmod 0664 /dev/cpuset/camera-daemon/cpus
 
 	####################################################
 	# paths of cpu-settings for apollo (little cluster)
