@@ -409,6 +409,27 @@
 		<ctl name="Third Mic Switch" value="1" />
 	</path>
 
+	<path name="headset-mic">
+		<ctl name="LHPF1 Input 1" value="IN2L" />
+		<ctl name="Headset Mic Switch" value="1" />
+	</path>
+
+	<path name="media-bt-sco-headset-in">
+		<ctl name="ISRC2 FSL" value="SYNCCLK rate 2" />
+		<ctl name="ISRC2 FSH" value="SYNCCLK rate 1" />
+		<ctl name="ISRC2INT1 Input" value="AIF3RX1" />
+		<ctl name="ISRC2INT2 Input" value="AIF3RX2" />
+		<ctl name="AIF1TX1 Input 1" value="ISRC2INT1" />
+		<ctl name="AIF1TX2 Input 1" value="ISRC2INT2" />
+	</path>
+
+	<!-- camcorder input -->
+	<path name="camcorder-mic">
+		<path name="capture_channel_invert" />
+		<path name="main-mic" />
+		<path name="2nd-mic" />
+	</path>
+
     <!-- NB -->
 	<path name="incall_nb-handset-mic">
 		<ctl name="Headset Mic Switch" value="0" />
@@ -628,6 +649,16 @@
 		<ctl name="HPOUT1R Impedance Volume" value="60" />
 		<ctl name="HPOUT1L Input 1 Volume" value="32" />
 		<ctl name="HPOUT1R Input 1 Volume" value="32" />
+	</path>
+
+	<path name="gain-media-bt-sco-headset">
+		<ctl name="AIF3TX1 Input 1 Volume" value="32" />
+		<ctl name="AIF3TX2 Input 1 Volume" value="32" />
+	</path>
+
+	<path name="gain-media-bt-sco-headset-in">
+		<ctl name="AIF1TX1 Input 1 Volume" value="32" />
+		<ctl name="AIF1TX2 Input 1 Volume" value="32" />
 	</path>
 
     <!-- NB volume -->
@@ -856,14 +887,19 @@
 		<path name="gain-incall_wb-headset"/>
 	</path>
 
-	<path name="bt-sco-headset">
+	<path name="voice-bt-sco-headset">
 		<path name="incall_nb-bt-sco-headset"/>
 		<path name="gain-incall_nb-bt-sco-headset"/>
 	</path>
 
-	<path name="bt-sco-headset-wb">
+	<path name="voice-bt-sco-headset-wb">
 		<path name="incall_wb-bt-sco-headset"/>
 		<path name="gain-incall_wb-bt-sco-headset"/>
+	</path>
+
+	<path name="bt-sco-headset">
+		<path name="media-bt-sco-headset"/>
+		<path name="gain-media-bt-sco-headset"/>
 	</path>
 
 	<!-- Input -->
@@ -877,12 +913,6 @@
 		<path name="capture_channel_left"/>
 		<path name="main-mic"/>
 		<path name="gain-media-mic"/>
-	</path>
-
-	<path name="headset-mic">
-		<ctl name="LHPF1 Input 1" value="IN2L"/>
-		<ctl name="Headset Mic Switch" value="1"/>
-		<path name="gain-media-headset-mic"/>
 	</path>
 
 	<path name="voice-mic">
@@ -920,21 +950,19 @@
 		<path name="gain-incall_wb-headset-mic"/>
 	</path>
 
-	<path name="bt-sco-mic">
+	<path name="voice-bt-sco-mic">
 		<path name="incall_nb-bt-sco-headset-in"/>
 		<path name="gain-incall_nb-bt-sco-headset-in"/>
 	</path>
 
-	<path name="bt-sco-mic-wb">
+	<path name="voice-bt-sco-mic-wb">
 		<path name="incall_wb-bt-sco-headset-in"/>
 		<path name="gain-incall_wb-bt-sco-headset-in"/>
 	</path>
 
-	<path name="camcorder-mic">
-		<path name="capture_channel_invert"/>
-		<path name="main-mic"/>
-		<path name="2nd-mic"/>
-		<path name="gain-camcorder-mic"/>
+	<path name="bt-sco-mic">
+		<path name="media-bt-sco-headset-in"/>
+		<path name="gain-media-bt-sco-headset-in"/>
 	</path>
 
 	<path name="voice-rec-mic">
@@ -946,5 +974,6 @@
 		<path name="headset-mic"/>
 		<path name="gain-recognition-headset-mic"/>
 	</path>
+	
 	<!-- END - OSS Audio HAL Paths -->
 </mixer>
