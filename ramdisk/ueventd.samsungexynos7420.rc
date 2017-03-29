@@ -159,6 +159,10 @@
 /sys/devices/platform/bbd.0/ssi_count    0440   system   system
 /sys/devices/platform/bbd.0/ssi_trace    0440   system   system
 
+# Sickness Tweaks
+/sys/devices/system/cpu/cpu*   cpufreq/scaling_max_freq   0640  root root
+/sys/devices/system/cpu/cpu*   cpufreq/scaling_min_freq   0640  root root
+
 ################################################
 # QCOM MIF
 /dev/subsys_esoc*         0660   system     radio

@@ -20,6 +20,7 @@ import init.wifi.rc
 import init.baseband.rc
 import init.power.rc
 import init.gps.rc
+import init.sickness.rc
 
 on early-init
     mount debugfs /sys/kernel/debug /sys/kernel/debug mode=755
@@ -553,8 +554,8 @@ on boot
 
 ################################################
 # Assume HMP uses shared cpufreq policy for all LITTLE CPUs
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown root root /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0640 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 
     chown system system sys/devices/system/cpu/cpufreq/mp-cpufreq/cluster0_max_freq
     chmod 0660 sys/devices/system/cpu/cpufreq/mp-cpufreq/cluster0_max_freq
@@ -563,8 +564,8 @@ on boot
 
 ################################################
 # Assume HMP uses shared cpufreq policy for big CPUs
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-    chmod 0660 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+    chown root root /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+    chmod 0640 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 
 ################################################
 # LITTLE cluster high load
@@ -1239,3 +1240,11 @@ service ipsec-daemon /system/bin/IPSecService
     socket ipsec_socket stream 660 system system
     user system
     group system net_raw inet net_admin
+	
+################################################
+# Sickness Tweaks
+# Call Post-init script
+service sick-init /sbin/sick.sh
+    class main
+    user root
+    oneshot
