@@ -1240,11 +1240,3 @@ service ipsec-daemon /system/bin/IPSecService
     socket ipsec_socket stream 660 system system
     user system
     group system net_raw inet net_admin
-	
-################################################
-# Sickness Tweaks
-# Call Post-init script
-service sick-init /sbin/sick.sh
-    class main
-    user root
-    oneshot
