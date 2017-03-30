@@ -34,7 +34,7 @@ $(call inherit-product-if-exists, frameworks/native/build/phone-xxxhdpi-3072-hwu
 
 # Browser
 PRODUCT_PACKAGES += \
-Gello
+	Gello
 
 # Dbthtool
 PRODUCT_PACKAGES += \

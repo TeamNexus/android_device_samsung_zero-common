@@ -122,8 +122,8 @@ on post-fs-data
     # Cluster0 (Apollo)
     write /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq 200000
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 200000
-    write /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq 1800000
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1800000
+    write /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq 1704000
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1704000
     # Cluster1 (Atlas)
     write /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq 200000
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 200000
@@ -134,67 +134,67 @@ on post-fs-data
 # cpugov: apollo
     chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "ondemandplus"
 
 ################################################
 # cpugov permissions: interactive/apollo
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+    # chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+    # chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+    # chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
+    # chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
+    # chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode
+    # chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode
+    # chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
+    # chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
+    # chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+    # chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+    # chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
+    # chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
+    # chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+    # chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 
 ################################################
 # cpugov settings: interactive/apollo
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay "89000 500000:69000 1000000:49000 1500000:29000"
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost 0
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode 0
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load 95
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq 1500000
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy 0
-    write /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads "80 500000:85 1000000:90 1500000:95"
+    # write /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay "89000 500000:69000 1000000:49000 1500000:29000"
+    # write /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost 0
+    # write /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode 0
+    # write /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load 95
+    # write /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq 1500000
+    # write /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy 0
+    # write /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads "80 500000:85 1000000:90 1500000:95"
 
 ################################################
 # cpugov: atlas
     chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "interactive"
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "ondemandplus"
 
 ################################################
 # cpugov permissions: interactive/atlas
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+    # chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+    # chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+    # chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost
+    # chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost
+    # chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode
+    # chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode
+    # chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
+    # chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
+    # chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
+    # chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
+    # chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
+    # chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
+    # chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+    # chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
 
 ################################################
 # cpugov settings: interactive/atlas
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay "89000 900000:69000 1600000:49000 2100000:29000"
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost 0
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode 0
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load 95
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq 2100000
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy 0
-    write /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads "80 1100000:85 1600000:90 2100000:95"
+    # write /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay "89000 900000:69000 1600000:49000 2100000:29000"
+    # write /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost 0
+    # write /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode 0
+    # write /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load 95
+    # write /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq 2100000
+    # write /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy 0
+    # write /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads "80 1100000:85 1600000:90 2100000:95"
 
 ################################################
 # cpuctl permissions
@@ -1197,11 +1197,11 @@ on fs
 ################################################
 
 on charger
-# Set cpu governor to interactive while in charging mode
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor interactive
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor interactive
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor interactive
+# Set cpu governor to ondemandplus while in charging mode
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "ondemandplus"
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor "ondemandplus"
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor "ondemandplus"
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor "ondemandplus"
 
 ################################################
 # ARGOSD
