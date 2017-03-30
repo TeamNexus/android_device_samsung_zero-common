@@ -57,6 +57,10 @@ PRODUCT_PACKAGES += \
     libxml2 \
     libprotobuf-cpp-full
 
+# Power
+PRODUCT_PACKAGES += \
+    power.exynos5
+
 # Torch
 PRODUCT_PACKAGES += \
     Torch
