@@ -1197,6 +1197,15 @@ on fs
     chmod 0664 /sys/class/usb_notify/usb_control/disable
 
 ################################################
+
+on charger
+# Set cpu governor to interactive while in charging mode
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
+    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor interactive
+    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor interactive
+    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor interactive
+
+################################################
 # ARGOSD
 service argos-daemon /system/bin/argosd
     class main
