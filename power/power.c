@@ -134,15 +134,15 @@ static int power_input_device_state(int state) {
 
         case STATE_DISABLE:
 
-            sysfs_write(TOUCHSCREEN_POWER_PATH, "0");
-            sysfs_write(TOUCHKEY_POWER_PATH, "0");
+            sysfs_write(POWER_ENABLE_TOUCHSCREEN, "0");
+            sysfs_write(POWER_ENABLE_TOUCHKEY, "0");
 
             break;
 
         case STATE_ENABLE:
 
-            sysfs_write(TOUCHSCREEN_POWER_PATH, "1");
-            sysfs_write(TOUCHKEY_POWER_PATH, "1");
+            sysfs_write(POWER_ENABLE_TOUCHSCREEN, "1");
+            sysfs_write(POWER_ENABLE_TOUCHKEY, "1");
 
             break;
 
