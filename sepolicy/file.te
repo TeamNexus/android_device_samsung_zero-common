@@ -26,6 +26,9 @@ type batch_io_device, dev_type;
 
 type fingerprint_data_file, file_type;
 
+### debugging
+type sysfs_debug, fs_type, sysfs_type, mlstrustedobject;
+
 ####################################
 # Nexus7420 Power HAL
 #

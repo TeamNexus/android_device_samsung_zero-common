@@ -48,7 +48,6 @@
 /efs/FactoryApp/fdata        u:object_r:radio_factoryapp_efs_file:s0
 /efs/FactoryApp/hist_nv      u:object_r:radio_factoryapp_efs_file:s0
 /efs/FactoryApp/test_nv      u:object_r:radio_factoryapp_efs_file:s0
-
 /efs/bluetooth(/.*)?         u:object_r:bluetooth_efs_file:s0
 /efs/drm(/.*)?               u:object_r:drm_efs_file:s0
 /efs/gyro_cal_data           u:object_r:sensor_efs_file:s0
@@ -66,12 +65,13 @@
 /data/nfc(/.*)?              u:object_r:nfc_data_file:s0
 /data/.cid.info              u:object_r:wifi_data_file:s0
 /data/.wifiver.info          u:object_r:wifi_data_file:s0
-
 /data/misc/radio(/.*)?       u:object_r:radio_data_file:s0
 
+####################################
 # fingerprint
 /data/biometrics(/.*)?       u:object_r:fingerprint_data_file:s0
 
+####################################
 # gps
 /data/system/gps/\.flp\.interface\.pipe\.to_gpsd     u:object_r:gps_data_file:s0
 /data/system/gps/\.gps\.interface\.pipe\.to_gpsd     u:object_r:gps_data_file:s0
@@ -82,7 +82,6 @@
 /data/system/gps/alt\.dat                            u:object_r:gps_data_file:s0
 /data/system/gps/lto2\.dat                           u:object_r:gps_data_file:s0
 /data/system/gps/ltoStatus\.txt                      u:object_r:gps_data_file:s0
-
 /data/gps/ctrlpipe                                   u:object_r:gps_data_file:s0
 /data/gps/.gpslogd.pipe                              u:object_r:gps_data_file:s0
 /data/gps/nmeapipe                                   u:object_r:gps_data_file:s0
@@ -93,38 +92,44 @@
 /sys/class/devfreq/exynos5-busfreq-mif(/.*)? -- u:object_r:sysfs_writable:s0
 /sys/class/lcd(/.*)?         -- u:object_r:sysfs_writable:s0
 
+####################################
 # bluetooth
 /sys/devices/bluetooth.[0-9]*/rfkill/rfkill0/state  u:object_r:sysfs_bluetooth_writable:s0
 /sys/devices/bluetooth.[0-9]*/rfkill/rfkill0/type   u:object_r:sysfs_bluetooth_writable:s0
 
+####################################
 # camera
 /sys/devices/virtual/camera/.*/.*_camfw           u:object_r:camera_device:s0
 
+####################################
 # cbd
 /sys/devices/10f24000.mipi-lli/lli_control  u:object_r:sysfs_mipi_writable:s0
 
+####################################
 # rild
 /data/data/com.android.providers.telephony/databases(/.*)?     u:object_r:radio_data_file:s0
 /data/data/com.android.providers.telephony/shared_prefs(/.*)?  u:object_r:radio_data_file:s0
 /sys/devices/virtual/misc/multipdp(/.*)     u:object_r:sysfs_multipdp_writable:s0
 
+####################################
 # mDNIe
 /sys/devices/[0-9]*.decon_fb/lcd/panel/mdnie/mode       u:object_r:sysfs_mdnie_writable:s0
 /sys/devices/[0-9]*.decon_fb/lcd/panel/mdnie/scenario   u:object_r:sysfs_mdnie_writable:s0
 
 ####################################
 # deamons
-#
-
 /system/bin/mcDriverDaemon   u:object_r:tee_exec:s0
 /system/bin/macloader        u:object_r:macloader_exec:s0
 /system/bin/modemloader      -- u:object_r:modemloader_exec:s0
 /system/bin/sensorhubservice -- u:object_r:sensorhubservice_exec:s0
 /system/bin/wifiloader       -- u:object_r:wifiloader_exec:s0
-
 /sbin/cbd                    -- u:object_r:rootfs:s0
 /system/bin/gpsd             -- u:object_r:gpsd_exec:s0
-/system/bin/lhd               -- u:object_r:lhd_exec:s0
+/system/bin/lhd              -- u:object_r:lhd_exec:s0
+
+####################################
+# debugging
+/sys/kernel/debug/mali/mem   -- u:object_r:sysfs_debug:s0
 
 ####################################
 # Nexus7420 Power HAL
