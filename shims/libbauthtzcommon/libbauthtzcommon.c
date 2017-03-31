@@ -19,8 +19,7 @@
 
 #include <cutils/log.h>
 
-int BAuth_Hat_OP(int arg0, int arg1, int arg2, int arg3, int arg4,
-                 int arg5, int arg6, int arg7, int arg8, int arg9)
+int BAuth_Hat_OP(void *dest, int dummy)
 {
     ALOGW("SHIM: hijacking %s!", __func__);
 
