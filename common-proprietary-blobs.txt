@@ -83,14 +83,11 @@ lib64/libsdid.so
 # Fingerprint
 app/mcRegistry/ffffffff00000000000000000000000e.tlbin
 app/mcRegistry/ffffffffd0000000000000000000000e.tlbin
-lib/libbauthserver.so
 lib64/libbauthserver.so
-lib/libbauthtzcommon.so
 lib64/libbauthtzcommon.so
-lib/libsynaFpSensorTestNwd.so
 lib64/libsynaFpSensorTestNwd.so
-lib/libegis_fp_normal_sensor_test.so
 lib64/libegis_fp_normal_sensor_test.so
+lib64/hw/fingerprint.default.so
 
 # Graphics
 lib/hw/gralloc.exynos5.so
