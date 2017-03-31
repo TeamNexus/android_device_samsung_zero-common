@@ -20,7 +20,6 @@ import init.wifi.rc
 import init.baseband.rc
 import init.power.rc
 import init.gps.rc
-import init.sickness.rc
 
 on early-init
     mount debugfs /sys/kernel/debug /sys/kernel/debug mode=755
