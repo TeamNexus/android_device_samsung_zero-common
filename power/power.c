@@ -89,17 +89,15 @@ static int sysfs_exists(const char *path)
     return 1;
 }
 
-static int is_atlas_interactive(void) {
-    return sysfs_exists(CPUGOV_PATH_B_ENFORCED_MODE);
-}
-
 static int is_apollo_interactive(void) {
-    return sysfs_exists(CPUGOV_PATH_L_ENFORCED_MODE);
+    return sysfs_exists(POWER_APOLLO_BOOSTPULSE);
 }
 
-static void power_set_profile(char *data) {
-    int profile = *((intptr_t *)data);
+static int is_atlas_interactive(void) {
+    return sysfs_exists(POWER_ATLAS_BOOSTPULSE);
+}
 
+static void power_set_profile(int profile) {
     current_power_profile = profile;
     switch (profile) {
 
@@ -123,15 +121,16 @@ static void power_set_profile(char *data) {
             sysfs_write(POWER_ATLAS_SCALING_GOVERNOR, POWER_CPUGOV_HIGH_PERFORMANCE);
 
             break;
-
-        default: return -EINVAL;
     }
 }
 
-static int power_input_device_state(int state) {
+static void power_set_profile_by_name(char *data) {
+	int profile = *((intptr_t *)data);
+    power_set_profile(profile);
+}
 
+static void power_input_device_state(int state) {
     switch (state) {
-
         case STATE_DISABLE:
 
             sysfs_write(POWER_ENABLE_TOUCHSCREEN, "0");
@@ -145,11 +144,7 @@ static int power_input_device_state(int state) {
             sysfs_write(POWER_ENABLE_TOUCHKEY, "1");
 
             break;
-
-        default: return -EINVAL;
     }
-
-    return 0;
 }
 
 static void power_init(struct power_module __unused * module) {
@@ -196,11 +191,11 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
             break;
 
         case POWER_HINT_SET_PROFILE:
-            power_set_profile(data);
+            power_set_profile_by_name(data);
             break;
 
         case POWER_HINT_DISABLE_TOUCH:
-            set_input_device_state(data ? 0 : 1);
+            power_input_device_state(data ? 0 : 1);
             break;
 
         default: break;
