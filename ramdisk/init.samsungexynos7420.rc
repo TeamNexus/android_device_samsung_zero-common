@@ -269,35 +269,23 @@ on post-fs-data
     write /sys/devices/platform/gpusysfs/gpu_max_clock 772
 
 ################################################
-# Sickness-Kernel permissions
-    chown root system /sys/kernel/mm/ksm/sleep_millisecs
-    chmod 0664 /sys/kernel/mm/ksm/sleep_millisecs
-    chown root system /sys/kernel/mm/ksm/pages_to_scan
-    chmod 0664 /sys/kernel/mm/ksm/pages_to_scan
-    chown root system /sys/kernel/sched/arch_power
-    chmod 0664 /sys/kernel/sched/arch_power
-    chown root system /sys/kernel/sched/gentle_fair_sleepers
-    chmod 0664 /sys/kernel/sched/gentle_fair_sleepers
+# Kernel tweaks: Permissions
+    chown root system /sys/module/workqueue/parameters/power_efficient
+    chmod 0664 /sys/module/workqueue/parameters/power_efficient
     chown root system /proc/sys/net/ipv6/conf/all/optimistic_dad
     chmod 0664 /proc/sys/net/ipv6/conf/all/optimistic_dad
     chown root system /proc/sys/net/ipv6/conf/all/use_optimistic
     chmod 0664 /proc/sys/net/ipv6/conf/all/use_optimistic
-    chown root system /sys/kernel/mm/uksm/cpu_governor
-    chmod 0664 /sys/kernel/mm/uksm/cpu_governor
     chown root system /proc/sys/kernel/random/read_wakeup_threshold
     chmod 0664 /proc/sys/kernel/random/read_wakeup_threshold
     chown root system /proc/sys/kernel/random/write_wakeup_threshold
     chmod 0664 /proc/sys/kernel/random/write_wakeup_threshold
 
 ################################################
-# Sickness-Kernel settings
-	write /sys/kernel/mm/ksm/sleep_millisecs 500
-    write /sys/kernel/mm/ksm/pages_to_scan 100
-    write /sys/kernel/sched/arch_power 0
-    write /sys/kernel/sched/gentle_fair_sleepers 0
+# Kernel tweaks
+    write /sys/module/workqueue/parameters/power_efficient 1
     write /proc/sys/net/ipv6/conf/all/optimistic_dad 1
     write /proc/sys/net/ipv6/conf/all/use_optimistic 1
-    write /sys/kernel/mm/uksm/cpu_governor low
     write /proc/sys/kernel/random/read_wakeup_threshold 512
     write /proc/sys/kernel/random/write_wakeup_threshold 256
 
