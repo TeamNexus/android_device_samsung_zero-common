@@ -210,6 +210,7 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 static int power_get_feature(struct power_module *module __unused, feature_t feature) {
     switch (feature) {
         case POWER_FEATURE_SUPPORTED_PROFILES: return 3;
+        case POWER_FEATURE_DOUBLE_TAP_TO_WAKE: return 0;
         default: return -EINVAL;
     }
 }
