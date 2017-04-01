@@ -39,10 +39,6 @@
 struct sec_power_module {
     struct power_module base;
     pthread_mutex_t lock;
-    int boostpulse_fd_l;
-    int boostpulse_warned_l;
-    int boostpulse_fd_b;
-    int boostpulse_warned_b;
 };
 
 #define container_of(addr, struct_name, field_name) \
@@ -50,178 +46,9 @@ struct sec_power_module {
 
 static int current_power_profile = PROFILE_NORMAL;
 
-static int sysfs_write(const char *path, const char *s)
-{
-    char buf[80];
-    int len, fd;
-
-    fd = open(path, O_WRONLY);
-
-    if (fd < 0) {
-        strerror_r(errno, buf, sizeof(buf));
-        ALOGE("Error opening %s: %s\n", path, buf);
-        return fd;
-    }
-
-    len = write(fd, s, strlen(s));
-    if (len < 0) {
-        strerror_r(errno, buf, sizeof(buf));
-        ALOGE("Error writing to %s: %s\n", path, buf);
-    }
-
-    close(fd);
-    return len;
-}
-
-static int sysfs_exists(const char *path)
-{
-    char buf[80];
-    int len, fd;
-
-    fd = open(path, O_WRONLY);
-
-    if (fd < 0) {
-        close(fd);
-        return 0;
-    }
-
-    close(fd);
-    return 1;
-}
-
-static int is_apollo_interactive(void) {
-    return sysfs_exists(POWER_APOLLO_BOOSTPULSE);
-}
-
-static int is_atlas_interactive(void) {
-    return sysfs_exists(POWER_ATLAS_BOOSTPULSE);
-}
-
-static void power_set_profile(int profile) {
-    current_power_profile = profile;
-    switch (profile) {
-
-        case PROFILE_POWER_SAVE:
-
-            sysfs_write(POWER_APOLLO_SCALING_GOVERNOR, POWER_CPUGOV_POWER_SAVE);
-            sysfs_write(POWER_ATLAS_SCALING_GOVERNOR, POWER_CPUGOV_POWER_SAVE);
-
-            break;
-
-        case PROFILE_NORMAL:
-
-            sysfs_write(POWER_APOLLO_SCALING_GOVERNOR, POWER_CPUGOV_NORMAL);
-            sysfs_write(POWER_ATLAS_SCALING_GOVERNOR, POWER_CPUGOV_NORMAL);
-
-            break;
-
-        case PROFILE_HIGH_PERFORMANCE:
-
-            sysfs_write(POWER_APOLLO_SCALING_GOVERNOR, POWER_CPUGOV_HIGH_PERFORMANCE);
-            sysfs_write(POWER_ATLAS_SCALING_GOVERNOR, POWER_CPUGOV_HIGH_PERFORMANCE);
-
-            break;
-    }
-}
-
-static void power_set_profile_by_name(char *data) {
-	int profile = *((intptr_t *)data);
-    power_set_profile(profile);
-}
-
-static void power_input_device_state(int state) {
-    switch (state) {
-        case STATE_DISABLE:
-
-            sysfs_write(POWER_ENABLE_TOUCHSCREEN, "0");
-            sysfs_write(POWER_ENABLE_TOUCHKEY, "0");
-
-            break;
-
-        case STATE_ENABLE:
-
-            sysfs_write(POWER_ENABLE_TOUCHSCREEN, "1");
-            sysfs_write(POWER_ENABLE_TOUCHKEY, "1");
-
-            break;
-    }
-}
-
-static void power_init(struct power_module __unused * module) {
-    struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
-
-    // give them some boost
-    if (is_apollo_interactive()) {
-        sysfs_write(POWER_APOLLO_BOOSTPULSE, "1");
-    }
-    if (is_atlas_interactive()) {
-        sysfs_write(POWER_ATLAS_BOOSTPULSE, "1");
-    }
-
-    // set to normal power profile
-    power_set_profile(PROFILE_NORMAL);
-}
-
-static void power_set_interactive(struct power_module __unused * module, int on) {
-    power_input_device_state(on ? 1 : 0);
-}
-
-static void power_hint(struct power_module *module, power_hint_t hint, void *data) {
-    struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
-
-    pthread_mutex_lock(&sec->lock);
-
-    switch (hint) {
-
-        case POWER_HINT_INTERACTION:
-        case POWER_HINT_CPU_BOOST:
-        case POWER_HINT_LAUNCH:
-
-            if (is_apollo_interactive()) {
-                sysfs_write(POWER_APOLLO_BOOSTPULSE, "1");
-            }
-            if (is_atlas_interactive()) {
-                sysfs_write(POWER_ATLAS_BOOSTPULSE, "1");
-            }
-
-            break;
-
-        case POWER_HINT_LOW_POWER:
-            power_set_profile(data ? PROFILE_POWER_SAVE : current_power_profile);
-            break;
-
-        case POWER_HINT_SET_PROFILE:
-            power_set_profile_by_name(data);
-            break;
-
-        case POWER_HINT_DISABLE_TOUCH:
-            power_input_device_state(data ? 0 : 1);
-            break;
-
-        default: break;
-    }
-
-    pthread_mutex_unlock(&sec->lock);
-}
-
-static int power_get_feature(struct power_module *module __unused, feature_t feature) {
-    switch (feature) {
-        case POWER_FEATURE_SUPPORTED_PROFILES: return 3;
-        default: return -EINVAL;
-    }
-}
-
-static void power_set_feature(struct power_module *module, feature_t feature, int state) {
-    struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
-
-    switch (feature) {
-        default:
-            ALOGW("Error setting the feature %d and state %d, it doesn't exist\n",
-                  feature, state);
-        break;
-    }
-}
-
+/***********************************
+ * Initializing
+ */
 static int power_open(const hw_module_t __unused * module, const char *name, hw_device_t **device) {
     int retval = 0; // 0 is ok; -1 is error
 
@@ -252,6 +79,198 @@ static int power_open(const hw_module_t __unused * module, const char *name, hw_
 
     ALOGD("%s: exit %d", __func__, retval);
     return retval;
+}
+
+static void power_init(struct power_module __unused * module) {
+    struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
+
+    // give them some boost
+    if (is_apollo_interactive()) {
+        sysfs_write(POWER_APOLLO_BOOSTPULSE, "1");
+    }
+    if (is_atlas_interactive()) {
+        sysfs_write(POWER_ATLAS_BOOSTPULSE, "1");
+    }
+
+    // set to normal power profile
+    power_set_profile(PROFILE_NORMAL);
+}
+
+/***********************************
+ * Hinting
+ */
+static void power_hint(struct power_module *module, power_hint_t hint, void *data) {
+    struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
+
+    pthread_mutex_lock(&sec->lock);
+
+    switch (hint) {
+
+        case POWER_HINT_INTERACTION:
+        case POWER_HINT_CPU_BOOST:
+        case POWER_HINT_LAUNCH:
+            power_hint_boost(data);
+            break;
+
+        case POWER_HINT_LOW_POWER:
+            power_set_profile(data ? PROFILE_POWER_SAVE : current_power_profile);
+            break;
+
+        case POWER_HINT_SET_PROFILE:
+            power_set_profile_by_name(data);
+            break;
+
+        case POWER_HINT_DISABLE_TOUCH:
+            power_input_device_state(data ? 0 : 1);
+            break;
+
+        default: break;
+    }
+
+    pthread_mutex_unlock(&sec->lock);
+}
+
+static void power_hint_boost(void *data) {
+    if (is_apollo_interactive()) {
+        sysfs_write(POWER_APOLLO_BOOSTPULSE, "1");
+    }
+    if (is_atlas_interactive()) {
+        sysfs_write(POWER_ATLAS_BOOSTPULSE, "1");
+    }
+}
+
+/***********************************
+ * Profiles
+ */
+static void power_set_profile_by_name(char *data) {
+    int profile = *((intptr_t *)data);
+    power_set_profile(profile);
+}
+
+static void power_set_profile(int profile) {
+    current_power_profile = profile;
+    switch (profile) {
+
+        case PROFILE_POWER_SAVE:
+
+            sysfs_write(POWER_APOLLO_SCALING_GOVERNOR, POWER_CPUGOV_POWER_SAVE);
+            sysfs_write(POWER_ATLAS_SCALING_GOVERNOR, POWER_CPUGOV_POWER_SAVE);
+
+            break;
+
+        case PROFILE_NORMAL:
+
+            sysfs_write(POWER_APOLLO_SCALING_GOVERNOR, POWER_CPUGOV_NORMAL);
+            sysfs_write(POWER_ATLAS_SCALING_GOVERNOR, POWER_CPUGOV_NORMAL);
+
+            break;
+
+        case PROFILE_HIGH_PERFORMANCE:
+
+            sysfs_write(POWER_APOLLO_SCALING_GOVERNOR, POWER_CPUGOV_HIGH_PERFORMANCE);
+            sysfs_write(POWER_ATLAS_SCALING_GOVERNOR, POWER_CPUGOV_HIGH_PERFORMANCE);
+
+            break;
+    }
+}
+
+/***********************************
+ * Inputs
+ */
+static void power_input_device_state(int state) {
+    switch (state) {
+        case STATE_DISABLE:
+
+            sysfs_write(POWER_ENABLE_TOUCHKEY, "0");
+            sysfs_write(POWER_ENABLE_TOUCHSCREEN, "0");
+
+            if (current_power_profile == PROFILE_POWER_SAVE) {
+                sysfs_write(POWER_ENABLE_GPIO, "0");
+            }
+
+            break;
+
+        case STATE_ENABLE:
+
+            sysfs_write(POWER_ENABLE_TOUCHKEY, "1");
+            sysfs_write(POWER_ENABLE_TOUCHSCREEN, "1");
+            sysfs_write(POWER_ENABLE_GPIO, "1");
+
+            break;
+    }
+}
+
+static void power_set_interactive(struct power_module __unused * module, int on) {
+    power_input_device_state(on ? 1 : 0);
+}
+
+/***********************************
+ * Features
+ */
+static int power_get_feature(struct power_module *module __unused, feature_t feature) {
+    switch (feature) {
+        case POWER_FEATURE_SUPPORTED_PROFILES: return 3;
+        default: return -EINVAL;
+    }
+}
+
+static void power_set_feature(struct power_module *module, feature_t feature, int state) {
+    struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
+
+    switch (feature) {
+        default:
+            ALOGW("Error setting the feature %d and state %d, it doesn't exist\n",
+                  feature, state);
+        break;
+    }
+}
+
+/***********************************
+ * Utilities
+ */
+static int sysfs_write(const char *path, const char *s) {
+    char buf[80];
+    int len, fd;
+
+    fd = open(path, O_WRONLY);
+
+    if (fd < 0) {
+        strerror_r(errno, buf, sizeof(buf));
+        ALOGE("Error opening %s: %s\n", path, buf);
+        return fd;
+    }
+
+    len = write(fd, s, strlen(s));
+    if (len < 0) {
+        strerror_r(errno, buf, sizeof(buf));
+        ALOGE("Error writing to %s: %s\n", path, buf);
+    }
+
+    close(fd);
+    return len;
+}
+
+static int sysfs_exists(const char *path) {
+    char buf[80];
+    int len, fd;
+
+    fd = open(path, O_WRONLY);
+
+    if (fd < 0) {
+        close(fd);
+        return 0;
+    }
+
+    close(fd);
+    return 1;
+}
+
+static int is_apollo_interactive() {
+    return sysfs_exists(POWER_APOLLO_BOOSTPULSE);
+}
+
+static int is_atlas_interactive() {
+    return sysfs_exists(POWER_ATLAS_BOOSTPULSE);
 }
 
 static struct hw_module_methods_t power_module_methods = {
