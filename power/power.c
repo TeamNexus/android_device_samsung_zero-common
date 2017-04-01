@@ -87,12 +87,7 @@ static void power_init(struct power_module __unused * module) {
 	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
 
 	// give them some boost
-	if (is_apollo_interactive()) {
-		sysfs_write(POWER_APOLLO_BOOSTPULSE, "1");
-	}
-	if (is_atlas_interactive()) {
-		sysfs_write(POWER_ATLAS_BOOSTPULSE, "1");
-	}
+	power_hint_boost(40000);
 
 	// set to normal power profile
 	power_set_profile(PROFILE_NORMAL);
@@ -243,7 +238,7 @@ static void power_set_profile(int profile) {
 	}
 }
 
-static void power_apply_profile(struct sec_power_profile data) {
+static void power_apply_profile(struct power_profile data) {
 	// manage GPU DVFS
 	sysfs_write(POWER_MALI_GPU_DVFS, data.mali.dvfs);
 	sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, data.mali.dvfs_governor);

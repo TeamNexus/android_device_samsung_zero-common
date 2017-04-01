@@ -110,7 +110,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 static void power_hint_cpu_boost(void *data);
 static void power_hint_interaction(void *data);
 static void power_hint_vsync(void *data);
-static void power_hint_boost(int boost_duration)
+static void power_hint_boost(int boost_duration);
 
 /***********************************
  * Profiles
