@@ -28,6 +28,8 @@ enum device_variant {
     G925K,
     G925L,
     G925I
+    G925W8
+    G920W8
 };
 
 device_variant match(std::string bl)
@@ -54,6 +56,10 @@ device_variant match(std::string bl)
         return G925L;
     } else if (bl.find("G925I") != std::string::npos) {
         return G925I;
+    } else if (bl.find("G925W8") != std::string::npos) {
+        return G925W8;
+    } else if (bl.find("G920W8") != std::string::npos) {
+        return G920W8;
     } else {
         return UNKNOWN;
     }

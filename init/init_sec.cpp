@@ -139,6 +139,20 @@ void vendor_load_properties()
             property_set("ro.product.model", "SM-G925I");
             property_set("ro.product.device", "zeroltexx");
             break;
+        case G925W8:
+           /* zeroltebmc */
+           property_set("ro.build.fingerprint", "samsung/zeroltebmc/zeroltebmc:6.0.1/MMB29K/G925W8VLU5CPK4:user/release-keys");
+           property_set("ro.build.description", "zeroltebmc-user 6.0.1 MMB29K G925W8VLU5CPK4 release-keys");
+           property_set("ro.product.model", "SM-G925W8");
+           property_set("ro.product.device", "zeroltebmc");
+           break;
+        case G920W8
+           /* zerofltebmc */
+           property_set("ro.build.fingerprint", "samsung/zerofltebmc/zerofltebmc:6.0.1/MM29K/G920W8VLU5CPK4:user/release-keys");
+           property_set("ro.build.description", "zerofltebmc-user 6.0.1 MMB29K G920W8VLU5CPK4 release-keys");
+           property_set("ro.product.model", "SM-G920W8");
+           property_set("ro.product.device", "zerofltebmc");
+           break;
         default:
             ERROR("Unknown bootloader id %s detected. bailing...\n", bootloader.c_str());
             return;
