@@ -164,6 +164,13 @@ static void power_hint_interaction(void *data) {
 
 static void power_hint_vsync(void *data) {
 	int pulse_requested = *((intptr_t *)data);
+
+	if (vsync_pulse_request_active) {
+		// previous pulse-request was not
+		// finished yet, don't start another one
+		return;
+	}
+
 	vsync_pulse_request_active = (pulse_requested != 0);
 
 	/*
@@ -178,10 +185,12 @@ static void power_hint_vsync(void *data) {
 
 		power_hint_boost((int)((1000 / 60) * 100));
 		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "3");
+		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "544");
 
 	} else {
 
 		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "1");
+		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "266");
 
 	}
 }
@@ -192,11 +201,11 @@ static void power_hint_boost(int boost_duration) {
 	// convert to string
 	snprintf(buffer, 16, "%d", boost_duration);
 
-    // everything lower than 1000 usecs would
-    // be a useless boost-duration
-    if (boost_duration => 1000) {
+	// everything lower than 1000 usecs would
+	// be a useless boost-duration
+	if (boost_duration => 1000) {
 		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, buffer);
-    }
+	}
 
 	if (is_apollo_interactive()) {
 		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE, "1");

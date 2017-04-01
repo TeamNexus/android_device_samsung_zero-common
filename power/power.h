@@ -35,6 +35,8 @@
 
 #define POWER_MALI_GPU_DVFS "/sys/class/misc/mali0/device/dvfs"
 #define POWER_MALI_GPU_DVFS_GOVERNOR "/sys/class/misc/mali0/device/dvfs_governor"
+#define POWER_MALI_GPU_DVFS_MIN_LOCK "/sys/class/misc/mali0/device/dvfs_min_lock"
+#define POWER_MALI_GPU_DVFS_MAX_LOCK "/sys/class/misc/mali0/device/dvfs_max_lock"
 #define POWER_CPU_HOTPLUG "/sys/power/enable_dm_hotplug"
 
 /***********************************
