@@ -87,7 +87,7 @@ lib64/libbauthserver.so
 lib64/libbauthtzcommon.so
 lib64/libsynaFpSensorTestNwd.so
 lib64/libegis_fp_normal_sensor_test.so
-lib64/hw/fingerprint.default.so
+lib64/hw/fingerprint.vendor.exynos5.so
 
 # Graphics
 lib/hw/gralloc.exynos5.so
