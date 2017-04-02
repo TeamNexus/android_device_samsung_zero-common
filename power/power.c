@@ -27,6 +27,10 @@
 #include <stdbool.h>
 #include <cutils/properties.h>
 
+#include <asm-generic/cputime_jiffies.h>
+#include <linux/kernel_stat.h>
+#include <linux/tick.h>
+
 #define LOG_TAG "Exynos5PowerHAL"
 #define LOG_NDEBUG 0
 #include <utils/Log.h>
@@ -46,7 +50,9 @@ struct sec_power_module {
 	((struct_name *)((char *)(addr) - offsetof(struct_name, field_name)))
 
 static int current_power_profile = PROFILE_NORMAL;
-static int vsync_pulse_request_active = 0;
+static int vsync_pulse_requests_active = 0;
+static int vsync_pulse_request_any_active = 0;
+static int vsync_pulse_request_cpufreq[2] = { 200000, 200000 };
 
 /***********************************
  * Initializing
@@ -156,18 +162,21 @@ static void power_hint_vsync(void *data) {
 	int pulse_requested = *((intptr_t *)data);
 	struct power_profile def_profile = power_profiles[current_power_profile];
 
+	int cpufreq_apollo, cpufreq_atlas;
+
 	if (current_power_profile == PROFILE_POWER_SAVE) {
 		// no vsync-boost when in powersave-mode
 		return;
 	}
 
-	if (vsync_pulse_request_active) {
+	/* if (vsync_pulse_request_active) {
 		// previous pulse-request was not
 		// finished yet, don't start another one
+		ALOGE("%s: OS tried to request a vsync-pulse while another one is still active", __func__);
 		return;
-	}
+	} */
 
-	vsync_pulse_request_active = (pulse_requested != 0);
+	vsync_pulse_request_any_active = vsync_pulse_requests_active > 0 || (pulse_requested != 0);
 
 	/***********************************
 	 * Mali GPU DVFS Governor:
@@ -178,26 +187,33 @@ static void power_hint_vsync(void *data) {
 	 * 3: Booster
 	 */
 
-	if (vsync_pulse_request_active) {
+	if (pulse_requested) {
 
-		if (current_power_profile != PROFILE_HIGH_PERFORMANCE) {
-			// cpu boost
-			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
+		// cpu boost
+		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
+		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
 
-			// gpu
-			sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "3");
-		} else {
-			// cpu freq
-			sysfs_write(POWER_APOLLO_MIN_FREQ, "1000000");
-			sysfs_write(POWER_ATLAS_MIN_FREQ, "1400000");
-		}
+		cpufreq_apollo = power_hint_vsync_cpufreq(0);
+		cpufreq_atlas = power_hint_vsync_cpufreq(1);
+
+		// cpu freq
+		power_hint_vsync_apply_cpufreq(POWER_APOLLO_MIN_FREQ, cpufreq_apollo);
+		power_hint_vsync_apply_cpufreq(POWER_ATLAS_MIN_FREQ, cpufreq_atlas);
 
 		// gpu
+		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "3");
 		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "544");
 		sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
 
+		// one request more
+		vsync_pulse_requests_active++;
+
 	} else {
+
+		// set back to default
+		vsync_pulse_request_cpufreq[0] = 200000;
+		vsync_pulse_request_cpufreq[1] = 200000;
+
 		// cpu boost
 		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, def_profile.cpugov.apollo.boost);
 		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, def_profile.cpugov.atlas.boost);
@@ -210,7 +226,67 @@ static void power_hint_vsync(void *data) {
 		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, def_profile.mali.dvfs_governor);
 		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, def_profile.mali.dvfs_min_lock);
 		sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, def_profile.mali.dvfs_max_lock);
+
+		// one request less
+		vsync_pulse_requests_active--;
 	}
+}
+
+static int power_hint_vsync_cpufreq(int cluster) {
+	u64 cpuall;
+	u64 cputime_avg, cputime0, cputime1, cputime2, cputime3;
+	int cpufreq, corr_cpufreq, min_cpufreq, max_cpufreq;
+
+	cpufreq = vsync_pulse_request_cpufreq[cluster];
+	corr_cpufreq = -1;
+
+	if (cluster == 0) {
+		min_cpufreq = 200000;
+		max_cpufreq = 1700000;
+	} else if (cluster == 1) {
+		min_cpufreq = 200000;
+		max_cpufreq = 2300000;
+	} else {
+		return -1; // invalid cluster
+	}
+
+	// cpufreq: apollo
+	cputime0 = get_cpu_idle_time((cluster * 4) + 0, &cpuall, 1);
+	cputime1 = get_cpu_idle_time((cluster * 4) + 1, &cpuall, 1);
+	cputime2 = get_cpu_idle_time((cluster * 4) + 2, &cpuall, 1);
+	cputime3 = get_cpu_idle_time((cluster * 4) + 3, &cpuall, 1);
+	cputime_avg = (cputime0 + cputime1 + cputime2 + cputime3) / 4;
+
+	// use next frequency if load is higher than 80%
+	// step down if the load if less than 50%
+	if (cputime_avg >= 80) {
+		cpufreq += 100000;
+
+		// max frequency reached, reset
+		if (cpufreq > max_cpufreq) {
+			cpufreq = max_cpufreq;
+		}
+	} else if (cputime_avg < 50) {
+		cpufreq -= 100000;
+
+		// min frequency reached, reset
+		if (cpufreq < 200000) {
+			cpufreq = 200000;
+		}
+	}
+
+	vsync_pulse_request_cpufreq[cluster] = cpufreq;
+	return correct_cpu_frequencies(cluster, cpufreq);
+}
+
+static void power_hint_vsync_apply_cpufreq(char *path, int freq) {
+	char buffer[16];
+
+	// convert to string
+	snprintf(buffer, 16, "%d", freq);
+
+	// apply
+	sysfs_write(path, buffer);
 }
 
 static void power_hint_boost(int boost_duration) {
@@ -417,6 +493,80 @@ static int is_apollo_interactive() {
 
 static int is_atlas_interactive() {
 	return sysfs_exists(POWER_ATLAS_INTERACTIVE_BOOSTPULSE);
+}
+
+static int correct_cpu_frequencies(int cluster, int freq) {
+	switch (freq) {
+
+		case 1100000:
+			if (cluster == 0) { // apollo
+				return 1104000;
+			}
+			break;
+
+		case 1300000:
+			if (cluster == 0) { // apollo
+				return 1296000;
+			}
+			break;
+
+		case 1700000:
+			return 1704000;
+
+		case 1900000:
+			if (cluster == 1) { // atlas
+				return 1896000;
+			}
+			break;
+
+		case 2300000:
+			if (cluster == 1) { // atlas
+				return 2304000;
+			}
+			break;
+
+		case 2500000:
+			if (cluster == 1) { // atlas
+				return 2496000;
+			}
+			break;
+	}
+
+	return freq;
+}
+
+static inline cputime64_t get_cpu_idle_time_jiffy(unsigned int cpu, cputime64_t *wall)
+{
+	u64 idle_time;
+	u64 cur_wall_time;
+	u64 busy_time;
+
+	cur_wall_time = jiffies64_to_cputime64(get_jiffies_64());
+
+	busy_time  = kcpustat_cpu(cpu).cpustat[CPUTIME_USER];
+	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SYSTEM];
+	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_IRQ];
+	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SOFTIRQ];
+	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_STEAL];
+	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_NICE];
+
+	idle_time = cur_wall_time - busy_time;
+	if (wall)
+		*wall = jiffies_to_usecs(cur_wall_time);
+
+	return jiffies_to_usecs(idle_time);
+}
+
+static inline cputime64_t get_cpu_idle_time(unsigned int cpu, cputime64_t *wall, int io_is_busy)
+{
+	u64 idle_time = get_cpu_idle_time_us(cpu, wall);
+
+	if (idle_time == -1ULL)
+		idle_time = get_cpu_idle_time_jiffy(cpu, wall);
+	else if (!io_is_busy)
+		idle_time += get_cpu_iowait_time_us(cpu, wall);
+
+	return idle_time;
 }
 
 static struct hw_module_methods_t power_module_methods = {

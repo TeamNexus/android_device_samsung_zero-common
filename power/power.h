@@ -97,6 +97,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 static void power_hint_cpu_boost(void *data);
 static void power_hint_interaction(void *data);
 static void power_hint_vsync(void *data);
+static int power_hint_vsync_cpufreq(int cluster);
 static void power_hint_boost(int boost_duration);
 
 /***********************************
@@ -125,5 +126,8 @@ static int sysfs_write(const char *path, char *s);
 static int sysfs_exists(const char *path);
 static int is_apollo_interactive();
 static int is_atlas_interactive();
+static int correct_cpu_frequencies(int cluster, int freq);
+static inline cputime64_t get_cpu_idle_time_jiffy(unsigned int cpu, cputime64_t *wall);
+static inline cputime64_t get_cpu_idle_time(unsigned int cpu, cputime64_t *wall, int io_is_busy);
 
 #endif // EXYNOS5_POWER_HAL_H_INCLUDED
