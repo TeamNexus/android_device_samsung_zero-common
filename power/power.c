@@ -27,10 +27,6 @@
 #include <stdbool.h>
 #include <cutils/properties.h>
 
-#include <asm-generic/cputime.h>
-#include <linux/kernel_stat.h>
-#include <linux/tick.h>
-
 #define LOG_TAG "Exynos5PowerHAL"
 #define LOG_NDEBUG 0
 #include <utils/Log.h>
