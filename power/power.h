@@ -44,35 +44,21 @@
  * CPU frequencies settings
  */
 // apollo
-#define POWER_APOLLO_MAX_FREQ "/sys/power/ipa/little_max_freq"
+#define POWER_APOLLO_MIN_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq"
+#define POWER_APOLLO_MAX_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"
 #define POWER_APOLLO_CORE1_ONLINE "/sys/devices/system/cpu/cpu0/online"
 #define POWER_APOLLO_CORE2_ONLINE "/sys/devices/system/cpu/cpu1/online"
 #define POWER_APOLLO_CORE3_ONLINE "/sys/devices/system/cpu/cpu2/online"
 #define POWER_APOLLO_CORE4_ONLINE "/sys/devices/system/cpu/cpu3/online"
 #define POWER_APOLLO_SCALING_GOVERNOR "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
-#define POWER_APOLLO_CORE1_MIN_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq"
-#define POWER_APOLLO_CORE2_MIN_FREQ "/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_min_freq"
-#define POWER_APOLLO_CORE3_MIN_FREQ "/sys/devices/system/cpu/cpu2/cpufreq/cpuinfo_min_freq"
-#define POWER_APOLLO_CORE4_MIN_FREQ "/sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_min_freq"
-#define POWER_APOLLO_CORE1_MAX_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"
-#define POWER_APOLLO_CORE2_MAX_FREQ "/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_max_freq"
-#define POWER_APOLLO_CORE3_MAX_FREQ "/sys/devices/system/cpu/cpu2/cpufreq/cpuinfo_max_freq"
-#define POWER_APOLLO_CORE4_MAX_FREQ "/sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_max_freq"
 // atlas
-#define POWER_ATLAS_MAX_FREQ "/sys/power/ipa/big_max_freq"
+#define POWER_ATLAS_MIN_FREQ "/sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq"
+#define POWER_ATLAS_MAX_FREQ "/sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq"
 #define POWER_ATLAS_CORE1_ONLINE "/sys/devices/system/cpu/cpu4/online"
 #define POWER_ATLAS_CORE2_ONLINE "/sys/devices/system/cpu/cpu5/online"
 #define POWER_ATLAS_CORE3_ONLINE "/sys/devices/system/cpu/cpu6/online"
 #define POWER_ATLAS_CORE4_ONLINE "/sys/devices/system/cpu/cpu7/online"
 #define POWER_ATLAS_SCALING_GOVERNOR "/sys/devices/system/cpu/cpu4/cpufreq/scaling_governor"
-#define POWER_ATLAS_CORE1_MIN_FREQ "/sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq"
-#define POWER_ATLAS_CORE2_MIN_FREQ "/sys/devices/system/cpu/cpu5/cpufreq/cpuinfo_min_freq"
-#define POWER_ATLAS_CORE3_MIN_FREQ "/sys/devices/system/cpu/cpu6/cpufreq/cpuinfo_min_freq"
-#define POWER_ATLAS_CORE4_MIN_FREQ "/sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_min_freq"
-#define POWER_ATLAS_CORE1_MAX_FREQ "/sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq"
-#define POWER_ATLAS_CORE2_MAX_FREQ "/sys/devices/system/cpu/cpu5/cpufreq/cpuinfo_max_freq"
-#define POWER_ATLAS_CORE3_MAX_FREQ "/sys/devices/system/cpu/cpu6/cpufreq/cpuinfo_max_freq"
-#define POWER_ATLAS_CORE4_MAX_FREQ "/sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_max_freq"
 
 /***********************************
  * Interactive cpugov-settings

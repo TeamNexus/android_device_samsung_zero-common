@@ -159,6 +159,7 @@ static void power_hint_interaction(void *data) {
 
 static void power_hint_vsync(void *data) {
 	int pulse_requested = *((intptr_t *)data);
+	power_profile def_profile = power_profiles[current_power_profile];
 
 	if (current_power_profile == PROFILE_POWER_SAVE) {
 		// no vsync-boost when in powersave-mode
@@ -185,31 +186,35 @@ static void power_hint_vsync(void *data) {
 	if (vsync_pulse_request_active) {
 
 		if (current_power_profile != PROFILE_HIGH_PERFORMANCE) {
-			// cpu
+			// cpu boost
 			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
 			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
 
 			// gpu
 			sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "3");
+		} else {
+			// cpu freq
+			sysfs_write(POWER_APOLLO_MIN_FREQ, "1000000");
+			sysfs_write(POWER_ATLAS_MIN_FREQ, "1400000");
 		}
 
 		// gpu
 		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "544");
+		sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
 
 	} else {
+		// cpu boost
+		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, def_profile.cpugov.apollo.boost);
+		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, def_profile.cpugov.atlas.boost);
 
-		if (current_power_profile != PROFILE_HIGH_PERFORMANCE) {
-			// cpu
-			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
-
-			// gpu
-			sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "1");
-		}
+		// cpu freq
+		sysfs_write(POWER_APOLLO_MIN_FREQ, def_profile.cpuminfreq.apollo);
+		sysfs_write(POWER_ATLAS_MIN_FREQ, def_profile.cpuminfreq.atlas);
 
 		// gpu
-		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "266");
-
+		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, def_profile.mali.dvfs_governor);
+		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, def_profile.mali.dvfs_min_lock);
+		sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, def_profile.mali.dvfs_max_lock);
 	}
 }
 
@@ -270,27 +275,12 @@ static void power_apply_profile(struct power_profile data) {
 	sysfs_write(POWER_CPU_HOTPLUG, "0");
 
 	// set min frequency
-	sysfs_write(POWER_APOLLO_CORE1_MIN_FREQ, data.cpuminfreq.apollo.core1);
-	sysfs_write(POWER_APOLLO_CORE2_MIN_FREQ, data.cpuminfreq.apollo.core2);
-	sysfs_write(POWER_APOLLO_CORE3_MIN_FREQ, data.cpuminfreq.apollo.core3);
-	sysfs_write(POWER_APOLLO_CORE4_MIN_FREQ, data.cpuminfreq.apollo.core4);
-	sysfs_write(POWER_ATLAS_CORE1_MIN_FREQ, data.cpuminfreq.atlas.core1);
-	sysfs_write(POWER_ATLAS_CORE2_MIN_FREQ, data.cpuminfreq.atlas.core2);
-	sysfs_write(POWER_ATLAS_CORE3_MIN_FREQ, data.cpuminfreq.atlas.core3);
-	sysfs_write(POWER_ATLAS_CORE4_MIN_FREQ, data.cpuminfreq.atlas.core4);
+	sysfs_write(POWER_APOLLO_MIN_FREQ, data.cpuminfreq.apollo);
+	sysfs_write(POWER_ATLAS_MIN_FREQ, data.cpumaxfreq.atlas);
 
 	// set max frequency
-	sysfs_write(POWER_APOLLO_MAX_FREQ, data.cpumaxfreq.apollo.core1);
-	sysfs_write(POWER_ATLAS_MAX_FREQ, data.cpumaxfreq.atlas.core1);
-
-	sysfs_write(POWER_APOLLO_CORE1_MAX_FREQ, data.cpumaxfreq.apollo.core1);
-	sysfs_write(POWER_APOLLO_CORE2_MAX_FREQ, data.cpumaxfreq.apollo.core2);
-	sysfs_write(POWER_APOLLO_CORE3_MAX_FREQ, data.cpumaxfreq.apollo.core3);
-	sysfs_write(POWER_APOLLO_CORE4_MAX_FREQ, data.cpumaxfreq.apollo.core4);
-	sysfs_write(POWER_ATLAS_CORE1_MAX_FREQ, data.cpumaxfreq.atlas.core1);
-	sysfs_write(POWER_ATLAS_CORE2_MAX_FREQ, data.cpumaxfreq.atlas.core2);
-	sysfs_write(POWER_ATLAS_CORE3_MAX_FREQ, data.cpumaxfreq.atlas.core3);
-	sysfs_write(POWER_ATLAS_CORE4_MAX_FREQ, data.cpumaxfreq.atlas.core4);
+	sysfs_write(POWER_APOLLO_MAX_FREQ, data.cpuminfreq.apollo);
+	sysfs_write(POWER_ATLAS_MAX_FREQ, data.cpumaxfreq.atlas);
 
 	// online cores
 	sysfs_write(POWER_APOLLO_CORE1_ONLINE, data.cpuonline.apollo.core1);

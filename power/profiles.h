@@ -24,6 +24,13 @@
 #ifndef EXYNOS5_POWER_HAL_PROFILES_INCLUDED
 #define EXYNOS5_POWER_HAL_PROFILES_INCLUDED
 
+struct power_profile_cpuclusters {
+	char *core1;
+	char *core2;
+	char *core3;
+	char *core4;
+};
+
 struct power_profile_cpucores {
 	char *core1;
 	char *core2;
@@ -46,17 +53,12 @@ struct power_profile {
 	struct {
 		char *dvfs;
 		char *dvfs_governor;
+		char *dvfs_min_lock;
+		char *dvfs_max_lock;
 	} mali;
 
-	struct {
-		struct power_profile_cpucores apollo; // ca53, little cluster
-		struct power_profile_cpucores atlas; // ca57, big cluster
-	} cpumaxfreq;
-
-	struct {
-		struct power_profile_cpucores apollo; // ca53, little cluster
-		struct power_profile_cpucores atlas; // ca57, big cluster
-	} cpuminfreq;
+	struct power_profile_cpuclusters cpumaxfreq;
+	struct power_profile_cpuclusters cpuminfreq;
 
 	struct {
 		struct power_profile_cpucores apollo; // ca53, little cluster
@@ -76,35 +78,17 @@ struct power_profile {
 	{
 		/* .mali = */ {
 			/* .dvfs          = */ "0",
-			/* .dvfs_governor = */ "1"
+			/* .dvfs_governor = */ "1",
+			/* .dvfs_min_lock = */ "266",
+			/* .dvfs_max_lock = */ "266"
 		},
 		/* .cpuminfreq = */ {
-			/* .apollo = */ {
-				/* .core1 = */ "200000",
-				/* .core2 = */ "200000",
-				/* .core3 = */ "200000",
-				/* .core4 = */ "200000"
-			},
-			/* .atlas = */ {
-				/* .core1 = */ "200000",
-				/* .core2 = */ "200000",
-				/* .core3 = */ "200000",
-				/* .core4 = */ "200000"
-			}
+			/* .apollo = */ "200000",
+			/* .atlas = */ "200000"
 		},
 		/* .cpumaxfreq = */ {
-			/* .apollo = */ {
-				/* .core1 = */ "600000",
-				/* .core2 = */ "600000",
-				/* .core3 = */ "200000",
-				/* .core4 = */ "200000"
-			},
-			/* .atlas = */ {
-				/* .core1 = */ "600000",
-				/* .core2 = */ "600000",
-				/* .core3 = */ "200000",
-				/* .core4 = */ "200000"
-			}
+			/* .apollo = */ "400000",
+			/* .atlas = */ "800000"
 		},
 		/* .cpuonline = */ {
 			/* .apollo = */ {
@@ -122,22 +106,22 @@ struct power_profile {
 		},
 		/* .cpugov = */ {
 			/* .apollo = */ {
-				/* .above_hispeed_delay = */ "19000 500000:49000 600000:19000",
+				/* .above_hispeed_delay = */ "19000 300000:49000 400000:19000",
 				/* .boost               = */ "0",
 				/* .boostpulse          = */ "0",
 				/* .boostpulse_duration = */ "20000",
 				/* .go_hispeed_load     = */ "85",
-				/* .hispeed_freq        = */ "600000", // allow 200MHz+ to minimum of 400MHz
-				/* .target_loads        = */ "75 500000:85 600000:90"
+				/* .hispeed_freq        = */ "400000", // allow 200MHz+ to minimum of 400MHz
+				/* .target_loads        = */ "75 300000:85 400000:90"
 			},
 			/* .atlas = */ {
-				/* .above_hispeed_delay = */ "79000 900000:49000 1000000:19000",
+				/* .above_hispeed_delay = */ "79000 500000:49000 800000:19000",
 				/* .boost               = */ "0",
 				/* .boostpulse          = */ "0",
 				/* .boostpulse_duration = */ "20000",
 				/* .go_hispeed_load     = */ "99",
-				/* .hispeed_freq        = */ "1000000", // allow 200MHz+ to minimum of 800Mhz
-				/* .target_loads        = */ "87 900000:85 1000000:90"
+				/* .hispeed_freq        = */ "800000", // allow 200MHz+ to minimum of 800Mhz
+				/* .target_loads        = */ "87 500000:85 800000:90"
 			}
 		}
 	},
@@ -148,35 +132,17 @@ struct power_profile {
 	{
 		/* .mali = */ {
 			/* .dvfs          = */ "1",
-			/* .dvfs_governor = */ "1"
+			/* .dvfs_governor = */ "1",
+			/* .dvfs_min_lock = */ "266",
+			/* .dvfs_max_lock = */ "772"
 		},
 		/* .cpuminfreq = */ {
-			/* .apollo = */ {
-				/* .core1 = */ "200000",
-				/* .core2 = */ "200000",
-				/* .core3 = */ "200000",
-				/* .core4 = */ "200000"
-			},
-			/* .atlas = */ {
-				/* .core1 = */ "200000",
-				/* .core2 = */ "200000",
-				/* .core3 = */ "200000",
-				/* .core4 = */ "200000"
-			}
+			/* .apollo = */ "200000",
+			/* .atlas = */ "200000"
 		},
 		/* .cpumaxfreq = */ {
-			/* .apollo = */ {
-				/* .core1 = */ "1200000",
-				/* .core2 = */ "1200000",
-				/* .core3 = */ "600000",
-				/* .core4 = */ "600000"
-			},
-			/* .atlas = */ {
-				/* .core1 = */ "1600000",
-				/* .core2 = */ "1600000",
-				/* .core3 = */ "1000000",
-				/* .core4 = */ "1000000"
-			}
+			/* .apollo = */ "1200000",
+			/* .atlas = */ "1600000"
 		},
 		/* .cpuonline = */ {
 			/* .apollo = */ {
@@ -220,35 +186,17 @@ struct power_profile {
 	{
 		/* .mali = */ {
 			/* .dvfs          = */ "1",
-			/* .dvfs_governor = */ "3"
+			/* .dvfs_governor = */ "3",
+			/* .dvfs_min_lock = */ "420",
+			/* .dvfs_max_lock = */ "772"
 		},
 		/* .cpuminfreq = */ {
-			/* .apollo = */ {
-				/* .core1 = */ "800000",
-				/* .core2 = */ "800000",
-				/* .core3 = */ "800000",
-				/* .core4 = */ "800000"
-			},
-			/* .atlas = */ {
-				/* .core1 = */ "1200000",
-				/* .core2 = */ "1200000",
-				/* .core3 = */ "1200000",
-				/* .core4 = */ "1200000"
-			}
+			/* .apollo = */ "800000",
+			/* .atlas = */ "1200000"
 		},
 		/* .cpumaxfreq = */ {
-			/* .apollo = */ {
-				/* .core1 = */ "1704000",
-				/* .core2 = */ "1704000",
-				/* .core3 = */ "1704000",
-				/* .core4 = */ "1704000"
-			},
-			/* .atlas = */ {
-				/* .core1 = */ "2304000",
-				/* .core2 = */ "2304000",
-				/* .core3 = */ "2304000",
-				/* .core4 = */ "2304000"
-			}
+			/* .apollo = */ "1704000",
+			/* .atlas = */ "2304000"
 		},
 		/* .cpuonline = */ {
 			/* .apollo = */ {
