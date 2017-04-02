@@ -27,7 +27,7 @@
 #include <stdbool.h>
 #include <cutils/properties.h>
 
-#include <asm-generic/cputime_jiffies.h>
+#include <asm-generic/cputime.h>
 #include <linux/kernel_stat.h>
 #include <linux/tick.h>
 
