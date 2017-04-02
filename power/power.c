@@ -341,10 +341,10 @@ static void power_apply_profile(struct power_profile data) {
 
 	// set min frequency
 	sysfs_write(POWER_APOLLO_MIN_FREQ, data.cpuminfreq.apollo);
-	sysfs_write(POWER_ATLAS_MIN_FREQ, data.cpumaxfreq.atlas);
+	sysfs_write(POWER_ATLAS_MIN_FREQ, data.cpuminfreq.atlas);
 
 	// set max frequency
-	sysfs_write(POWER_APOLLO_MAX_FREQ, data.cpuminfreq.apollo);
+	sysfs_write(POWER_APOLLO_MAX_FREQ, data.cpumaxfreq.apollo);
 	sysfs_write(POWER_ATLAS_MAX_FREQ, data.cpumaxfreq.atlas);
 
 	// online cores
