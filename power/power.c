@@ -27,6 +27,8 @@
 #include <stdbool.h>
 #include <cutils/properties.h>
 
+#include <asm-generic/percpu.h>
+
 #define LOG_TAG "Exynos5PowerHAL"
 #define LOG_NDEBUG 0
 #include <utils/Log.h>
@@ -229,12 +231,9 @@ static void power_hint_vsync(void *data) {
 }
 
 static int power_hint_vsync_cpufreq(int cluster) {
-	u64 cpuall;
-	u64 cputime_avg, cputime0, cputime1, cputime2, cputime3;
-	int cpufreq, corr_cpufreq, min_cpufreq, max_cpufreq;
+	int cpuutil = 0, cpufreq = 0, min_cpufreq = 0, max_cpufreq = 0;
 
 	cpufreq = vsync_pulse_request_cpufreq[cluster];
-	corr_cpufreq = -1;
 
 	if (cluster == 0) {
 		min_cpufreq = 200000;
@@ -246,29 +245,30 @@ static int power_hint_vsync_cpufreq(int cluster) {
 		return -1; // invalid cluster
 	}
 
-	// get real cpu-usage if possible, ...
-	cputime_avg = 50;
+	// get current cpu utilization
+	if (cluster == 0) {
+		cpuutil = per_cpu(cpu_util, 0);
+	} else if (cluster == 1) {
+		cpuutil = per_cpu(cpu_util, 4);
+	} // nothing to do if invalid, handled above
 
 	// use next frequency if load is higher than 80%
 	// step down if the load if less than 50%
-	if (cputime_avg >= 80) {
+	if (cpuutil >= 80) {
 		cpufreq += 100000;
 
 		// max frequency reached, reset
 		if (cpufreq > max_cpufreq) {
 			cpufreq = max_cpufreq;
 		}
-	} else if (cputime_avg < 50) {
+	} else if (cpuutil < 50) {
 		cpufreq -= 100000;
 
 		// min frequency reached, reset
-		if (cpufreq < 200000) {
-			cpufreq = 200000;
+		if (cpufreq < min_cpufreq) {
+			cpufreq = min_cpufreq;
 		}
 	}
-
-	// ... meanwhile, we set static frequencies
-	cpufreq = 1100000;
 
 	vsync_pulse_request_cpufreq[cluster] = cpufreq;
 	return correct_cpu_frequencies(cluster, cpufreq);
