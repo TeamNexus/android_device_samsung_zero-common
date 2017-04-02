@@ -44,16 +44,16 @@
  * CPU frequencies settings
  */
 // apollo
-#define POWER_APOLLO_MIN_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq"
-#define POWER_APOLLO_MAX_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq"
+#define POWER_APOLLO_MIN_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq"
+#define POWER_APOLLO_MAX_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq"
 #define POWER_APOLLO_CORE1_ONLINE "/sys/devices/system/cpu/cpu0/online"
 #define POWER_APOLLO_CORE2_ONLINE "/sys/devices/system/cpu/cpu1/online"
 #define POWER_APOLLO_CORE3_ONLINE "/sys/devices/system/cpu/cpu2/online"
 #define POWER_APOLLO_CORE4_ONLINE "/sys/devices/system/cpu/cpu3/online"
 #define POWER_APOLLO_SCALING_GOVERNOR "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
 // atlas
-#define POWER_ATLAS_MIN_FREQ "/sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq"
-#define POWER_ATLAS_MAX_FREQ "/sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq"
+#define POWER_ATLAS_MIN_FREQ "/sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq"
+#define POWER_ATLAS_MAX_FREQ "/sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq"
 #define POWER_ATLAS_CORE1_ONLINE "/sys/devices/system/cpu/cpu4/online"
 #define POWER_ATLAS_CORE2_ONLINE "/sys/devices/system/cpu/cpu5/online"
 #define POWER_ATLAS_CORE3_ONLINE "/sys/devices/system/cpu/cpu6/online"
