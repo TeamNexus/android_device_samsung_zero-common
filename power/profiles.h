@@ -92,14 +92,14 @@ struct power_profile {
 			/* .apollo = */ {
 				/* .core1 = */ "1",
 				/* .core2 = */ "1",
-				/* .core3 = */ "0",
-				/* .core4 = */ "0"
+				/* .core3 = */ "1",
+				/* .core4 = */ "1"
 			},
 			/* .atlas = */ {
 				/* .core1 = */ "1",
 				/* .core2 = */ "1",
-				/* .core3 = */ "0",
-				/* .core4 = */ "0"
+				/* .core3 = */ "1",
+				/* .core4 = */ "1"
 			}
 		},
 		/* .cpugov = */ {

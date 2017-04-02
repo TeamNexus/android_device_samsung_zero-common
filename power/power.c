@@ -318,15 +318,15 @@ static void power_set_profile(int profile) {
 	switch (profile) {
 
 		case PROFILE_POWER_SAVE:
-			power_apply_profile(power_profiles[PROFILE_POWER_SAVE]);
+			power_apply_profile(power_profiles[0]);
 			break;
 
 		case PROFILE_NORMAL:
-			power_apply_profile(power_profiles[PROFILE_NORMAL]);
+			power_apply_profile(power_profiles[1]);
 			break;
 
 		case PROFILE_HIGH_PERFORMANCE:
-			power_apply_profile(power_profiles[PROFILE_HIGH_PERFORMANCE]);
+			power_apply_profile(power_profiles[2]);
 			break;
 	}
 }
@@ -335,6 +335,8 @@ static void power_apply_profile(struct power_profile data) {
 	// manage GPU DVFS
 	sysfs_write(POWER_MALI_GPU_DVFS, data.mali.dvfs);
 	sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, data.mali.dvfs_governor);
+	sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, data.mali.dvfs_min_lock);
+	sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, data.mali.dvfs_max_lock);
 
 	// disable CPU hotplugging
 	sysfs_write(POWER_CPU_HOTPLUG, "0");
