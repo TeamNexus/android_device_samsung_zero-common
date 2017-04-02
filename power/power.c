@@ -160,6 +160,11 @@ static void power_hint_interaction(void *data) {
 static void power_hint_vsync(void *data) {
 	int pulse_requested = *((intptr_t *)data);
 
+	if (current_power_profile == PROFILE_POWER_SAVE) {
+		// no vsync-boost when in powersave-mode
+		return;
+	}
+
 	if (vsync_pulse_request_active) {
 		// previous pulse-request was not
 		// finished yet, don't start another one
@@ -168,7 +173,7 @@ static void power_hint_vsync(void *data) {
 
 	vsync_pulse_request_active = (pulse_requested != 0);
 
-	/*
+	/***********************************
 	 * Mali GPU DVFS Governor:
 	 *
 	 * 0: Default
@@ -176,15 +181,33 @@ static void power_hint_vsync(void *data) {
 	 * 2: Static
 	 * 3: Booster
 	 */
+
 	if (vsync_pulse_request_active) {
 
-		power_hint_boost((int)((1000 / 60) * 100));
-		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "3");
+		if (current_power_profile != PROFILE_HIGH_PERFORMANCE) {
+			// cpu
+			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
+
+			// gpu
+			sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "3");
+		}
+
+		// gpu
 		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "544");
 
 	} else {
 
-		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "1");
+		if (current_power_profile != PROFILE_HIGH_PERFORMANCE) {
+			// cpu
+			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
+
+			// gpu
+			sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "1");
+		}
+
+		// gpu
 		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "266");
 
 	}
@@ -198,7 +221,7 @@ static void power_hint_boost(int boost_duration) {
 
 	// everything lower than 1000 usecs would
 	// be a useless boost-duration
-	if (boost_duration => 1000) {
+	if (boost_duration >= 1000) {
 		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, buffer);
 	}
 

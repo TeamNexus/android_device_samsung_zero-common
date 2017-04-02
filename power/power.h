@@ -15,11 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef EXYNOS5_POWER_HAL_H_INCLUDED
-
 #include <hardware/hardware.h>
 #include <hardware/power.h>
 
+#include "profiles.h"
+
+#ifndef EXYNOS5_POWER_HAL_H_INCLUDED
 #define EXYNOS5_POWER_HAL_H_INCLUDED
 
 #define PROFILE_POWER_SAVE 0

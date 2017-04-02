@@ -21,6 +21,9 @@
  * CPU clock frequencies. Be warned, you do this on your own risk. If you patched kernel,
  * update the CPUCLK_* defines in power.h to enable support for the new frequencies in Exynos5PowerHAL
  */
+#ifndef EXYNOS5_POWER_HAL_PROFILES_INCLUDED
+#define EXYNOS5_POWER_HAL_PROFILES_INCLUDED
+
 struct power_profile_cpucores {
 	char *core1;
 	char *core2;
@@ -66,14 +69,14 @@ struct power_profile {
 	} cpugov;
 
 
-} power_profiles[4] = {
+} power_profiles[3] = {
 	/************************************
 	 * PROFILE_POWER_SAVE
 	 */
 	{
 		/* .mali = */ {
 			/* .dvfs          = */ "0",
-			/* .dvfs_governor = */ "Interactive"
+			/* .dvfs_governor = */ "1"
 		},
 		/* .cpuminfreq = */ {
 			/* .apollo = */ {
@@ -145,7 +148,7 @@ struct power_profile {
 	{
 		/* .mali = */ {
 			/* .dvfs          = */ "1",
-			/* .dvfs_governor = */ "Interactive"
+			/* .dvfs_governor = */ "1"
 		},
 		/* .cpuminfreq = */ {
 			/* .apollo = */ {
@@ -217,7 +220,7 @@ struct power_profile {
 	{
 		/* .mali = */ {
 			/* .dvfs          = */ "1",
-			/* .dvfs_governor = */ "Boost"
+			/* .dvfs_governor = */ "3"
 		},
 		/* .cpuminfreq = */ {
 			/* .apollo = */ {
@@ -284,3 +287,5 @@ struct power_profile {
 	}
 
 };
+
+#endif // EXYNOS5_POWER_HAL_PROFILES_INCLUDED
