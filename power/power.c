@@ -159,7 +159,7 @@ static void power_hint_interaction(void *data) {
 
 static void power_hint_vsync(void *data) {
 	int pulse_requested = *((intptr_t *)data);
-	power_profile def_profile = power_profiles[current_power_profile];
+	struct power_profile def_profile = power_profiles[current_power_profile];
 
 	if (current_power_profile == PROFILE_POWER_SAVE) {
 		// no vsync-boost when in powersave-mode

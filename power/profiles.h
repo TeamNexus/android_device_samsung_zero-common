@@ -25,10 +25,8 @@
 #define EXYNOS5_POWER_HAL_PROFILES_INCLUDED
 
 struct power_profile_cpuclusters {
-	char *core1;
-	char *core2;
-	char *core3;
-	char *core4;
+	char *apollo;
+	char *atlas;
 };
 
 struct power_profile_cpucores {
