@@ -144,17 +144,12 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 
 static void power_hint_cpu_boost(void *data) {
 	int boost_duration = *((intptr_t *)data);
-
-	// give some more power even after time ended
-	power_hint_boost((int)(boost_duration * 1.5));
+	power_hint_boost((int)boost_duration);
 }
 
 static void power_hint_interaction(void *data) {
 	int boost_duration = *((intptr_t *)data);
-	boost_duration *= 1000; // ms to usec
-
-	// give some more power even after time ended
-	power_hint_boost((int)(boost_duration * 1.5));
+	power_hint_boost((int)boost_duration);
 }
 
 static void power_hint_vsync(void *data) {
