@@ -27,8 +27,6 @@
 #include <stdbool.h>
 #include <cutils/properties.h>
 
-#include <asm-generic/percpu.h>
-
 #define LOG_TAG "Exynos5PowerHAL"
 #define LOG_NDEBUG 0
 #include <utils/Log.h>
@@ -36,6 +34,7 @@
 #include <hardware/hardware.h>
 #include <hardware/power.h>
 
+#include "percpu.h"
 #include "power.h"
 #include "profiles.h"
 
