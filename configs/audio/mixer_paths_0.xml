@@ -970,7 +970,8 @@
 	</path>
 
 	<path name="voice-rec-mic">
-		<path name="speaker-mic"/>
+		<path name="capture_channel_left"/>
+		<path name="main-mic"/>
 		<path name="gain-recognition-mic"/>
 	</path>
 
