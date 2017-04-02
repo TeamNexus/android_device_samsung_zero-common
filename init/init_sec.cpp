@@ -146,7 +146,7 @@ void vendor_load_properties()
            property_set("ro.product.model", "SM-G925W8");
            property_set("ro.product.device", "zeroltebmc");
            break;
-        case G920W8
+        case G920W8:
            /* zerofltebmc */
            property_set("ro.build.fingerprint", "samsung/zerofltebmc/zerofltebmc:6.0.1/MM29K/G920W8VLU5CPK4:user/release-keys");
            property_set("ro.build.description", "zerofltebmc-user 6.0.1 MMB29K G920W8VLU5CPK4 release-keys");
@@ -160,4 +160,3 @@ void vendor_load_properties()
     device = property_get("ro.product.device");
     INFO("Found bootloader id %s setting build properties for %s device\n", bootloader.c_str(), device.c_str());
 }
-

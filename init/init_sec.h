@@ -27,8 +27,8 @@ enum device_variant {
     G925S,
     G925K,
     G925L,
-    G925I
-    G925W8
+    G925I,
+    G925W8,
     G920W8
 };
 
