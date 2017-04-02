@@ -246,12 +246,8 @@ static int power_hint_vsync_cpufreq(int cluster) {
 		return -1; // invalid cluster
 	}
 
-	// cpufreq: apollo
-	cputime0 = get_cpu_idle_time((cluster * 4) + 0, &cpuall, 1);
-	cputime1 = get_cpu_idle_time((cluster * 4) + 1, &cpuall, 1);
-	cputime2 = get_cpu_idle_time((cluster * 4) + 2, &cpuall, 1);
-	cputime3 = get_cpu_idle_time((cluster * 4) + 3, &cpuall, 1);
-	cputime_avg = (cputime0 + cputime1 + cputime2 + cputime3) / 4;
+	// get real cpu-usage if possible, ...
+	cputime_avg = 50;
 
 	// use next frequency if load is higher than 80%
 	// step down if the load if less than 50%
@@ -270,6 +266,9 @@ static int power_hint_vsync_cpufreq(int cluster) {
 			cpufreq = 200000;
 		}
 	}
+
+	// ... meanwhile, we set static frequencies
+	cpufreq = 1100000;
 
 	vsync_pulse_request_cpufreq[cluster] = cpufreq;
 	return correct_cpu_frequencies(cluster, cpufreq);
@@ -529,40 +528,6 @@ static int correct_cpu_frequencies(int cluster, int freq) {
 	}
 
 	return freq;
-}
-
-static inline cputime64_t get_cpu_idle_time_jiffy(unsigned int cpu, cputime64_t *wall)
-{
-	u64 idle_time;
-	u64 cur_wall_time;
-	u64 busy_time;
-
-	cur_wall_time = jiffies64_to_cputime64(get_jiffies_64());
-
-	busy_time  = kcpustat_cpu(cpu).cpustat[CPUTIME_USER];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SYSTEM];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_IRQ];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_SOFTIRQ];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_STEAL];
-	busy_time += kcpustat_cpu(cpu).cpustat[CPUTIME_NICE];
-
-	idle_time = cur_wall_time - busy_time;
-	if (wall)
-		*wall = jiffies_to_usecs(cur_wall_time);
-
-	return jiffies_to_usecs(idle_time);
-}
-
-static inline cputime64_t get_cpu_idle_time(unsigned int cpu, cputime64_t *wall, int io_is_busy)
-{
-	u64 idle_time = get_cpu_idle_time_us(cpu, wall);
-
-	if (idle_time == -1ULL)
-		idle_time = get_cpu_idle_time_jiffy(cpu, wall);
-	else if (!io_is_busy)
-		idle_time += get_cpu_iowait_time_us(cpu, wall);
-
-	return idle_time;
 }
 
 static struct hw_module_methods_t power_module_methods = {

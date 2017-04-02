@@ -128,7 +128,10 @@ static int sysfs_exists(const char *path);
 static int is_apollo_interactive();
 static int is_atlas_interactive();
 static int correct_cpu_frequencies(int cluster, int freq);
-static inline cputime64_t get_cpu_idle_time_jiffy(unsigned int cpu, cputime64_t *wall);
-static inline cputime64_t get_cpu_idle_time(unsigned int cpu, cputime64_t *wall, int io_is_busy);
+
+/***********************************
+ * Linux kernel headers
+ */
+u64 get_jiffies_64(void);
 
 #endif // EXYNOS5_POWER_HAL_H_INCLUDED
