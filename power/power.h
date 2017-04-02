@@ -129,9 +129,4 @@ static int is_apollo_interactive();
 static int is_atlas_interactive();
 static int correct_cpu_frequencies(int cluster, int freq);
 
-/***********************************
- * Linux kernel headers
- */
-u64 get_jiffies_64(void);
-
 #endif // EXYNOS5_POWER_HAL_H_INCLUDED
