@@ -409,11 +409,6 @@
 		<ctl name="Third Mic Switch" value="1" />
 	</path>
 
-	<path name="headset-mic">
-		<ctl name="LHPF1 Input 1" value="IN2L" />
-		<ctl name="Headset Mic Switch" value="1" />
-	</path>
-
 	<path name="media-bt-sco-headset-in">
 		<ctl name="ISRC2 FSL" value="SYNCCLK rate 2" />
 		<ctl name="ISRC2 FSH" value="SYNCCLK rate 1" />
@@ -915,6 +910,15 @@
 		<path name="gain-media-mic"/>
 	</path>
 
+	<path name="headset-mic">
+		<!-- Call recording route -->
+		<ctl name="LHPF1 Input 1" value="IN2L"/>
+		<ctl name="AIF1TX1 Input 1" value="LHPF1"/>
+		<ctl name="AIF1TX2 Input 1" value="LHPF1"/>
+		<ctl name="Headset Mic Switch" value="1"/>
+		<path name="gain-media-headset-mic"/>
+	</path>
+
 	<path name="voice-mic">
 		<path name="incall_nb-speaker-mic"/>
 		<path name="gain-incall_nb-speaker-mic"/>
@@ -971,7 +975,8 @@
 	</path>
 
 	<path name="voice-rec-headset-mic">
-		<path name="headset-mic"/>
+		<ctl name="LHPF1 Input 1" value="IN2L"/>
+		<ctl name="Headset Mic Switch" value="1"/>
 		<path name="gain-recognition-headset-mic"/>
 	</path>
 	
