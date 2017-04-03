@@ -38,27 +38,11 @@
 #define POWER_MALI_GPU_DVFS_GOVERNOR "/sys/class/misc/mali0/device/dvfs_governor"
 #define POWER_MALI_GPU_DVFS_MIN_LOCK "/sys/class/misc/mali0/device/dvfs_min_lock"
 #define POWER_MALI_GPU_DVFS_MAX_LOCK "/sys/class/misc/mali0/device/dvfs_max_lock"
-#define POWER_CPU_HOTPLUG "/sys/power/enable_dm_hotplug"
 
 /***********************************
- * CPU frequencies settings
+ * CPU-settings
  */
-// apollo
-#define POWER_APOLLO_MIN_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq"
-#define POWER_APOLLO_MAX_FREQ "/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq"
-#define POWER_APOLLO_CORE1_ONLINE "/sys/devices/system/cpu/cpu0/online"
-#define POWER_APOLLO_CORE2_ONLINE "/sys/devices/system/cpu/cpu1/online"
-#define POWER_APOLLO_CORE3_ONLINE "/sys/devices/system/cpu/cpu2/online"
-#define POWER_APOLLO_CORE4_ONLINE "/sys/devices/system/cpu/cpu3/online"
-#define POWER_APOLLO_SCALING_GOVERNOR "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
-// atlas
-#define POWER_ATLAS_MIN_FREQ "/sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq"
-#define POWER_ATLAS_MAX_FREQ "/sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq"
-#define POWER_ATLAS_CORE1_ONLINE "/sys/devices/system/cpu/cpu4/online"
-#define POWER_ATLAS_CORE2_ONLINE "/sys/devices/system/cpu/cpu5/online"
-#define POWER_ATLAS_CORE3_ONLINE "/sys/devices/system/cpu/cpu6/online"
-#define POWER_ATLAS_CORE4_ONLINE "/sys/devices/system/cpu/cpu7/online"
-#define POWER_ATLAS_SCALING_GOVERNOR "/sys/devices/system/cpu/cpu4/cpufreq/scaling_governor"
+#define POWER_CPU_HOTPLUG "/sys/power/enable_dm_hotplug"
 
 /***********************************
  * Interactive cpugov-settings

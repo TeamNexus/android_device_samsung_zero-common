@@ -49,7 +49,6 @@ struct sec_power_module {
 static int current_power_profile = PROFILE_NORMAL;
 static int vsync_pulse_requests_active = 0;
 static int vsync_pulse_request_any_active = 0;
-static int vsync_pulse_request_cpufreq[2] = { 200000, 200000 };
 
 /***********************************
  * Initializing
@@ -157,8 +156,6 @@ static void power_hint_interaction(void *data) {
 
 static void power_hint_vsync(void *data) {
 	int pulse_requested = *((intptr_t *)data);
-	struct power_profile def_profile = power_profiles[current_power_profile];
-
 	int cpufreq_apollo, cpufreq_atlas;
 
 	if (current_power_profile == PROFILE_POWER_SAVE) {
@@ -190,13 +187,6 @@ static void power_hint_vsync(void *data) {
 		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
 		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
 
-		cpufreq_apollo = power_hint_vsync_cpufreq(0);
-		cpufreq_atlas = power_hint_vsync_cpufreq(1);
-
-		// cpu freq
-		power_hint_vsync_apply_cpufreq(POWER_APOLLO_MIN_FREQ, cpufreq_apollo);
-		power_hint_vsync_apply_cpufreq(POWER_ATLAS_MIN_FREQ, cpufreq_atlas);
-
 		// gpu
 		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "3");
 		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "544");
@@ -207,84 +197,21 @@ static void power_hint_vsync(void *data) {
 
 	} else {
 
-		// set back to default
-		vsync_pulse_request_cpufreq[0] = 200000;
-		vsync_pulse_request_cpufreq[1] = 200000;
-
-		// cpu boost
-		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, def_profile.cpugov.apollo.boost);
-		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, def_profile.cpugov.atlas.boost);
-
-		// cpu freq
-		sysfs_write(POWER_APOLLO_MIN_FREQ, def_profile.cpuminfreq.apollo);
-		sysfs_write(POWER_ATLAS_MIN_FREQ, def_profile.cpuminfreq.atlas);
-
-		// gpu
-		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, def_profile.mali.dvfs_governor);
-		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, def_profile.mali.dvfs_min_lock);
-		sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, def_profile.mali.dvfs_max_lock);
+		// reset profile
+		power_set_profile(current_power_profile);
 
 		// one request less
 		vsync_pulse_requests_active--;
 	}
 }
 
-static int power_hint_vsync_cpufreq(int cluster) {
-	int cpuutil = 0, cpufreq = 0, min_cpufreq = 0, max_cpufreq = 0;
-
-	cpufreq = vsync_pulse_request_cpufreq[cluster];
-
-	if (cluster == 0) {
-		min_cpufreq = 200000;
-		max_cpufreq = 1700000;
-	} else if (cluster == 1) {
-		min_cpufreq = 200000;
-		max_cpufreq = 2300000;
-	} else {
-		return -1; // invalid cluster
-	}
-
-	// get current cpu utilization
-	if (cluster == 0) {
-		cpuutil = per_cpu(cpu_util, 0);
-	} else if (cluster == 1) {
-		cpuutil = per_cpu(cpu_util, 4);
-	} // nothing to do if invalid, handled above
-
-	// use next frequency if load is higher than 80%
-	// step down if the load if less than 50%
-	if (cpuutil >= 80) {
-		cpufreq += 100000;
-
-		// max frequency reached, reset
-		if (cpufreq > max_cpufreq) {
-			cpufreq = max_cpufreq;
-		}
-	} else if (cpuutil < 50) {
-		cpufreq -= 100000;
-
-		// min frequency reached, reset
-		if (cpufreq < min_cpufreq) {
-			cpufreq = min_cpufreq;
-		}
-	}
-
-	vsync_pulse_request_cpufreq[cluster] = cpufreq;
-	return correct_cpu_frequencies(cluster, cpufreq);
-}
-
-static void power_hint_vsync_apply_cpufreq(char *path, int freq) {
-	char buffer[16];
-
-	// convert to string
-	snprintf(buffer, 16, "%d", freq);
-
-	// apply
-	sysfs_write(path, buffer);
-}
-
 static void power_hint_boost(int boost_duration) {
 	char buffer[16];
+
+	if (current_power_profile == PROFILE_POWER_SAVE) {
+		// no boost-pulse when in powersave-mode
+		return;
+	}
 
 	// convert to string
 	snprintf(buffer, 16, "%d", boost_duration);
@@ -315,77 +242,104 @@ static void power_set_profile_by_name(char *data) {
 static void power_set_profile(int profile) {
 	current_power_profile = profile;
 
+	/***********************************
+	 * Mali GPU DVFS:
+	 *
+	 * Table: 772 700 600 544 420 350 266
+	 *
+	 * Governor:
+	 *   0: Default
+	 *   1: Interactive
+	 *   2: Static
+	 *   3: Booster
+	 */
+
+ 	// disable CPU hotplugging
+ 	sysfs_write(POWER_CPU_HOTPLUG, "0");
+
+	// disable enforced mode
+	sysfs_write(POWER_APOLLO_INTERACTIVE_ENFORCED_MODE, "0");
+	sysfs_write(POWER_ATLAS_INTERACTIVE_ENFORCED_MODE, "0");
+
 	switch (profile) {
 
 		case PROFILE_POWER_SAVE:
-			power_apply_profile(power_profiles[0]);
+
+			// manage GPU DVFS
+			sysfs_write(POWER_MALI_GPU_DVFS, "0");
+			sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "1");
+			sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "266");
+			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "544");
+
+			// apply settings for apollo
+			sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "19000");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "20000");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "95");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "400000");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "95");
+
+			// apply settings for atlas
+			sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "39000");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "40000");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "95");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "800000");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "95");
+
 			break;
 
 		case PROFILE_NORMAL:
-			power_apply_profile(power_profiles[1]);
+
+			// manage GPU DVFS
+			sysfs_write(POWER_MALI_GPU_DVFS, "1");
+			sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "1");
+			sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "266");
+			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
+
+			// apply settings for apollo
+			sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "49000");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "30000");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "85");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1000000");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "85");
+
+			// apply settings for atlas
+			sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "85");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1600000");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "85");
+
 			break;
 
 		case PROFILE_HIGH_PERFORMANCE:
-			power_apply_profile(power_profiles[2]);
+
+			// manage GPU DVFS
+			sysfs_write(POWER_MALI_GPU_DVFS, "1");
+			sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "3");
+			sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "420");
+			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
+
+			// apply settings for apollo
+			sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "75");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1704000");
+			sysfs_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "75");
+
+			// apply settings for atlas
+			sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "89000");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "80000");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "75");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "2304000");
+			sysfs_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "75");
+
 			break;
-	}
-}
-
-static void power_apply_profile(struct power_profile data) {
-	// manage GPU DVFS
-	sysfs_write(POWER_MALI_GPU_DVFS, data.mali.dvfs);
-	sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, data.mali.dvfs_governor);
-	sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, data.mali.dvfs_min_lock);
-	sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, data.mali.dvfs_max_lock);
-
-	// disable CPU hotplugging
-	sysfs_write(POWER_CPU_HOTPLUG, "0");
-
-	// set min frequency
-	sysfs_write(POWER_APOLLO_MIN_FREQ, data.cpuminfreq.apollo);
-	sysfs_write(POWER_ATLAS_MIN_FREQ, data.cpuminfreq.atlas);
-
-	// set max frequency
-	sysfs_write(POWER_APOLLO_MAX_FREQ, data.cpumaxfreq.apollo);
-	sysfs_write(POWER_ATLAS_MAX_FREQ, data.cpumaxfreq.atlas);
-
-	// online cores
-	sysfs_write(POWER_APOLLO_CORE1_ONLINE, data.cpuonline.apollo.core1);
-	sysfs_write(POWER_APOLLO_CORE2_ONLINE, data.cpuonline.apollo.core2);
-	sysfs_write(POWER_APOLLO_CORE3_ONLINE, data.cpuonline.apollo.core3);
-	sysfs_write(POWER_APOLLO_CORE4_ONLINE, data.cpuonline.apollo.core4);
-	sysfs_write(POWER_ATLAS_CORE1_ONLINE, data.cpuonline.atlas.core1);
-	sysfs_write(POWER_ATLAS_CORE2_ONLINE, data.cpuonline.atlas.core2);
-	sysfs_write(POWER_ATLAS_CORE3_ONLINE, data.cpuonline.atlas.core3);
-	sysfs_write(POWER_ATLAS_CORE4_ONLINE, data.cpuonline.atlas.core4);
-
-	// cpu governor settings
-	if (is_apollo_interactive()) {
-		// disable enforced mode
-		sysfs_write(POWER_APOLLO_INTERACTIVE_ENFORCED_MODE, "0");
-
-		// apply settings
-		sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, data.cpugov.apollo.above_hispeed_delay);
-		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, data.cpugov.apollo.boost);
-		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE, data.cpugov.apollo.boostpulse);
-		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, data.cpugov.apollo.boostpulse_duration);
-		sysfs_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, data.cpugov.apollo.go_hispeed_load);
-		sysfs_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, data.cpugov.apollo.hispeed_freq);
-		sysfs_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, data.cpugov.apollo.target_loads);
-	}
-
-	if (is_atlas_interactive()) {
-		// disable enforced mode
-		sysfs_write(POWER_ATLAS_INTERACTIVE_ENFORCED_MODE, "0");
-
-		// apply settings
-		sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, data.cpugov.atlas.above_hispeed_delay);
-		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, data.cpugov.atlas.boost);
-		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE, data.cpugov.atlas.boostpulse);
-		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, data.cpugov.atlas.boostpulse_duration);
-		sysfs_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, data.cpugov.atlas.go_hispeed_load);
-		sysfs_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, data.cpugov.atlas.hispeed_freq);
-		sysfs_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, data.cpugov.atlas.target_loads);
 	}
 }
 
@@ -396,7 +350,7 @@ static void power_input_device_state(int state) {
 	switch (state) {
 		case STATE_DISABLE:
 
-			sysfs_write(POWER_ENABLE_TOUCHKEY, "0");
+			// sysfs_write(POWER_ENABLE_TOUCHKEY, "0");
 			sysfs_write(POWER_ENABLE_TOUCHSCREEN, "0");
 
 			if (current_power_profile == PROFILE_POWER_SAVE) {
@@ -409,7 +363,7 @@ static void power_input_device_state(int state) {
 
 		case STATE_ENABLE:
 
-			sysfs_write(POWER_ENABLE_TOUCHKEY, "1");
+			// sysfs_write(POWER_ENABLE_TOUCHKEY, "1");
 			sysfs_write(POWER_ENABLE_TOUCHSCREEN, "1");
 			sysfs_write(POWER_ENABLE_GPIO, "1");
 
