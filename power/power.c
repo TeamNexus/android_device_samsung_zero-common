@@ -34,7 +34,6 @@
 #include <hardware/hardware.h>
 #include <hardware/power.h>
 
-#include "percpu.h"
 #include "power.h"
 #include "profiles.h"
 
