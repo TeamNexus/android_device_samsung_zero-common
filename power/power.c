@@ -47,6 +47,7 @@ struct sec_power_module {
 	((struct_name *)((char *)(addr) - offsetof(struct_name, field_name)))
 
 static int current_power_profile = PROFILE_NORMAL;
+static int screen_is_on = 1;
 static int vsync_pulse_requests_active = 0;
 static int vsync_pulse_request_any_active = 0;
 
@@ -163,6 +164,12 @@ static void power_hint_vsync(void *data) {
 		return;
 	}
 
+	if (current_power_profile == PROFILE_NORMAL && !screen_is_on) {
+		// no vsync-boost when in balanced
+		// power-mode and screen is deactivated
+		return;
+	}
+
 	/* if (vsync_pulse_request_active) {
 		// previous pulse-request was not
 		// finished yet, don't start another one
@@ -210,6 +217,12 @@ static void power_hint_boost(int boost_duration) {
 
 	if (current_power_profile == PROFILE_POWER_SAVE) {
 		// no boost-pulse when in powersave-mode
+		return;
+	}
+
+	if (current_power_profile == PROFILE_NORMAL && !screen_is_on) {
+		// no boost-pulse when in balanced
+		// power-mode and screen is deactivated
 		return;
 	}
 
@@ -372,6 +385,7 @@ static void power_input_device_state(int state) {
 }
 
 static void power_set_interactive(struct power_module __unused * module, int on) {
+	screen_is_on = (on != 0);
 	power_input_device_state(on ? 1 : 0);
 }
 
