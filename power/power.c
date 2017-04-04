@@ -156,17 +156,30 @@ static void power_hint_interaction(void *data) {
 
 static void power_hint_vsync(void *data) {
 	int pulse_requested = *((intptr_t *)data);
-	int cpufreq_apollo, cpufreq_atlas;
+	int cpufreq_apollo, cpufreq_atlas, pulse_divider = 1;
+	char *dvfs_gov = "1", *dvfs_min_lock = "";
 
 	if (current_power_profile == PROFILE_POWER_SAVE) {
 		// no vsync-boost when in powersave-mode
 		return;
 	}
 
-	if (current_power_profile == PROFILE_NORMAL && !screen_is_on) {
-		// no vsync-boost when in balanced
-		// power-mode and screen is deactivated
-		return;
+	if (current_power_profile == PROFILE_NORMAL) {
+		if (!screen_is_on) {
+			// no vsync-boost when in balanced
+			// power-mode and screen is deactivated
+			return;
+		} else {
+			// but if screen is not deactivated,
+			// run the CPU-boost only half the time
+			pulse_divider = 2;
+		}
+	}
+
+	if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
+		// if in performance-mode, use more GPU-power
+		dvfs_gov = "3";
+		dvfs_min_lock = "544";
 	}
 
 	/* if (vsync_pulse_request_active) {
@@ -175,6 +188,19 @@ static void power_hint_vsync(void *data) {
 		ALOGE("%s: OS tried to request a vsync-pulse while another one is still active", __func__);
 		return;
 	} */
+
+	if (vsync_pulse_requests_active > 10) {
+		// The OS doesn't seem to close the pulse-requests
+		ALOGE("%s: %d pulse-requests are currently active, running clean-up now", __func__, vsync_pulse_requests_active);
+
+		// reset profile
+		power_set_profile(current_power_profile);
+
+		// reset counter
+		vsync_pulse_requests_active = 0;
+
+		return;
+	}
 
 	vsync_pulse_request_any_active = vsync_pulse_requests_active > 0 || (pulse_requested != 0);
 
@@ -190,12 +216,11 @@ static void power_hint_vsync(void *data) {
 	if (pulse_requested) {
 
 		// cpu boost
-		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
-		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
+		power_hint_boost((int)((1000 / 59.95) * 1000) / pulse_divider); // boost for one FPS
 
 		// gpu
-		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, "3");
-		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "544");
+		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, dvfs_gov);
+		sysfs_write(POWER_MALI_GPU_DVFS_MIN_LOCK, dvfs_min_lock);
 		sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
 
 		// one request more
@@ -206,27 +231,37 @@ static void power_hint_vsync(void *data) {
 		// reset profile
 		power_set_profile(current_power_profile);
 
-		// one request less
-		vsync_pulse_requests_active--;
+		// reset counter
+		vsync_pulse_requests_active = 0;
 	}
 }
 
 static void power_hint_boost(int boost_duration) {
 	char buffer[16];
+	int pulse_divider = 1;
 
 	if (current_power_profile == PROFILE_POWER_SAVE) {
 		// no boost-pulse when in powersave-mode
 		return;
 	}
 
-	if (current_power_profile == PROFILE_NORMAL && !screen_is_on) {
-		// no boost-pulse when in balanced
-		// power-mode and screen is deactivated
-		return;
+	if (current_power_profile == PROFILE_NORMAL) {
+		if (!screen_is_on) {
+			// no vsync-boost when in balanced
+			// power-mode and screen is deactivated
+			return;
+		} else {
+			// but if screen is not deactivated,
+			// run the CPU-boost only half the time
+			pulse_divider = 2;
+		}
 	}
 
 	// convert to string
 	snprintf(buffer, 16, "%d", boost_duration);
+
+	// update boost-duration
+	boost_duration /= pulse_divider;
 
 	// everything lower than 1000 usecs would
 	// be a useless boost-duration
