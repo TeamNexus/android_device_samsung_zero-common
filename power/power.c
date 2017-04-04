@@ -35,7 +35,6 @@
 #include <hardware/power.h>
 
 #include "power.h"
-#include "profiles.h"
 
 struct sec_power_module {
 	struct power_module base;

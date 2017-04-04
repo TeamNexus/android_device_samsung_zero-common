@@ -18,8 +18,6 @@
 #include <hardware/hardware.h>
 #include <hardware/power.h>
 
-#include "profiles.h"
-
 #ifndef EXYNOS5_POWER_HAL_H_INCLUDED
 #define EXYNOS5_POWER_HAL_H_INCLUDED
 
