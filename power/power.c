@@ -261,12 +261,14 @@ static void power_hint_boost(int boost_duration) {
 	snprintf(cluster0buffer, 10, "%d", cluster0duration);
 	snprintf(cluster1buffer, 10, "%d", cluster1duration);
 
-	// everything lower than 1000 usecs would
+	// everything lower than 10 ms would
 	// be a useless boost-duration
-	if (boost_duration >= 1000) {
-		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, cluster0buffer);
-		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, cluster1buffer);
+	if (boost_duration < 10000) {
+		boost_duration = 10000;
 	}
+
+	sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, cluster0buffer);
+	sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, cluster1buffer);
 
 	if (is_apollo_interactive()) {
 		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE, "1");
