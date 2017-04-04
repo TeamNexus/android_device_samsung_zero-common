@@ -79,10 +79,10 @@
  */
 struct interactive_cpu_util {
     int avg;
-    int core0;
-    int core1;
-    int core2;
-    int core3;
+    int cpu0;
+    int cpu1;
+    int cpu2;
+    int cpu3;
 };
 
 /***********************************
