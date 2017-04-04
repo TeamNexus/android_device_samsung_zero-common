@@ -23,6 +23,12 @@
 #ifndef EXYNOS5_POWER_HAL_H_INCLUDED
 #define EXYNOS5_POWER_HAL_H_INCLUDED
 
+/*
+ * Macros
+ */
+#define POSITIVE(n) ((n) < 0 ? 0 - (n) : (n))
+#define CPUUTIL_ANY_BELOW_AVG(n) (cpu0diff > n || cpu1diff > n || cpu2diff > n || cpu3diff > n)
+
 #define PROFILE_POWER_SAVE 0
 #define PROFILE_NORMAL 1
 #define PROFILE_HIGH_PERFORMANCE 2
@@ -53,6 +59,7 @@
 #define POWER_APOLLO_INTERACTIVE_BOOST POWER_APOLLO_INTERACTIVE "boost"
 #define POWER_APOLLO_INTERACTIVE_BOOSTPULSE POWER_APOLLO_INTERACTIVE "boostpulse"
 #define POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION POWER_APOLLO_INTERACTIVE "boostpulse_duration"
+#define POWER_APOLLO_INTERACTIVE_CPU_UTIL POWER_APOLLO_INTERACTIVE "cpu_util"
 #define POWER_APOLLO_INTERACTIVE_ENFORCED_MODE POWER_APOLLO_INTERACTIVE "enforced_mode"
 #define POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD POWER_APOLLO_INTERACTIVE "go_hispeed_load"
 #define POWER_APOLLO_INTERACTIVE_HISPEED_FREQ POWER_APOLLO_INTERACTIVE "hispeed_freq"
@@ -63,10 +70,22 @@
 #define POWER_ATLAS_INTERACTIVE_BOOST POWER_ATLAS_INTERACTIVE "boost"
 #define POWER_ATLAS_INTERACTIVE_BOOSTPULSE POWER_ATLAS_INTERACTIVE "boostpulse"
 #define POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION POWER_ATLAS_INTERACTIVE "boostpulse_duration"
+#define POWER_ATLAS_INTERACTIVE_CPU_UTIL POWER_ATLAS_INTERACTIVE "cpu_util"
 #define POWER_ATLAS_INTERACTIVE_ENFORCED_MODE POWER_ATLAS_INTERACTIVE "enforced_mode"
 #define POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD POWER_ATLAS_INTERACTIVE "go_hispeed_load"
 #define POWER_ATLAS_INTERACTIVE_HISPEED_FREQ POWER_ATLAS_INTERACTIVE "hispeed_freq"
 #define POWER_ATLAS_INTERACTIVE_TARGET_LOADS POWER_ATLAS_INTERACTIVE "target_loads"
+
+/***********************************
+ * Structures
+ */
+struct interactive_cpu_util {
+    int avg;
+    int core0;
+    int core1;
+    int core2;
+    int core3;
+};
 
 /***********************************
  * Initializing
@@ -111,6 +130,9 @@ static int sysfs_write(const char *path, char *s);
 static int sysfs_exists(const char *path);
 static int is_apollo_interactive();
 static int is_atlas_interactive();
+static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil);
+static int read_cpu_util_parse_int(char *str, int core, int *val);
+static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_util cpuutil);
 static int correct_cpu_frequencies(int cluster, int freq);
 
 #endif // EXYNOS5_POWER_HAL_H_INCLUDED

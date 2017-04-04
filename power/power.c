@@ -231,8 +231,9 @@ static void power_hint_vsync(void *data) {
 }
 
 static void power_hint_boost(int boost_duration) {
-	char buffer[16];
-	int pulse_divider = 1;
+	char cluster0buffer[16], cluster1buffer[16];
+	int pulse_divider = 1, cluster0duration, cluster1duration;
+	struct interactive_cpu_util cluster0util, cluster1util;
 
 	if (!screen_is_on || current_power_profile == PROFILE_POWER_SAVE) {
 		// no boostpulse when screen is deactivated
@@ -245,16 +246,26 @@ static void power_hint_boost(int boost_duration) {
 		pulse_divider = 2;
 	}
 
-	// convert to string
-	snprintf(buffer, 16, "%d", boost_duration);
+	// read current CPU-usage
+	read_cpu_util(0, &cluster0util);
+	read_cpu_util(1, &cluster1util);
 
-	// update boost-duration
+	// apply divider to boost-duration
 	boost_duration /= pulse_divider;
+
+	// apply cluster-specific changes
+	cluster0duration = recalculate_boostpulse_duration(boost_duration, cluster0util);
+	cluster1duration = recalculate_boostpulse_duration(boost_duration, cluster1util);
+
+	// convert to string
+	snprintf(cluster0buffer, 16, "%d", cluster0duration);
+	snprintf(cluster1buffer, 16, "%d", cluster1duration);
 
 	// everything lower than 1000 usecs would
 	// be a useless boost-duration
 	if (boost_duration >= 1000) {
-		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, buffer);
+		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, cluster0buffer);
+		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, buffer);
 	}
 
 	if (is_apollo_interactive()) {
@@ -479,6 +490,105 @@ static int is_apollo_interactive() {
 
 static int is_atlas_interactive() {
 	return sysfs_exists(POWER_ATLAS_INTERACTIVE_BOOSTPULSE);
+}
+
+static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil) {
+	char errbuf[80];
+	char utilbuf[16];
+	char *path;
+	int len, fd;
+
+	memset(cpuutil, 0, sizeof(struct interactive_cpu_util));
+
+	if (cluster == 0) {
+		path = POWER_APOLLO_INTERACTIVE_CPU_UTIL;
+	} else if (cluster == 1) {
+		path = POWER_ATLAS_INTERACTIVE_CPU_UTIL;
+	} else {
+		return 0; // invalid cluster
+	}
+
+	fd = open(path, O_RDONLY);
+
+	if (fd < 0) {
+		strerror_r(errno, errbuf, sizeof(errbuf));
+		ALOGE("Error opening %s: %s\n", path, errbuf);
+		return 0;
+	}
+
+	len = read(fd, utilbuf, 15); // 3 chars for cpu_util per core plus 3 separators (3 * 4 + 3)
+	if (len != 15) {
+		strerror_r(errno, errbuf, sizeof(errbuf));
+		ALOGE("Error reading from %s: %s\n", path, errbuf);
+		return 0;
+	}
+
+	read_cpu_util_parse_int(utilbuf, 0, cpuutil->cpu0);
+	read_cpu_util_parse_int(utilbuf, 1, cpuutil->cpu1);
+	read_cpu_util_parse_int(utilbuf, 2, cpuutil->cpu2);
+	read_cpu_util_parse_int(utilbuf, 3, cpuutil->cpu3);
+
+	cpuutil->avg = 0;
+	cpuutil->avg += cpuutil->cpu0;
+	cpuutil->avg += cpuutil->cpu1;
+	cpuutil->avg += cpuutil->cpu2;
+	cpuutil->avg += cpuutil->cpu3;
+	cpuutil->avg /= 4;
+
+	return 1;
+}
+
+static int read_cpu_util_parse_int(char *str, int core, int *val) {
+	int idx = (core * 4) + 2;
+	char cidx = str[idx];
+
+	if (cidx < 48 || cidx > 57) {
+		*val = 0; // set to zero if invalid
+		return 0; // won't be a number
+	}
+
+	idx -= 2; // go to start-index
+	*val = 0; // set to zero
+
+	if ((cidx = str[idx++]) && !(cidx < 48 || cidx > 57))
+		*val += (cidx - 48) * 100;
+
+	if ((cidx = str[idx++]) && !(cidx < 48 || cidx > 57))
+		*val += (cidx - 48) * 10;
+
+	*val += (str[idx] - 48);
+
+	return 1;
+}
+
+static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_util cpuutil) {
+	int avg = cpuutil.avg;
+	int cpu0diff = 0, cpu1diff = 0,
+		cpu2diff = 0, cpu3diff = 0;
+
+	// get the absolute differences from average load
+	cpu0diff = POSITIVE(cpuutil.cpu0 - avg);
+	cpu1diff = POSITIVE(cpuutil.cpu1 - avg);
+	cpu2diff = POSITIVE(cpuutil.cpu2 - avg);
+	cpu3diff = POSITIVE(cpuutil.cpu3 - avg);
+
+	if (avg >= 85) {
+		duration += 150000; // very high load, +150ms
+	} else if (avg >= 65) {
+		duration += 100000; // high load, +100ms
+	} else if (avg >= 50) {
+		duration += 50000; // average load, +50ms
+	}
+
+	if (CPUUTIL_ANY_BELOW_AVG(40)) {
+		duration -= 100000; // core with really low load, -100ms
+	} else if (CPUUTIL_ANY_BELOW_AVG(35)) {
+		duration -= 50000; // core with low load, -50ms
+	} else if (CPUUTIL_ANY_BELOW_AVG(25)) {
+		duration -= 25000; // core with acceptable low load, -25ms
+	}
+
+	return duration;
 }
 
 static int correct_cpu_frequencies(int cluster, int freq) {
