@@ -36,6 +36,10 @@ $(call inherit-product-if-exists, frameworks/native/build/phone-xxxhdpi-3072-hwu
 PRODUCT_PACKAGES += \
 	Gello
 
+# Camera
+PRODUCT_PACKAGES += \
+    HTCCamera
+
 # Dbthtool
 PRODUCT_PACKAGES += \
     dtbhtoolExynos
@@ -68,7 +72,3 @@ PRODUCT_PACKAGES += \
 # Set default USB interface
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mtp
-
-# Snap
-PRODUCT_PACKAGES += \
-    Snap
