@@ -20,7 +20,7 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE               := HTCCamera
 LOCAL_SRC_FILES            := $(LOCAL_MODULE).apk
-LOCAL_REQUIRED_MODULES     := libcam_exif2 libcam_imagelib libcimagegif-jni libgifdecoder libgifdecoder2 libhtccamera libmorpho_hyperlapse_jni_v6 libmorpho_image_stitcher3 libmorpho_render_util_v6 libpanoramaplus libpanostitcher libsgmain libsgmainso-5.1.81 libtbb libtbdecode
+# LOCAL_REQUIRED_MODULES     := libcam_exif2 libcam_imagelib libcimagegif-jni libgifdecoder libgifdecoder2 libhtccamera libmorpho_hyperlapse_jni_v6 libmorpho_image_stitcher3 libmorpho_render_util_v6 libpanoramaplus libpanostitcher libsgmain libsgmainso-5.1.81 libtbb libtbdecode
 LOCAL_MODULE_CLASS         := APPS
 LOCAL_MODULE_SUFFIX        := $(COMMON_ANDROID_PACKAGE_SUFFIX)
 LOCAL_CERTIFICATE          := PRESIGNED
