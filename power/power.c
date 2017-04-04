@@ -159,21 +159,15 @@ static void power_hint_vsync(void *data) {
 	int cpufreq_apollo, cpufreq_atlas, pulse_divider = 1;
 	char *dvfs_gov = "1", *dvfs_min_lock = "";
 
-	if (current_power_profile == PROFILE_POWER_SAVE) {
-		// no vsync-boost when in powersave-mode
+	if (!screen_is_on || current_power_profile == PROFILE_POWER_SAVE) {
+		// no vsync-boost when screen is deactivated
+		// or when in powersave-mode
 		return;
 	}
 
 	if (current_power_profile == PROFILE_NORMAL) {
-		if (!screen_is_on) {
-			// no vsync-boost when in balanced
-			// power-mode and screen is deactivated
-			return;
-		} else {
-			// but if screen is not deactivated,
-			// run the CPU-boost only half the time
-			pulse_divider = 2;
-		}
+		// run the vsync-boost only half the time
+		pulse_divider = 2;
 	}
 
 	if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
@@ -240,21 +234,15 @@ static void power_hint_boost(int boost_duration) {
 	char buffer[16];
 	int pulse_divider = 1;
 
-	if (current_power_profile == PROFILE_POWER_SAVE) {
-		// no boost-pulse when in powersave-mode
+	if (!screen_is_on || current_power_profile == PROFILE_POWER_SAVE) {
+		// no boostpulse when screen is deactivated
+		// or when in powersave-mode
 		return;
 	}
 
 	if (current_power_profile == PROFILE_NORMAL) {
-		if (!screen_is_on) {
-			// no vsync-boost when in balanced
-			// power-mode and screen is deactivated
-			return;
-		} else {
-			// but if screen is not deactivated,
-			// run the CPU-boost only half the time
-			pulse_divider = 2;
-		}
+		// run the boostpulse only half the time
+		pulse_divider = 2;
 	}
 
 	// convert to string
