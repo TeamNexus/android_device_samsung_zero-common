@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2012 The CyanogenMod Project
+     Copyright (C) 2017 The LineageOS Project
+     Copyright (C) 2017 Team Nexus7420
+     Licensed under the GNU GPLv2 license
+     The text of the license can be found in the LICENSE file
+     or at https://www.gnu.org/licenses/gpl-2.0.txt
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Updater Config Strings -->
+    <string name="conf_update_server_url_def" translatable="false">https://download.nexus7420.cf/api</string>
+</resources>
