@@ -266,8 +266,8 @@ static void power_hint_boost(int boost_duration) {
 	}
 
 	// convert to string
-	snprintf(cluster0buffer, 10, "%d", cluster0duration);
-	snprintf(cluster1buffer, 10, "%d", cluster1duration);
+	snprintf(cluster0buffer, 11, "%d", cluster0duration);
+	snprintf(cluster1buffer, 11, "%d", cluster1duration);
 
 	sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, cluster0buffer);
 	sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, cluster1buffer);
@@ -580,35 +580,17 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 	cpu2diff = POWERHAL_POSITIVE(cpuutil.cpu2 - avg);
 	cpu3diff = POWERHAL_POSITIVE(cpuutil.cpu3 - avg);
 
-	if (avg < 50) {
-		if (avg < 15) {
-			duration -= 100000; // core with really low load, -100ms
-		} else if (avg < 30) {
-			duration -= 50000; // core with low load, -50ms
-		} else if (avg < 40) {
-			duration -= 25000; // core with acceptable low load, -25ms
-		}
-	} else {
-		if (avg >= 85) {
-			duration += 150000; // very high load, +150ms
-		} else if (avg >= 65) {
-			duration += 100000; // high load, +100ms
-		} else if (avg >= 50) {
-			duration += 50000; // average load, +50ms
-		}
-
-		if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(25)) {
-			duration -= 25000; // core with acceptable low load, -25ms
-		} else if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(35)) {
-			duration -= 50000; // core with low load, -50ms
-		} else if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(40)) {
-			duration -= 100000; // core with really low load, -100ms
-		}
+	if (avg >= 85) {
+		duration += 150000; // very high load, +150ms
+	} else if (avg >= 65) {
+		duration += 100000; // high load, +100ms
+	} else if (avg >= 50) {
+		duration += 50000; // average load, +50ms
 	}
 
 	// set to one as minimal or writing
 	// to boostpulse_duration will fail
-	if (duration < 0) {
+	if (duration <= 0) {
 		duration = 1;
 	}
 
