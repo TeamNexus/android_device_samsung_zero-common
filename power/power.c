@@ -256,15 +256,18 @@ static void power_hint_boost(int boost_duration) {
 	cluster0duration = recalculate_boostpulse_duration(boost_duration, cluster0util);
 	cluster1duration = recalculate_boostpulse_duration(boost_duration, cluster1util);
 
+	// everything lower than 10 ms would
+	// be a useless boost-duration
+	if (cluster0duration < 10000) {
+		cluster0duration = 10000;
+	}
+	if (cluster1duration < 10000) {
+		cluster1duration = 10000;
+	}
+
 	// convert to string
 	snprintf(cluster0buffer, 10, "%d", cluster0duration);
 	snprintf(cluster1buffer, 10, "%d", cluster1duration);
-
-	// everything lower than 10 ms would
-	// be a useless boost-duration
-	if (boost_duration < 10000) {
-		boost_duration = 10000;
-	}
 
 	sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, cluster0buffer);
 	sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, cluster1buffer);
@@ -601,6 +604,12 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 		} else if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(40)) {
 			duration -= 100000; // core with really low load, -100ms
 		}
+	}
+
+	// set to one as minimal or writing
+	// to boostpulse_duration will fail
+	if (duration < 0) {
+		duration = 1;
 	}
 
 	return duration;
