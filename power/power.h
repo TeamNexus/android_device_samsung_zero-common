@@ -26,8 +26,8 @@
 /*
  * Macros
  */
-#define POSITIVE(n) ((n) < 0 ? 0 - (n) : (n))
-#define CPUUTIL_ANY_BELOW_AVG(n) (cpu0diff > n || cpu1diff > n || cpu2diff > n || cpu3diff > n)
+#define POWERHAL_POSITIVE(n) ((n) < 0 ? 0 - (n) : (n))
+#define POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(n) (cpu0diff <= n || cpu1diff <= n || cpu2diff <= n || cpu3diff <= n)
 
 #define PROFILE_POWER_SAVE 0
 #define PROFILE_NORMAL 1

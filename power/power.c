@@ -569,25 +569,35 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 		cpu2diff = 0, cpu3diff = 0;
 
 	// get the absolute differences from average load
-	cpu0diff = POSITIVE(cpuutil.cpu0 - avg);
-	cpu1diff = POSITIVE(cpuutil.cpu1 - avg);
-	cpu2diff = POSITIVE(cpuutil.cpu2 - avg);
-	cpu3diff = POSITIVE(cpuutil.cpu3 - avg);
+	cpu0diff = POWERHAL_POSITIVE(cpuutil.cpu0 - avg);
+	cpu1diff = POWERHAL_POSITIVE(cpuutil.cpu1 - avg);
+	cpu2diff = POWERHAL_POSITIVE(cpuutil.cpu2 - avg);
+	cpu3diff = POWERHAL_POSITIVE(cpuutil.cpu3 - avg);
 
-	if (avg >= 85) {
-		duration += 150000; // very high load, +150ms
-	} else if (avg >= 65) {
-		duration += 100000; // high load, +100ms
-	} else if (avg >= 50) {
-		duration += 50000; // average load, +50ms
-	}
+	if (avg < 50) {
+		if (avg < 15) {
+			duration -= 100000; // core with really low load, -100ms
+		} else if (avg < 30) {
+			duration -= 50000; // core with low load, -50ms
+		} else if (avg < 40) {
+			duration -= 25000; // core with acceptable low load, -25ms
+		}
+	} else {
+		if (avg >= 85) {
+			duration += 150000; // very high load, +150ms
+		} else if (avg >= 65) {
+			duration += 100000; // high load, +100ms
+		} else if (avg >= 50) {
+			duration += 50000; // average load, +50ms
+		}
 
-	if (CPUUTIL_ANY_BELOW_AVG(40)) {
-		duration -= 100000; // core with really low load, -100ms
-	} else if (CPUUTIL_ANY_BELOW_AVG(35)) {
-		duration -= 50000; // core with low load, -50ms
-	} else if (CPUUTIL_ANY_BELOW_AVG(25)) {
-		duration -= 25000; // core with acceptable low load, -25ms
+		if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(25)) {
+			duration -= 25000; // core with acceptable low load, -25ms
+		} else if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(35)) {
+			duration -= 50000; // core with low load, -50ms
+		} else if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(40)) {
+			duration -= 100000; // core with really low load, -100ms
+		}
 	}
 
 	return duration;
