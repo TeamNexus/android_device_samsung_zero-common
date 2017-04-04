@@ -474,7 +474,7 @@ static int sysfs_exists(const char *path) {
 	char buf[80];
 	int len, fd;
 
-	fd = open(path, O_WRONLY);
+	fd = open(path, O_RDONLY);
 
 	if (fd < 0) {
 		close(fd);
@@ -518,16 +518,20 @@ static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil) {
 	}
 
 	len = read(fd, utilbuf, 15); // 3 chars for cpu_util per core plus 3 separators (3 * 4 + 3)
+
+	// close file when finished reading
+	close(fd);
+
 	if (len != 15) {
 		strerror_r(errno, errbuf, sizeof(errbuf));
 		ALOGE("Error reading from %s: %s\n", path, errbuf);
 		return 0;
 	}
 
-	read_cpu_util_parse_int(utilbuf, 0, cpuutil->cpu0);
-	read_cpu_util_parse_int(utilbuf, 1, cpuutil->cpu1);
-	read_cpu_util_parse_int(utilbuf, 2, cpuutil->cpu2);
-	read_cpu_util_parse_int(utilbuf, 3, cpuutil->cpu3);
+	read_cpu_util_parse_int(utilbuf, 0, &(cpuutil->cpu0));
+	read_cpu_util_parse_int(utilbuf, 1, &(cpuutil->cpu1));
+	read_cpu_util_parse_int(utilbuf, 2, &(cpuutil->cpu2));
+	read_cpu_util_parse_int(utilbuf, 3, &(cpuutil->cpu3));
 
 	cpuutil->avg = 0;
 	cpuutil->avg += cpuutil->cpu0;
