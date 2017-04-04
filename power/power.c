@@ -231,7 +231,7 @@ static void power_hint_vsync(void *data) {
 }
 
 static void power_hint_boost(int boost_duration) {
-	char cluster0buffer[16], cluster1buffer[16];
+	char cluster0buffer[11], cluster1buffer[11];
 	int pulse_divider = 1, cluster0duration, cluster1duration;
 	struct interactive_cpu_util cluster0util, cluster1util;
 
@@ -258,14 +258,14 @@ static void power_hint_boost(int boost_duration) {
 	cluster1duration = recalculate_boostpulse_duration(boost_duration, cluster1util);
 
 	// convert to string
-	snprintf(cluster0buffer, 16, "%d", cluster0duration);
-	snprintf(cluster1buffer, 16, "%d", cluster1duration);
+	snprintf(cluster0buffer, 10, "%d", cluster0duration);
+	snprintf(cluster1buffer, 10, "%d", cluster1duration);
 
 	// everything lower than 1000 usecs would
 	// be a useless boost-duration
 	if (boost_duration >= 1000) {
 		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, cluster0buffer);
-		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, buffer);
+		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, cluster1buffer);
 	}
 
 	if (is_apollo_interactive()) {
