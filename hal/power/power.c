@@ -155,18 +155,13 @@ static void power_hint_interaction(void *data) {
 
 static void power_hint_vsync(void *data) {
 	int pulse_requested = *((intptr_t *)data);
-	int cpufreq_apollo, cpufreq_atlas, pulse_divider = 1;
+	int cpufreq_apollo, cpufreq_atlas;
 	char *dvfs_gov = "1", *dvfs_min_lock = "";
 
 	if (!screen_is_on || current_power_profile == PROFILE_POWER_SAVE) {
 		// no vsync-boost when screen is deactivated
 		// or when in powersave-mode
 		return;
-	}
-
-	if (current_power_profile == PROFILE_NORMAL) {
-		// run the vsync-boost only half the time
-		pulse_divider = 2;
 	}
 
 	if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
@@ -209,7 +204,19 @@ static void power_hint_vsync(void *data) {
 	if (pulse_requested) {
 
 		// cpu boost
-		power_hint_boost((int)((1000 / 59.95) * 1000) / pulse_divider); // boost for one FPS
+		if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
+			power_hint_boost(pulse_requested); // boost for the requested time
+		} else {
+			// boost for only half of the requested time,
+			// maximum of 750ms for the pulse
+			pulse_requested /= 2;
+
+			if (pulse_requested > 750000) {
+				pulse_requested = 750000;
+			}
+
+			power_hint_boost(pulse_requested);
+		}
 
 		// gpu
 		sysfs_write(POWER_MALI_GPU_DVFS_GOVERNOR, dvfs_gov);
