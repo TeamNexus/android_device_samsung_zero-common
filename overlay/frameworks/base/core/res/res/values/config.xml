@@ -56,14 +56,12 @@
         <item>"1,1"</item>
         <item>"0,1"</item>
         <item>"7,1"</item>
-        <item>"9,1"</item>
     </string-array>
 
     <!-- List of regexpressions describing the interface (if any) that represent tetherable
          USB interfaces.  If the device doesn't want to support tething over USB this should
          be empty.  An example would be "usb.*" -->
     <string-array translatable="false" name="config_tether_usb_regexs">
-        <item>usb\\d</item>
         <item>rndis\\d</item>
     </string-array>
 
@@ -72,7 +70,6 @@
          should be empty.  An example would be "softap.*" -->
     <string-array translatable="false" name="config_tether_wifi_regexs">
         <item>"wlan0"</item>
-        <item>"softap.*"</item>
     </string-array>
 
     <!-- List of regexpressions describing the interface (if any) that represent tetherable
@@ -92,45 +89,9 @@
         <item>7</item>
     </integer-array>
 
-    <!-- Boolean indicating whether the wifi chipset has dual frequency band support -->
-    <bool translatable="false" name="config_wifi_dual_band_support">true</bool>
-
-    <!-- Boolean indicating whether the wifi chipset has background scan support -->
-    <bool translatable="false" name="config_wifi_background_scan_support">true</bool>
-
-    <!-- Wifi driver supports batched scan -->
-    <bool translatable="false" name="config_wifi_batched_scan_supported">true</bool>
-
     <!-- Flag indicating whether we should enable the automatic brightness in Settings.
          Software implementation will be used if config_hardware_auto_brightness_available is not set -->
     <bool name="config_automatic_brightness_available">true</bool>
-
-    <!-- Indicate whether the lid state impacts the accessibility of
-         the physical keyboard.  0 means it doesn't, 1 means it is accessible
-         when the lid is open, 2 means it is accessible when the lid is
-         closed.  The default is 0. -->
-    <integer name="config_lidKeyboardAccessibility">1</integer>
-
-    <!-- Indicate whether the lid state impacts the accessibility of
-         the navigation buttons.  0 means it doesn't, 1 means it is accessible
-         when the lid is open, 2 means it is accessible when the lid is
-         closed.  The default is 0. -->
-    <integer name="config_lidNavigationAccessibility">1</integer>
-
-    <!-- Indicate whether closing the lid causes the device to go to sleep and opening
-         it causes the device to wake up.
-         The default is false. -->
-    <bool name="config_lidControlsSleep">true</bool>
-
-    <!-- Indicate whether the SD card is accessible without removing the battery. -->
-    <bool name="config_batterySdCardAccessibility">true</bool>
-
-    <!-- Shutdown if the battery temperature exceeds (this value * 0.1) Celsius. -->
-    <integer name="config_shutdownBatteryTemperature">600</integer>
-
-    <!-- Default value for led color when battery is medium charged -->
-    <!-- The green LED is brighter than red, bias closer to yellow. -->
-    <integer name="config_notificationsBatteryMediumARGB">0xFFFF6000</integer>
 
     <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
     <bool name="config_intrusiveNotificationLed">true</bool>
@@ -212,37 +173,6 @@
         <item>255</item>  <!-- 20001+ -->
     </integer-array>
 
-    <!-- Array of output values for button backlight corresponding to the LUX values
-         in the config_autoBrightnessLevels array.  This array should have size one greater
-         than the size of the config_autoBrightnessLevels array.
-         This must be overridden in platform specific overlays -->
-    <integer-array name="config_autoBrightnessButtonBacklightValues">
-        <item>255</item>   <!-- 0-9 -->
-        <item>255</item>   <!-- 10-30 -->
-        <item>255</item>   <!-- 31-100 -->
-        <item>255</item>   <!-- 101-325 -->
-        <item>255</item>   <!-- 326-1250 -->
-        <item>255</item>  <!-- 1251-3500 -->
-        <item>255</item>  <!-- 3501-10000 -->
-        <item>255</item>  <!-- 10001-20000 -->
-        <item>255</item>  <!-- 20001+ -->
-    </integer-array>
-
-    <!-- Array of output values for keyboard backlight corresponding to the LUX values
-        in the config_autoBrightnessLevels array. This array should have size one greater
-        than the size of the config_autoBrightnessLevels array. -->
-    <integer-array name="config_autoBrightnessKeyboardBacklightValues">
-        <item>255</item>   <!-- 0-9 -->
-        <item>255</item>   <!-- 10-30 -->
-        <item>255</item>   <!-- 31-100 -->
-        <item>255</item>   <!-- 101-325 -->
-        <item>255</item>   <!-- 326-1250 -->
-        <item>255</item>  <!-- 1251-3500 -->
-        <item>255</item>  <!-- 3501-10000 -->
-        <item>255</item>  <!-- 10001-20000 -->
-        <item>255</item>  <!-- 20001+ -->
-    </integer-array>
-
     <!-- Boolean indicating if current platform supports BLE peripheral mode -->
     <bool name="config_bluetooth_le_peripheral_mode_supported">true</bool>
 
@@ -255,17 +185,11 @@
          format is UMTS|LTE|... -->
     <string translatable="false" name="config_radio_access_family">GSM | WCDMA | LTE</string>
 
-    <!-- Boolean indicating if restoring network selection should be skipped -->
-    <!-- The restoring is handled by modem if it is true -->
-    <bool translatable="false" name="skip_restoring_network_selection">true</bool>
-
     <!--  Maximum number of supported users -->
     <integer name="config_multiuserMaximumUsers">4</integer>
+
     <!-- Whether UI for multi user should be shown -->
     <bool name="config_enableMultiUserUI">true</bool>
-
-    <!-- reference volume index for music stream to limit headphone volume and display warning -->
-    <integer name="config_safe_media_volume_index">7</integer>
 
     <!-- Configure mobile tcp buffer sizes in the form:
          rat-name:rmem_min,rmem_def,rmem_max,wmem_min,wmem_def,wmem_max
@@ -283,10 +207,6 @@
         <item>evdo:131072,262144,1048576,4096,16384,524288</item>
         <item>lte:524288,1048576,8388608,262144,524288,4194304</item>
     </string-array>
-
-    <!-- Configure wifi tcp buffersizes in the form:
-         rmem_min,rmem_def,rmem_max,wmem_min,wmem_def,wmem_max -->
-    <string name="config_wifi_tcp_buffers" translatable="false">524288,2097152,4194304,262144,524288,1048576</string>
 
     <!-- Whether WiFi display is supported by this device.
          There are many prerequisites for this feature to work correctly.
@@ -330,12 +250,4 @@
 
     <!-- For performance and storage reasons, limit the number of fingerprints per user -->
     <integer name="config_fingerprintMaxTemplatesPerUser">4</integer>
-
-    <string-array translatable="false" name="config_defaultPinnerServiceFiles">
-        <item>"/system/framework/arm64/boot-framework.oat"</item>
-        <item>"/system/framework/oat/arm64/services.odex"</item>
-        <item>"/system/framework/arm64/boot.oat"</item>
-        <item>"/system/framework/arm64/boot-core-libart.oat"</item>
-   </string-array>
-
 </resources>
