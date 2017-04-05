@@ -308,8 +308,12 @@ static void power_set_profile(int profile) {
  	sysfs_write(POWER_CPU_HOTPLUG, "0");
 
 	// disable enforced mode
-	sysfs_write(POWER_APOLLO_INTERACTIVE_ENFORCED_MODE, "0");
-	sysfs_write(POWER_ATLAS_INTERACTIVE_ENFORCED_MODE, "0");
+	if (is_apollo_interactive()) {
+		sysfs_write(POWER_APOLLO_INTERACTIVE_ENFORCED_MODE, "0");
+	}
+	if (is_atlas_interactive()) {
+		sysfs_write(POWER_ATLAS_INTERACTIVE_ENFORCED_MODE, "0");
+	}
 
 	switch (profile) {
 
@@ -322,20 +326,24 @@ static void power_set_profile(int profile) {
 			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "544");
 
 			// apply settings for apollo
-			sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "19000");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "20000");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "95");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "400000");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "95");
+			if (is_apollo_interactive()) {
+				sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "19000");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "20000");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "95");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "400000");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "95");
+			}
 
 			// apply settings for atlas
-			sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "39000");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "40000");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "95");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "800000");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "95");
+			if (is_atlas_interactive()) {
+				sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "39000");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "40000");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "95");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "800000");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "95");
+			}
 
 			break;
 
@@ -348,20 +356,24 @@ static void power_set_profile(int profile) {
 			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
 
 			// apply settings for apollo
-			sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "49000");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "30000");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "85");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1000000");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "85");
+			if (is_apollo_interactive()) {
+				sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "49000");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "30000");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "85");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1000000");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "85");
+			}
 
 			// apply settings for atlas
-			sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "85");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1600000");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "85");
+			if (is_atlas_interactive()) {
+				sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "85");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1600000");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "85");
+			}
 
 			break;
 
@@ -374,20 +386,24 @@ static void power_set_profile(int profile) {
 			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
 
 			// apply settings for apollo
-			sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "75");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1704000");
-			sysfs_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "75");
+			if (is_apollo_interactive()) {
+				sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "75");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1704000");
+				sysfs_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "75");
+			}
 
 			// apply settings for atlas
-			sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "89000");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "80000");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "75");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "2304000");
-			sysfs_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "75");
+			if (is_atlas_interactive()) {
+				sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "89000");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "80000");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "75");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "2304000");
+				sysfs_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "75");
+			}
 
 			break;
 	}
