@@ -98,7 +98,6 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 static void power_hint_cpu_boost(void *data);
 static void power_hint_interaction(void *data);
 static void power_hint_vsync(void *data);
-static int power_hint_vsync_cpufreq(int cluster);
 static void power_hint_vsync_apply_cpufreq(char *path, int freq);
 static void power_hint_boost(int boost_duration);
 
