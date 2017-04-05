@@ -286,7 +286,7 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 	snprintf(durationbuf, 16, "%d", boost_duration);
 
 	// update the timer
-	power_pulse_set_timer(cluster);
+	power_pulse_set_timer(cluster, boost_duration);
 
 	if (cluster == 0 && is_apollo_interactive()) {
 		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, durationbuf);
@@ -683,7 +683,7 @@ static int power_pulse_is_active(int cluster) {
 	struct timespec tms;
 	uint64_t ltimer;
 
-	if (power_pulse_active_timer == 0 || power_pulse_last_duration == 0) {
+	if (power_pulse_ending[cluster] == 0) {
 		return 0;
 	}
 
