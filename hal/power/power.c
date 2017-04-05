@@ -48,6 +48,7 @@ static int current_power_profile = PROFILE_NORMAL;
 static int screen_is_on = 1;
 static int vsync_pulse_requests_active = 0;
 static int vsync_pulse_request_any_active = 0;
+static uint64_t power_pulse_ending[2] = { 0, 0 };
 
 /***********************************
  * Initializing
@@ -177,7 +178,7 @@ static void power_hint_vsync(void *data) {
 		return;
 	} */
 
-	if (vsync_pulse_requests_active > 10) {
+	if (unlikely(vsync_pulse_requests_active > 10)) {
 		// The OS doesn't seem to close the pulse-requests
 		ALOGE("%s: %d pulse-requests are currently active, running clean-up now", __func__, vsync_pulse_requests_active);
 
@@ -252,38 +253,47 @@ static void power_hint_boost(int boost_duration) {
 		pulse_divider = 2;
 	}
 
-	// read current CPU-usage
-	read_cpu_util(0, &cluster0util);
-	read_cpu_util(1, &cluster1util);
-
 	// apply divider to boost-duration
 	boost_duration /= pulse_divider;
 
+	power_hint_boost_apply_pulse(0, boost_duration);
+	power_hint_boost_apply_pulse(1, boost_duration);
+}
+
+static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
+	char durationbuf[17];
+	struct interactive_cpu_util util;
+
+	if (power_pulse_is_active(cluster)) {
+		// if there already is a boostpulse running
+		// on this cluster, discard this one
+		return;
+	}
+
+	// read current CPU-usage
+	read_cpu_util(cluster, &util);
+
 	// apply cluster-specific changes
-	cluster0duration = recalculate_boostpulse_duration(boost_duration, cluster0util);
-	cluster1duration = recalculate_boostpulse_duration(boost_duration, cluster1util);
+	boost_duration = recalculate_boostpulse_duration(boost_duration, util);
 
 	// everything lower than 10 ms would
 	// be a useless boost-duration
-	if (cluster0duration < 10000) {
-		cluster0duration = 10000;
-	}
-	if (cluster1duration < 10000) {
-		cluster1duration = 10000;
+	if (unlikely(boost_duration < 10000)) {
+		boost_duration = 10000;
 	}
 
 	// convert to string
-	snprintf(cluster0buffer, 16, "%d", cluster0duration);
-	snprintf(cluster1buffer, 16, "%d", cluster1duration);
+	snprintf(durationbuf, 16, "%d", boost_duration);
 
-	if (is_apollo_interactive()) {
-		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, cluster0buffer);
+	// update the timer
+	power_pulse_set_timer(cluster);
+
+	if (cluster == 0 && is_apollo_interactive()) {
+		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, durationbuf);
 		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE, "1");
-	}
-
-	if (is_atlas_interactive()) {
-		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, cluster1buffer);
-		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE, "1");
+	} else if (cluster == 1 && is_atlas_interactive()) {
+		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, durationbuf);
+		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE, "1");
 	}
 }
 
@@ -314,10 +324,10 @@ static void power_set_profile(int profile) {
  	sysfs_write(POWER_CPU_HOTPLUG, "0");
 
 	// disable enforced mode
-	if (is_apollo_interactive()) {
+	if (likeley(is_apollo_interactive())) {
 		sysfs_write(POWER_APOLLO_INTERACTIVE_ENFORCED_MODE, "0");
 	}
-	if (is_atlas_interactive()) {
+	if (likeley(is_atlas_interactive())) {
 		sysfs_write(POWER_ATLAS_INTERACTIVE_ENFORCED_MODE, "0");
 	}
 
@@ -332,7 +342,7 @@ static void power_set_profile(int profile) {
 			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "544");
 
 			// apply settings for apollo
-			if (is_apollo_interactive()) {
+			if (likeley(is_apollo_interactive())) {
 				sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "19000");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "20000");
@@ -342,7 +352,7 @@ static void power_set_profile(int profile) {
 			}
 
 			// apply settings for atlas
-			if (is_atlas_interactive()) {
+			if (likeley(is_atlas_interactive())) {
 				sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "39000");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "40000");
@@ -362,7 +372,7 @@ static void power_set_profile(int profile) {
 			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
 
 			// apply settings for apollo
-			if (is_apollo_interactive()) {
+			if (likeley(is_apollo_interactive())) {
 				sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "49000");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "30000");
@@ -372,7 +382,7 @@ static void power_set_profile(int profile) {
 			}
 
 			// apply settings for atlas
-			if (is_atlas_interactive()) {
+			if (likeley(is_atlas_interactive())) {
 				sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
@@ -392,7 +402,7 @@ static void power_set_profile(int profile) {
 			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
 
 			// apply settings for apollo
-			if (is_apollo_interactive()) {
+			if (likeley(is_apollo_interactive())) {
 				sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
@@ -402,7 +412,7 @@ static void power_set_profile(int profile) {
 			}
 
 			// apply settings for atlas
-			if (is_atlas_interactive()) {
+			if (likeley(is_atlas_interactive())) {
 				sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "89000");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "80000");
@@ -479,14 +489,14 @@ static int sysfs_write(const char *path, char *s) {
 
 	fd = open(path, O_WRONLY);
 
-	if (fd < 0) {
+	if (unlikely(fd < 0)) {
 		strerror_r(errno, buf, sizeof(buf));
 		ALOGE("Error opening %s: %s\n", path, buf);
 		return fd;
 	}
 
 	len = write(fd, s, strlen(s));
-	if (len < 0) {
+	if (unlikely(len < 0)) {
 		strerror_r(errno, buf, sizeof(buf));
 		ALOGE("Error writing to %s: %s\n", path, buf);
 	}
@@ -536,7 +546,7 @@ static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil) {
 
 	fd = open(path, O_RDONLY);
 
-	if (fd < 0) {
+	if (unlikely(fd < 0)) {
 		strerror_r(errno, errbuf, sizeof(errbuf));
 		ALOGE("Error opening %s: %s\n", path, errbuf);
 		return 0;
@@ -547,7 +557,7 @@ static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil) {
 	// close file when finished reading
 	close(fd);
 
-	if (len != 15) {
+	if (unlikely(len != 15)) {
 		strerror_r(errno, errbuf, sizeof(errbuf));
 		ALOGE("Error reading from %s: %s\n", path, errbuf);
 		return 0;
@@ -612,7 +622,7 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 
 	// set to one as minimal or writing
 	// to boostpulse_duration will fail
-	if (duration <= 0) {
+	if (unlikely(duration <= 0)) {
 		duration = 1;
 	}
 
@@ -638,25 +648,56 @@ static int correct_cpu_frequencies(int cluster, int freq) {
 			return 1704000;
 
 		case 1900000:
-			if (cluster == 1) { // atlas
+			if (likeley(cluster == 1)) { // atlas
 				return 1896000;
 			}
 			break;
 
 		case 2300000:
-			if (cluster == 1) { // atlas
+			if (likeley(cluster == 1)) { // atlas
 				return 2304000;
 			}
 			break;
 
 		case 2500000:
-			if (cluster == 1) { // atlas
+			if (likeley(cluster == 1)) { // atlas
 				return 2496000;
 			}
 			break;
 	}
 
 	return freq;
+}
+
+static void power_pulse_set_timer(int cluster, int pulse_duration) {
+	struct timespec tms;
+
+	if (clock_gettime(CLOCK_REALTIME, &tms)) {
+		return;
+	}
+
+	power_pulse_ending[cluster] = (tms.tv_sec * 1000000) + (tms.tv_nsec / 1000) + pulse_duration;
+}
+
+static int power_pulse_is_active(int cluster) {
+	struct timespec tms;
+	uint64_t ltimer;
+
+	if (power_pulse_active_timer == 0 || power_pulse_last_duration == 0) {
+		return 0;
+	}
+
+	if (clock_gettime(CLOCK_REALTIME, &tms)) {
+		return 0;
+	}
+
+	ltimer = (tms.tv_sec * 1000000) + (tms.tv_nsec / 1000);
+
+	if (ltimer < power_pulse_ending[cluster]) {
+		return 1;
+	} else {
+		return 0;
+	}
 }
 
 static struct hw_module_methods_t power_module_methods = {

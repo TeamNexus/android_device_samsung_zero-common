@@ -98,8 +98,8 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 static void power_hint_cpu_boost(void *data);
 static void power_hint_interaction(void *data);
 static void power_hint_vsync(void *data);
-static void power_hint_vsync_apply_cpufreq(char *path, int freq);
 static void power_hint_boost(int boost_duration);
+static void power_hint_boost_apply_pulse(int cluster, int boost_duration);
 
 /***********************************
  * Profiles
@@ -131,5 +131,7 @@ static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil);
 static int read_cpu_util_parse_int(char *str, int core, int *val);
 static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_util cpuutil);
 static int correct_cpu_frequencies(int cluster, int freq);
+static void power_pulse_set_timer(int cluster, int pulse_duration);
+static int power_pulse_is_active(int cluster);
 
 #endif // EXYNOS5_POWER_HAL_H_INCLUDED
