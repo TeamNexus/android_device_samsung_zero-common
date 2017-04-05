@@ -230,7 +230,7 @@ static void power_hint_vsync(void *data) {
 }
 
 static void power_hint_boost(int boost_duration) {
-	char cluster0buffer[11], cluster1buffer[11];
+	char cluster0buffer[17], cluster1buffer[17];
 	int pulse_divider = 1, cluster0duration, cluster1duration;
 	struct interactive_cpu_util cluster0util, cluster1util;
 
@@ -266,17 +266,16 @@ static void power_hint_boost(int boost_duration) {
 	}
 
 	// convert to string
-	snprintf(cluster0buffer, 11, "%d", cluster0duration);
-	snprintf(cluster1buffer, 11, "%d", cluster1duration);
-
-	sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, cluster0buffer);
-	sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, cluster1buffer);
+	snprintf(cluster0buffer, 16, "%d", cluster0duration);
+	snprintf(cluster1buffer, 16, "%d", cluster1duration);
 
 	if (is_apollo_interactive()) {
+		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, cluster0buffer);
 		sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE, "1");
 	}
 
 	if (is_atlas_interactive()) {
+		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, cluster1buffer);
 		sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE, "1");
 	}
 }
