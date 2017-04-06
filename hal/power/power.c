@@ -178,7 +178,7 @@ static void power_hint_vsync(void *data) {
 		return;
 	} */
 
-	if (unlikely(vsync_pulse_requests_active > 10)) {
+	if (vsync_pulse_requests_active > 10) {
 		// The OS doesn't seem to close the pulse-requests
 		ALOGE("%s: %d pulse-requests are currently active, running clean-up now", __func__, vsync_pulse_requests_active);
 
@@ -278,7 +278,7 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 
 	// everything lower than 10 ms would
 	// be a useless boost-duration
-	if (unlikely(boost_duration < 10000)) {
+	if (boost_duration < 10000) {
 		boost_duration = 10000;
 	}
 
@@ -324,10 +324,10 @@ static void power_set_profile(int profile) {
  	sysfs_write(POWER_CPU_HOTPLUG, "0");
 
 	// disable enforced mode
-	if (likeley(is_apollo_interactive())) {
+	if (is_apollo_interactive()) {
 		sysfs_write(POWER_APOLLO_INTERACTIVE_ENFORCED_MODE, "0");
 	}
-	if (likeley(is_atlas_interactive())) {
+	if (is_atlas_interactive()) {
 		sysfs_write(POWER_ATLAS_INTERACTIVE_ENFORCED_MODE, "0");
 	}
 
@@ -342,7 +342,7 @@ static void power_set_profile(int profile) {
 			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "544");
 
 			// apply settings for apollo
-			if (likeley(is_apollo_interactive())) {
+			if (is_apollo_interactive()) {
 				sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "19000");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "20000");
@@ -352,7 +352,7 @@ static void power_set_profile(int profile) {
 			}
 
 			// apply settings for atlas
-			if (likeley(is_atlas_interactive())) {
+			if (is_atlas_interactive()) {
 				sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "39000");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "40000");
@@ -372,7 +372,7 @@ static void power_set_profile(int profile) {
 			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
 
 			// apply settings for apollo
-			if (likeley(is_apollo_interactive())) {
+			if (is_apollo_interactive()) {
 				sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "49000");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "30000");
@@ -382,7 +382,7 @@ static void power_set_profile(int profile) {
 			}
 
 			// apply settings for atlas
-			if (likeley(is_atlas_interactive())) {
+			if (is_atlas_interactive()) {
 				sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
@@ -402,7 +402,7 @@ static void power_set_profile(int profile) {
 			sysfs_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
 
 			// apply settings for apollo
-			if (likeley(is_apollo_interactive())) {
+			if (is_apollo_interactive()) {
 				sysfs_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
 				sysfs_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
@@ -412,7 +412,7 @@ static void power_set_profile(int profile) {
 			}
 
 			// apply settings for atlas
-			if (likeley(is_atlas_interactive())) {
+			if (is_atlas_interactive()) {
 				sysfs_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "89000");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
 				sysfs_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "80000");
@@ -489,14 +489,14 @@ static int sysfs_write(const char *path, char *s) {
 
 	fd = open(path, O_WRONLY);
 
-	if (unlikely(fd < 0)) {
+	if (fd < 0) {
 		strerror_r(errno, buf, sizeof(buf));
 		ALOGE("Error opening %s: %s\n", path, buf);
 		return fd;
 	}
 
 	len = write(fd, s, strlen(s));
-	if (unlikely(len < 0)) {
+	if (len < 0) {
 		strerror_r(errno, buf, sizeof(buf));
 		ALOGE("Error writing to %s: %s\n", path, buf);
 	}
@@ -546,7 +546,7 @@ static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil) {
 
 	fd = open(path, O_RDONLY);
 
-	if (unlikely(fd < 0)) {
+	if (fd < 0) {
 		strerror_r(errno, errbuf, sizeof(errbuf));
 		ALOGE("Error opening %s: %s\n", path, errbuf);
 		return 0;
@@ -557,7 +557,7 @@ static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil) {
 	// close file when finished reading
 	close(fd);
 
-	if (unlikely(len != 15)) {
+	if (len != 15) {
 		strerror_r(errno, errbuf, sizeof(errbuf));
 		ALOGE("Error reading from %s: %s\n", path, errbuf);
 		return 0;
@@ -622,7 +622,7 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 
 	// set to one as minimal or writing
 	// to boostpulse_duration will fail
-	if (unlikely(duration <= 0)) {
+	if (duration <= 0) {
 		duration = 1;
 	}
 
@@ -648,19 +648,19 @@ static int correct_cpu_frequencies(int cluster, int freq) {
 			return 1704000;
 
 		case 1900000:
-			if (likeley(cluster == 1)) { // atlas
+			if (cluster == 1) { // atlas
 				return 1896000;
 			}
 			break;
 
 		case 2300000:
-			if (likeley(cluster == 1)) { // atlas
+			if (cluster == 1) { // atlas
 				return 2304000;
 			}
 			break;
 
 		case 2500000:
-			if (likeley(cluster == 1)) { // atlas
+			if (cluster == 1) { // atlas
 				return 2496000;
 			}
 			break;
