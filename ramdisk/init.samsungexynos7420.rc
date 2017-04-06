@@ -267,6 +267,8 @@ on post-fs-data
     chmod 0664 /proc/sys/kernel/random/read_wakeup_threshold
     chown root system /proc/sys/kernel/random/write_wakeup_threshold
     chmod 0664 /proc/sys/kernel/random/write_wakeup_threshold
+    chown root system /sys/devices/virtual/fingerprint/fingerprint/disable_wake_lock
+    chmod 0664 /sys/devices/virtual/fingerprint/fingerprint/disable_wake_lock
 
 ################################################
 # Kernel tweaks
@@ -275,6 +277,7 @@ on post-fs-data
     write /proc/sys/net/ipv6/conf/all/use_optimistic 1
     write /proc/sys/kernel/random/read_wakeup_threshold 512
     write /proc/sys/kernel/random/write_wakeup_threshold 256
+    write /sys/devices/virtual/fingerprint/fingerprint/disable_wake_lock 1
 
 ################################################
 # Sickness-Kernel: Google Play Store Fix
