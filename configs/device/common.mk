@@ -38,7 +38,7 @@ PRODUCT_PACKAGES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    HTCCamera
+    Snap
 
 # Dbthtool
 PRODUCT_PACKAGES += \
