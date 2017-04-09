@@ -16,7 +16,7 @@
 
 <MediaCodecs>
     <Decoders>
-        <MediaCodec name="somxamrd">
+        <!-- <MediaCodec name="somxamrd">
             <Type name="audio/amr-wb" />
             <Type name="audio/3gpp"  />
             <Quirk name="needs-flush-before-disable" />
@@ -40,6 +40,6 @@
         <MediaCodec name="somxadpcmd" type="audio/x-ima" >
             <Quirk name="needs-flush-before-disable" />
             <Quirk name="decoder-ignores-streamcorrupt-error" />
-        </MediaCodec>
+        </MediaCodec> -->
     </Decoders>
 </MediaCodecs>
