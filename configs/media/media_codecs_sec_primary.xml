@@ -16,28 +16,28 @@
 
 <MediaCodecs>
     <Decoders>
-        <MediaCodec name="OMX.SEC.amr.dec">
+        <MediaCodec name="somxamrd">
             <Type name="audio/amr-wb" />
             <Type name="audio/3gpp"  />
             <Quirk name="needs-flush-before-disable" />
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.mp3.dec">
+        <MediaCodec name="somxmp3d">
             <Type name="audio/mpeg"/>
             <Type name="audio/mpeg-L1"/>
             <Type name="audio/mpeg-L2"/>
             <Quirk name="needs-flush-before-disable" />
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.flac.dec" type="audio/flac" >
+        <MediaCodec name="somxflacd" type="audio/flac" >
             <Quirk name="needs-flush-before-disable" />
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.wma.dec" type="audio/x-ms-wma" >
+        <MediaCodec name="somxwmad" type="audio/x-ms-wma" >
             <Quirk name="needs-flush-before-disable" />
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.adpcm.dec" type="audio/x-ima" >
+        <MediaCodec name="somxadpcmd" type="audio/x-ima" >
             <Quirk name="needs-flush-before-disable" />
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
