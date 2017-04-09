@@ -146,18 +146,38 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 
 static void power_hint_cpu_boost(void *data) {
 	int boost_duration = *((intptr_t *)data);
+
+	if (data) {
+		boost_duration = *((intptr_t *)data);
+	} else {
+		boost_duration = 80000;
+	}
+
 	power_hint_boost((int)boost_duration);
 }
 
 static void power_hint_interaction(void *data) {
 	int boost_duration = *((intptr_t *)data);
+
+	if (data) {
+		boost_duration = *((intptr_t *)data);
+	} else {
+		boost_duration = 80000;
+	}
+
 	power_hint_boost((int)boost_duration);
 }
 
 static void power_hint_vsync(void *data) {
-	int pulse_requested = *((intptr_t *)data);
+	int pulse_requested;
 	int cpufreq_apollo, cpufreq_atlas;
 	char *dvfs_gov = "1", *dvfs_min_lock = "";
+
+	if (data) {
+		pulse_requested = *((intptr_t *)data);
+	} else {
+		pulse_requested = 80000;
+	}
 
 	if (!screen_is_on || current_power_profile == PROFILE_POWER_SAVE) {
 		// no vsync-boost when screen is deactivated
@@ -208,10 +228,6 @@ static void power_hint_vsync(void *data) {
 		if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
 			power_hint_boost(pulse_requested); // boost for the requested time
 		} else {
-			// boost for only half of the requested time,
-			// maximum of 750ms for the pulse
-			pulse_requested /= 2;
-
 			if (pulse_requested > 750000) {
 				pulse_requested = 750000;
 			}
