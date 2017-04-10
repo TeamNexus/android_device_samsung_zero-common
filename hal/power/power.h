@@ -27,6 +27,8 @@
 #define POWERHAL_POSITIVE(n) ((n) < 0 ? 0 - (n) : (n))
 #define POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(n) (cpu0diff <= n || cpu1diff <= n || cpu2diff <= n || cpu3diff <= n)
 
+#define POWERHAL_DEBUG 0
+
 #define PROFILE_POWER_SAVE 0
 #define PROFILE_NORMAL 1
 #define PROFILE_HIGH_PERFORMANCE 2
@@ -88,6 +90,7 @@ struct interactive_cpu_util {
 /***********************************
  * Initializing
  */
+static int powerhal_is_debugging();
 static int power_open(const hw_module_t __unused * module, const char *name, hw_device_t **device);
 static void power_init(struct power_module __unused * module);
 
@@ -95,9 +98,7 @@ static void power_init(struct power_module __unused * module);
  * Hinting
  */
 static void power_hint(struct power_module *module, power_hint_t hint, void *data);
-static void power_hint_cpu_boost(void *data);
-static void power_hint_interaction(void *data);
-static void power_hint_vsync(void *data);
+static void power_hint_boost_generic(void *data);
 static void power_hint_boost(int boost_duration);
 static void power_hint_boost_apply_pulse(int cluster, int boost_duration);
 
@@ -123,8 +124,8 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
 /***********************************
  * Utilities
  */
-static int sysfs_write(const char *path, char *s);
-static int sysfs_exists(const char *path);
+static int file_write(const char *path, char *s);
+static int file_exists(const char *path);
 static int is_apollo_interactive();
 static int is_atlas_interactive();
 static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil);
