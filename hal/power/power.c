@@ -113,7 +113,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 		case POWER_HINT_CPU_BOOST:
 		case POWER_HINT_INTERACTION:
 		case POWER_HINT_VSYNC:
-			power_hint_boost_generic(data);
+			power_hint_boost(data);
 			break;
 
 		/***********************************
@@ -140,19 +140,19 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	pthread_mutex_unlock(&sec->lock);
 }
 
-static void power_hint_boost_generic(void *data) {
-	int boost_duration = *((intptr_t *)data);
+static void power_hint_boost(void *data) {
+	int boost_duration;
 
 	if (data) {
 		boost_duration = *((intptr_t *)data);
 	} else {
-		boost_duration = 80000;
+		boost_duration = 40000;
 	}
 
-	power_hint_boost((int)boost_duration);
+	power_hint_boost_apply((int)boost_duration);
 }
 
-static void power_hint_boost(int boost_duration) {
+static void power_hint_boost_apply(int boost_duration) {
 	char cluster0buffer[17], cluster1buffer[17];
 	int cluster0duration, cluster1duration;
 	struct interactive_cpu_util cluster0util, cluster1util;
@@ -192,7 +192,7 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 
 	if (power_pulse_is_active(cluster)) {
 		if (powerhal_is_debugging())
-			ALOGE("%s: cluster%d: a boostpulse is already active on this cluster", __func__, cluster);
+			ALOGE("%s: cluster%d: boostpulse is already active on this cluster", __func__, cluster);
 
 		// if there already is a boostpulse running
 		// on this cluster, discard this one
