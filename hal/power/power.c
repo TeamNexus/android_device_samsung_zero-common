@@ -90,8 +90,8 @@ static int power_open(const hw_module_t __unused * module, const char *name, hw_
 static void power_init(struct power_module __unused * module) {
 	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
 
-	// give them some boost
-	power_hint_boost(40000);
+	// give it some speed
+	power_hint_boost_apply(750000);
 
 	// set to normal power profile
 	power_set_profile(PROFILE_NORMAL);
@@ -551,7 +551,7 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 	cpu3diff = POWERHAL_POSITIVE(cpuutil.cpu3 - avg);
 
 	if (powerhal_is_debugging()) {
-		ALOGD("%s: cpudiff %3d %3d %3d %3d", __func__, cluster, cpu0diff, cpu1diff, cpu2diff, cpu3diff);
+		ALOGD("%s: cpudiff %3d %3d %3d %3d", __func__, cpu0diff, cpu1diff, cpu2diff, cpu3diff);
 	}
 
 	if (avg >= 85) {
