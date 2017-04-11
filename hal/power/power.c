@@ -540,7 +540,7 @@ static int read_cpu_util_parse_int(char *str, int core, int *val) {
 }
 
 static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_util cpuutil) {
-	int avg = cpuutil.avg;
+	int avg = cpuutil.avg, init_duration = duration;
 	int cpu0diff = 0, cpu1diff = 0,
 		cpu2diff = 0, cpu3diff = 0;
 
@@ -555,19 +555,25 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 	}
 
 	if (avg >= 85) {
-		duration += 150000; // very high load, +150ms
+		duration += ((duration / 3) * 3); // very high load
 	} else if (avg >= 65) {
-		duration += 100000; // high load, +100ms
+		duration += ((duration / 3) * 2); // high load
 	} else if (avg >= 50) {
-		duration += 50000; // average load, +50ms
+		duration += ((duration / 3) * 1); // average load
 	}
 
 	if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(25)) {
-		duration -= 25000; // slightly low load on at least one core, -25ms
+		duration -= ((duration / 3) * 1); // slightly low load
 	} else if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(35)) {
-		duration -= 500000; // low load, -50ms
+		duration -= ((duration / 3) * 2); // low load
 	} else if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(50)) {
-		duration -= 75000; // very low load, -75ms
+		duration -= ((duration / 3) * 3); // very low load
+	}
+
+	// the calculated boost-duration should not
+	// be lower than the initial duration
+	if (duration < init_duration) {
+		duration = init_duration;
 	}
 
 	return duration;
