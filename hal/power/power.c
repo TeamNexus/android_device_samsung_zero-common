@@ -381,7 +381,7 @@ static void power_input_device_state(int state) {
 	switch (state) {
 		case STATE_DISABLE:
 
-			// file_write(POWER_ENABLE_TOUCHKEY, "0");
+			file_write(POWER_ENABLE_TOUCHKEY, "0");
 			file_write(POWER_ENABLE_TOUCHSCREEN, "0");
 
 			if (current_power_profile == PROFILE_POWER_SAVE) {
@@ -394,7 +394,9 @@ static void power_input_device_state(int state) {
 
 		case STATE_ENABLE:
 
-			// file_write(POWER_ENABLE_TOUCHKEY, "1");
+			if (!softkeys_active()) {
+				file_write(POWER_ENABLE_TOUCHKEY, "1");
+			}
 			file_write(POWER_ENABLE_TOUCHSCREEN, "1");
 			file_write(POWER_ENABLE_GPIO, "1");
 
@@ -475,6 +477,34 @@ static int is_apollo_interactive() {
 
 static int is_atlas_interactive() {
 	return file_exists(POWER_ATLAS_INTERACTIVE_BOOSTPULSE);
+}
+
+static int softkeys_active() {
+	char errbuf[80];
+	FILE *fp;
+	int softkeys_active;
+
+	fd = fopen("/data/power/softkeys_active", "r");
+
+	if (fd == NULL) {
+		strerror_r(errno, errbuf, sizeof(errbuf));
+		ALOGE("Error opening /data/power/touchkeys: %s\n", errbuf);
+		return 0;
+	}
+
+	if (fread(fd, "%d", &softkeys_active) != 1) {
+		strerror_r(errno, errbuf, sizeof(errbuf));
+		ALOGE("Error reading from %s: %s\n", path, errbuf);
+
+		// close file when finished reading
+		close(fd);
+		return 0;
+	}
+
+	// close file when finished reading
+	close(fd);
+
+	return softkeys_active;
 }
 
 static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil) {

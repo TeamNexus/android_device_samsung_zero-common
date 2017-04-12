@@ -29,18 +29,22 @@ import org.cyanogenmod.internal.util.FileUtils;
 
 public class KeyDisabler {
 
-    private static String CONTROL_PATH = "/sys/class/input/input0/enabled";
+    private static String NAME_PATH = "/sys/class/input/input0/name";
+    private static String CTRL_PATH = "/sys/class/input/input0/enabled";
+    private static String POWER_HAL_PATH = "/data/power/softkeys_active";
 
     public static boolean isSupported() {
-        return FileUtils.isFileWritable(CONTROL_PATH);
+        return FileUtils.isFileWritable(CTRL_PATH) &&
+               FileUtils.readOneLine(TYPE_PATH).equals("sec_touchkey");
     }
 
     public static boolean isActive() {
-        return FileUtils.readOneLine(CONTROL_PATH).equals("0");
+        return FileUtils.readOneLine(NAME_PATH).equals("0");
     }
 
     public static boolean setActive(boolean state) {
-        return FileUtils.writeLine(CONTROL_PATH, (state ? "0" : "1"));
+        return FileUtils.writeLine(CTRL_PATH, (state ? "0" : "1")) &&
+               FileUtils.writeLine(POWER_HAL_PATH, (state ? "1" : "0"));
     }
 
 }

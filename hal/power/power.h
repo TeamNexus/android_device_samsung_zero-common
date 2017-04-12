@@ -134,6 +134,7 @@ static int file_write(const char *path, char *s);
 static int file_exists(const char *path);
 static int is_apollo_interactive();
 static int is_atlas_interactive();
+static int softkeys_active();
 static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil);
 static int read_cpu_util_parse_int(char *str, int core, int *val);
 static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_util cpuutil);

@@ -61,6 +61,12 @@ on post-fs-data
     setprop vold.post_fs_data_done 1
 
 ################################################
+# Power-HAL
+    mkdir /data/power 0771 system system
+    write /data/power/softkeys_active 0
+    rm /data/power/debug
+
+################################################
 # cpu permissions
     chmod 0664 /sys/power/enable_dm_hotplug
     chown system system /sys/power/enable_dm_hotplug
