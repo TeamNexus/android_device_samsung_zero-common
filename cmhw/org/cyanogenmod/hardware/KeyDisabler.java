@@ -35,11 +35,11 @@ public class KeyDisabler {
 
     public static boolean isSupported() {
         return FileUtils.isFileWritable(CTRL_PATH) &&
-               FileUtils.readOneLine(TYPE_PATH).equals("sec_touchkey");
+               FileUtils.readOneLine(NAME_PATH).equals("sec_touchkey");
     }
 
     public static boolean isActive() {
-        return FileUtils.readOneLine(NAME_PATH).equals("0");
+        return FileUtils.readOneLine(CTRL_PATH).equals("0");
     }
 
     public static boolean setActive(boolean state) {
