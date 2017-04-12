@@ -67,7 +67,7 @@ int exynos7420_power_get_current_profile() {
 static int powerhal_is_debugging() {
 	struct timespec tms;
 
-	if (debug_file_check_cache_time == 0) {
+	if (debug_file_check_expire == 0) {
 		return POWERHAL_FORCE_DEBUG;
 	}
 
@@ -141,19 +141,19 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 		 * power_hint_boost(data or NULL if data does not contain a duration, default value, indicator if value are milliseconds)
 		 */
 		case POWER_HINT_CPU_BOOST:
-			power_hint_boost(data, 40, 0, 0);
+			power_hint_boost(data, 40, 0);
 			break;
 
 		case POWER_HINT_INTERACTION:
-			power_hint_boost(data, 40, 1, 0);
+			power_hint_boost(data, 40, 1);
 			break;
 
 		case POWER_HINT_VSYNC:
-			power_hint_boost(NULL, 1000 / 59.95, 1, 0);
+			power_hint_boost(NULL, 1000 / 59.95, 1);
 			break;
 
 		case POWER_HINT_LAUNCH:
-			power_hint_boost(NULL, 1000, 1, 0)
+			power_hint_boost(NULL, 1000, 1);
 			break;
 
 		/***********************************
