@@ -27,7 +27,7 @@
 #define POWERHAL_POSITIVE(n) ((n) < 0 ? 0 - (n) : (n))
 #define POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(n) (cpu0diff <= n || cpu1diff <= n || cpu2diff <= n || cpu3diff <= n)
 
-#define POWERHAL_DEBUG 0
+#define POWERHAL_FORCE_DEBUG 0
 
 #define PROFILE_POWER_SAVE 0
 #define PROFILE_NORMAL 1
@@ -86,6 +86,12 @@ struct interactive_cpu_util {
     int cpu2;
     int cpu3;
 };
+
+/***********************************
+ * Public Methods
+ */
+int exynos7420_power_is_screen_on();
+int exynos7420_power_get_current_profile();
 
 /***********************************
  * Initializing

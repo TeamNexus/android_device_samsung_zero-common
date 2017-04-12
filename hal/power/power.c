@@ -49,10 +49,21 @@ static int screen_is_on = 1;
 static uint64_t power_pulse_ending[2] = { 0, 0 };
 
 /***********************************
+ * Public Methods
+ */
+int exynos7420_power_is_screen_on() {
+	return screen_is_on;
+}
+
+int exynos7420_power_get_current_profile() {
+	return current_power_profile;
+}
+
+/***********************************
  * Initializing
  */
 static int powerhal_is_debugging() {
-	return POWERHAL_DEBUG || file_exists("/data/.powerhal-debug");
+	return POWERHAL_FORCE_DEBUG || file_exists("/data/power/debug");
 }
 
 static int power_open(const hw_module_t __unused * module, const char *name, hw_device_t **device) {

@@ -23,6 +23,8 @@
 #include <hardware/fingerprint.h>
 #include <utils/threads.h>
 
+#include "../hal/power/power.h"
+
 typedef struct {
     fingerprint_device_t base;
     union {
@@ -87,6 +89,11 @@ static uint64_t pre_enroll(struct fingerprint_device *dev)
 {
     device_t *device = (device_t *) dev;
 
+    // deactivate fp-sensor if screen is off
+    if (!exynos7420_power_is_screen_on()) {
+        return -EINVAL;
+    }
+
     return device->vendor.device->pre_enroll(device->vendor.device);
 }
 
@@ -95,12 +102,22 @@ static int enroll(struct fingerprint_device *dev, const hw_auth_token_t *hat, ui
 {
     device_t *device = (device_t *) dev;
 
+    // deactivate fp-sensor if screen is off
+    if (!exynos7420_power_is_screen_on()) {
+        return -EINVAL;
+    }
+
     return device->vendor.device->enroll(device->vendor.device, hat, gid, timeout_sec);
 }
 
 static int post_enroll(struct fingerprint_device *dev)
 {
     device_t *device = (device_t *) dev;
+
+    // deactivate fp-sensor if screen is off
+    if (!exynos7420_power_is_screen_on()) {
+        return -EINVAL;
+    }
 
     return device->vendor.device->post_enroll(device->vendor.device);
 }
@@ -115,6 +132,11 @@ static uint64_t get_authenticator_id(struct fingerprint_device *dev)
 static int cancel(struct fingerprint_device *dev)
 {
     device_t *device = (device_t *) dev;
+
+    // deactivate fp-sensor if screen is off
+    if (!exynos7420_power_is_screen_on()) {
+        return -EINVAL;
+    }
 
     return device->vendor.device->cancel(device->vendor.device);
 }
@@ -143,6 +165,11 @@ static int set_active_group(struct fingerprint_device *dev, uint32_t gid, const 
 static int authenticate(struct fingerprint_device *dev, uint64_t operation_id, uint32_t gid)
 {
     device_t *device = (device_t *) dev;
+
+    // deactivate fp-sensor if screen is off
+    if (!exynos7420_power_is_screen_on()) {
+        return -EINVAL;
+    }
 
     return device->vendor.device->authenticate(device->vendor.device, operation_id, gid);
 }
