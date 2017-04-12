@@ -137,14 +137,23 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 
 		/***********************************
 		 * Performance
+		 *
+		 * power_hint_boost(data or NULL if data does not contain a duration, default value, indicator if value are milliseconds)
 		 */
 		case POWER_HINT_CPU_BOOST:
+			power_hint_boost(data, 40, 0, 0);
+			break;
+
 		case POWER_HINT_INTERACTION:
+			power_hint_boost(data, 40, 1, 0);
+			break;
+
 		case POWER_HINT_VSYNC:
-			power_hint_boost(data);
+			power_hint_boost(NULL, 1000 / 59.95, 1, 0);
 			break;
 
 		case POWER_HINT_LAUNCH:
+			power_hint_boost(NULL, 1000, 1, 0)
 			break;
 
 		/***********************************
@@ -171,13 +180,17 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	pthread_mutex_unlock(&sec->lock);
 }
 
-static void power_hint_boost(void *data) {
+static void power_hint_boost(void *data, int def, int ismillisec) {
 	int boost_duration;
 
 	if (data) {
 		boost_duration = *((intptr_t *)data);
 	} else {
-		boost_duration = 40000;
+		boost_duration = def;
+	}
+
+	if (ismillisec) {
+		boost_duration *= 1000;
 	}
 
 	power_hint_boost_apply((int)boost_duration);
