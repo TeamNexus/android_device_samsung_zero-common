@@ -153,6 +153,11 @@ static uint64_t get_authenticator_id(struct fingerprint_device *dev)
 {
     device_t *device = (device_t *) dev;
 
+    // deactivate fp-sensor if screen is off
+    if (!exynos7420_power_is_screen_on()) {
+        return -EINVAL;
+    }
+
     return device->vendor.device->get_authenticator_id(device->vendor.device);
 }
 
@@ -172,6 +177,11 @@ static int enumerate(struct fingerprint_device *dev)
 {
     device_t *device = (device_t *) dev;
 
+    // deactivate fp-sensor if screen is off
+    if (!exynos7420_power_is_screen_on()) {
+        return -EINVAL;
+    }
+
     return device->vendor.device->enumerate(device->vendor.device);
 }
 
@@ -185,6 +195,11 @@ static int remove(struct fingerprint_device *dev, uint32_t gid, uint32_t fid)
 static int set_active_group(struct fingerprint_device *dev, uint32_t gid, const char *store_path)
 {
     device_t *device = (device_t *) dev;
+
+    // deactivate fp-sensor if screen is off
+    if (!exynos7420_power_is_screen_on()) {
+        return -EINVAL;
+    }
 
     return device->vendor.device->set_active_group(device->vendor.device, gid, store_path);
 }
