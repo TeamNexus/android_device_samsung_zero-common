@@ -17,13 +17,12 @@
 //#define LOG_NDEBUG 0
 #define LOG_TAG "FingerprintWrapper"
 
+#include <stdlib.h>
 #include <cutils/log.h>
 
 #include <hardware/hardware.h>
 #include <hardware/fingerprint.h>
 #include <utils/threads.h>
-
-#include <power.h>
 
 typedef struct {
     fingerprint_device_t base;
