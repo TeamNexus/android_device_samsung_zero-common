@@ -23,7 +23,7 @@
 #include <hardware/fingerprint.h>
 #include <utils/threads.h>
 
-#include "../hal/power/power.h"
+#include <power.h>
 
 typedef struct {
     fingerprint_device_t base;
@@ -41,6 +41,34 @@ static union {
 } vendor;
 
 static fingerprint_notify_t original_notify;
+
+static bool exynos7420_power_is_screen_on() {
+	char errbuf[80];
+	FILE *fd;
+	int screen_on;
+
+	fd = fopen("/data/power/screen_on", "r");
+
+	if (fd == NULL) {
+		strerror_r(errno, errbuf, sizeof(errbuf));
+		ALOGE("Error opening /data/power/screen_on: %s\n", errbuf);
+		return 0;
+	}
+
+	if (fscanf(fd, "%d", &screen_on) != 1) {
+		strerror_r(errno, errbuf, sizeof(errbuf));
+		ALOGE("Error reading from /data/power/screen_on: %s\n", errbuf);
+
+		// close file when finished reading
+		fclose(fd);
+		return 0;
+	}
+
+	// close file when finished reading
+	fclose(fd);
+
+	return screen_on;
+}
 
 static bool ensure_vendor_module_is_loaded(void)
 {

@@ -356,7 +356,7 @@ static void power_set_profile(int profile) {
 				file_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
 				file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
 				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "75");
-				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1704000");
+				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1500000");
 				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "75");
 			}
 
@@ -366,7 +366,7 @@ static void power_set_profile(int profile) {
 				file_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
 				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "80000");
 				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "75");
-				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "2304000");
+				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "2100000");
 				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "75");
 			}
 
@@ -381,6 +381,8 @@ static void power_input_device_state(int state) {
 	switch (state) {
 		case STATE_DISABLE:
 
+			file_write("/data/power/screen_on", "0");
+
 			file_write(POWER_ENABLE_TOUCHKEY, "0");
 			file_write(POWER_ENABLE_TOUCHSCREEN, "0");
 
@@ -393,6 +395,8 @@ static void power_input_device_state(int state) {
 			break;
 
 		case STATE_ENABLE:
+
+			file_write("/data/power/screen_on", "1");
 
 			if (!softkeys_active()) {
 				file_write(POWER_ENABLE_TOUCHKEY, "1");
@@ -481,7 +485,7 @@ static int is_atlas_interactive() {
 
 static int softkeys_active() {
 	char errbuf[80];
-	FILE *fp;
+	FILE *fd;
 	int softkeys_active;
 
 	fd = fopen("/data/power/softkeys_active", "r");
@@ -492,17 +496,17 @@ static int softkeys_active() {
 		return 0;
 	}
 
-	if (fread(fd, "%d", &softkeys_active) != 1) {
+	if (fscanf(fd, "%d", &softkeys_active) != 1) {
 		strerror_r(errno, errbuf, sizeof(errbuf));
-		ALOGE("Error reading from %s: %s\n", path, errbuf);
+		ALOGE("Error reading from /data/power/touchkeys: %s\n", errbuf);
 
 		// close file when finished reading
-		close(fd);
+		fclose(fd);
 		return 0;
 	}
 
 	// close file when finished reading
-	close(fd);
+	fclose(fd);
 
 	return softkeys_active;
 }
