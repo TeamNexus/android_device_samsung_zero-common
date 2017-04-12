@@ -15,7 +15,7 @@
 -->
 
 <MediaCodecs>
-    <!-- <Decoders>
+    <Decoders>
         <MediaCodec name="somxaacd" type="audio/mp4a-latm" >
             <Quirk name="needs-flush-before-disable" />
             <Quirk name="decoder-ignores-streamcorrupt-error" />
@@ -27,5 +27,5 @@
             <Limit name="sample-rate" ranges="11025,12000,16000,22050,24000,32000,44100,48000" />
             <Limit name="bitrate" range="8000-960000" />
         </MediaCodec>
-    </Encoders> -->
+    </Encoders>
 </MediaCodecs>
