@@ -217,7 +217,6 @@ static void power_hint_boost_apply(int boost_duration) {
 		boost_duration /= 2;
 
 		// boostpulse should not be longer than 750ms
-		//
 		if (boost_duration > 750000) {
 			boost_duration = 750000;
 		}
@@ -255,10 +254,16 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 	if (powerhal_is_debugging())
 		ALOGD("%s: cluster%d: pulse-duration after cpuutil is %d", __func__, cluster, boost_duration);
 
-	// everything lower than 10 ms would
+	// everything lower than 25 ms would
 	// be a useless boost-duration
-	if (boost_duration < 10000) {
-		boost_duration = 10000;
+	if (boost_duration < 25000) {
+		boost_duration = 25000;
+	}
+
+	// boostpulse should not be longer than 750ms
+	// when balanced profile is activated
+	if (current_power_profile == PROFILE_NORMAL && boost_duration > 750000) {
+		boost_duration = 750000;
 	}
 
 	if (powerhal_is_debugging())
