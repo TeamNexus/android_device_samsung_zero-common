@@ -51,7 +51,7 @@ static bool exynos7420_power_is_screen_on() {
 	if (fd == NULL) {
 		strerror_r(errno, errbuf, sizeof(errbuf));
 		ALOGE("Error opening /data/power/screen_on: %s\n", errbuf);
-		return 0;
+		return 1; // if failed, indicate that screen is on
 	}
 
 	if (fscanf(fd, "%d", &screen_on) != 1) {
@@ -60,7 +60,7 @@ static bool exynos7420_power_is_screen_on() {
 
 		// close file when finished reading
 		fclose(fd);
-		return 0;
+		return 1; // if failed, indicate that screen is on
 	}
 
 	// close file when finished reading

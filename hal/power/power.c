@@ -127,6 +127,9 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 			power_hint_boost(data);
 			break;
 
+		case POWER_HINT_LAUNCH:
+			break;
+
 		/***********************************
 		 * Profiles
 		 */
@@ -492,13 +495,13 @@ static int softkeys_active() {
 
 	if (fd == NULL) {
 		strerror_r(errno, errbuf, sizeof(errbuf));
-		ALOGE("Error opening /data/power/touchkeys: %s\n", errbuf);
+		ALOGE("Error opening /data/power/softkeys_active: %s\n", errbuf);
 		return 0;
 	}
 
 	if (fscanf(fd, "%d", &softkeys_active) != 1) {
 		strerror_r(errno, errbuf, sizeof(errbuf));
-		ALOGE("Error reading from /data/power/touchkeys: %s\n", errbuf);
+		ALOGE("Error reading from /data/power/softkeys_active: %s\n", errbuf);
 
 		// close file when finished reading
 		fclose(fd);
