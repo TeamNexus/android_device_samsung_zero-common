@@ -223,36 +223,36 @@ Only the three quirks included above are recognized at this point:
         </MediaCodec>
 
         <!-- SEC Software -->
-        <!-- <MediaCodec name="OMX.SEC.h263.sw.dec" type="video/3gpp" >
+        <MediaCodec name="somx263dsw" type="video/3gpp" >
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.avc.sw.dec" type="video/avc" >
+        <MediaCodec name="somx264dsw" type="video/avc" >
             <Quirk name="decoder-ignores-streamcorrupt-error" />
             <Limit name="size" min="64x64" max="2048x2048" />
             <Feature name="adaptive-playback" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.mpeg4.sw.dec" type="video/mp4v-es" >
+        <MediaCodec name="somxmp4vdsw" type="video/mp4v-es" >
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.vc1.sw.dec" >
+        <MediaCodec name="somxvc1dsw" >
             <Type name="video/wvc1" />
             <Type name="video/x-ms-wmv" />
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.wmv7.dec" type="video/x-ms-wmv7" >
+        <MediaCodec name="somxwmv7d" type="video/x-ms-wmv7" >
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.wmv8.dec" type="video/x-ms-wmv8" >
+        <MediaCodec name="somxwmv8d" type="video/x-ms-wmv8" >
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.mp43.dec" type="video/mp43" >
+        <MediaCodec name="somxmp43d" type="video/mp43" >
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
-        <MediaCodec name="OMX.SEC.vp8.dec" type="video/x-vnd.on2.vp8" >
+        <MediaCodec name="somxvp8d" type="video/x-vnd.on2.vp8" >
             <Quirk name="decoder-ignores-streamcorrupt-error" />
             <Limit name="size" min="64x64" max="2048x2048" />
             <Feature name="adaptive-playback" />
-        </MediaCodec> -->
+        </MediaCodec>
     </Decoders>
 
     <Encoders>
