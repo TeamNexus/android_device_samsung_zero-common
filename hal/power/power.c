@@ -548,10 +548,10 @@ static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil) {
 		return 0;
 	}
 
-	read_cpu_util_parse_int(utilbuf, 0, &(cpuutil->cpu0));
-	read_cpu_util_parse_int(utilbuf, 1, &(cpuutil->cpu1));
-	read_cpu_util_parse_int(utilbuf, 2, &(cpuutil->cpu2));
-	read_cpu_util_parse_int(utilbuf, 3, &(cpuutil->cpu3));
+	read_cpu_util_parse_int(utilbuf, 0, &cpuutil->cpu0);
+	read_cpu_util_parse_int(utilbuf, 1, &cpuutil->cpu1);
+	read_cpu_util_parse_int(utilbuf, 2, &cpuutil->cpu2);
+	read_cpu_util_parse_int(utilbuf, 3, &cpuutil->cpu3);
 
 	cpuutil->avg = 0;
 	cpuutil->avg += cpuutil->cpu0;
@@ -598,7 +598,7 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 	cpu3diff = POWERHAL_POSITIVE(cpuutil.cpu3 - avg);
 
 	if (powerhal_is_debugging()) {
-		ALOGD("%s: cpudiff %3d %3d %3d %3d", __func__, cpu0diff, cpu1diff, cpu2diff, cpu3diff);
+		ALOGD("%s: cpudiff %3d - %3d %3d %3d %3d", __func__, avg, cpu0diff, cpu1diff, cpu2diff, cpu3diff);
 	}
 
 	if (avg >= 85) {
