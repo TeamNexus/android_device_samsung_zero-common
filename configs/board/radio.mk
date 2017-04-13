@@ -1,0 +1,2 @@
+# Ril
+BOARD_PROVIDES_LIBRIL := true
