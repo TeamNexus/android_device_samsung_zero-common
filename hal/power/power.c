@@ -222,12 +222,17 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 		if (boost_duration > 750000) {
 			boost_duration = 750000;
 		}
+	} else if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
+		// boostpulse should not be longer than 1.5s
+		if (boost_duration > 1500000) {
+			boost_duration = 1500000;
+		}
 	}
 
-	// everything lower than 25 ms would
+	// everything lower than 75 ms would
 	// be a useless boost-duration
-	if (boost_duration < 25000) {
-		boost_duration = 25000;
+	if (boost_duration < 75000) {
+		boost_duration = 75000;
 	}
 
 	if (powerhal_is_debugging())
@@ -601,26 +606,16 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 		ALOGD("%s: cpudiff %3d - %3d %3d %3d %3d", __func__, avg, cpu0diff, cpu1diff, cpu2diff, cpu3diff);
 	}
 
-	if (avg >= 85) {
-		duration += ((duration / 3) * 3); // very high load
-	} else if (avg >= 65) {
-		duration += ((duration / 3) * 2); // high load
-	} else if (avg >= 50) {
-		duration += ((duration / 3) * 1); // average load
-	}
-
-	if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(25)) {
-		duration -= ((duration / 3) * 1); // slightly low load
-	} else if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(35)) {
-		duration -= ((duration / 3) * 2); // low load
-	} else if (POWERHAL_CPUUTIL_ANY_BELOW_OR_EQUAL(50)) {
-		duration -= ((duration / 3) * 3); // very low load
+	if ((avg / 10) - 5 > 0) {
+		duration += ((avg / 10) - 5) * (duration / 10);
+	} else {
+		duration += (((avg / 10) - 5) / 2) * (duration / 10);
 	}
 
 	// the calculated boost-duration should not
-	// be lower than the initial duration
-	if (duration < init_duration) {
-		duration = init_duration;
+	// be lower than half of the initial duration
+	if (duration < init_duration / 2) {
+		duration = init_duration / 2;
 	}
 
 	return duration;
