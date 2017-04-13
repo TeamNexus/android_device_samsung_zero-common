@@ -123,7 +123,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 		 */
 		case POWER_HINT_CPU_BOOST:
 			if (data) {
-				power_hint_boost_apply((int)boost_duration);
+				power_hint_boost_apply(*((intptr_t *)data));
 			} else {
 				power_hint_boost_apply(25000); // 25ms
 			}
@@ -131,7 +131,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 
 		case POWER_HINT_INTERACTION:
 			if (data) {
-				power_hint_boost_apply(((int)boost_duration) * 1000);
+				power_hint_boost_apply((*((intptr_t *)data)) * 1000);
 			} else {
 				power_hint_boost_apply(25000); // 25ms
 			}
