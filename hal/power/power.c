@@ -120,23 +120,26 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 
 		/***********************************
 		 * Performance
-		 *
-		 * power_hint_boost(data or NULL if data does not contain a duration, default value, indicator if value are milliseconds)
 		 */
 		case POWER_HINT_CPU_BOOST:
-			power_hint_boost(data, 40, 0);
+			if (data) {
+				power_hint_boost_apply((int)boost_duration);
+			} else {
+				power_hint_boost_apply(25000); // 25ms
+			}
 			break;
 
 		case POWER_HINT_INTERACTION:
-			power_hint_boost(data, 40, 1);
+			if (data) {
+				power_hint_boost_apply(((int)boost_duration) * 1000);
+			} else {
+				power_hint_boost_apply(25000); // 25ms
+			}
 			break;
 
 		case POWER_HINT_VSYNC:
-			power_hint_boost(NULL, 1000 / 59.95, 1);
-			break;
-
 		case POWER_HINT_LAUNCH:
-			power_hint_boost(NULL, 1000, 1);
+			power_hint_boost_apply(250000); // 250ms
 			break;
 
 		/***********************************
@@ -163,22 +166,6 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	pthread_mutex_unlock(&sec->lock);
 }
 
-static void power_hint_boost(void *data, int def, int ismillisec) {
-	int boost_duration;
-
-	if (data) {
-		boost_duration = *((intptr_t *)data);
-	} else {
-		boost_duration = def;
-	}
-
-	if (ismillisec) {
-		boost_duration *= 1000;
-	}
-
-	power_hint_boost_apply((int)boost_duration);
-}
-
 static void power_hint_boost_apply(int boost_duration) {
 	char cluster0buffer[17], cluster1buffer[17];
 	int cluster0duration, cluster1duration;
@@ -193,16 +180,6 @@ static void power_hint_boost_apply(int boost_duration) {
 		// no boostpulse when screen is deactivated
 		// or when in powersave-mode
 		return;
-	}
-
-	if (current_power_profile == PROFILE_NORMAL) {
-		// apply divider to boost-duration
-		boost_duration /= 2;
-
-		// boostpulse should not be longer than 750ms
-		if (boost_duration > 750000) {
-			boost_duration = 750000;
-		}
 	}
 
 	if (powerhal_is_debugging())
@@ -226,27 +203,31 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 	}
 
 	// read current CPU-usage
-	read_cpu_util(cluster, &util);
+	if (read_cpu_util(cluster, &util)) {
+		if (powerhal_is_debugging())
+			ALOGD("%s: cluster%d: cpuutil %3d %3d %3d %3d (avg %3d)", __func__, cluster, util.avg, util.cpu0, util.cpu1, util.cpu2, util.cpu3);
 
-	if (powerhal_is_debugging())
-		ALOGD("%s: cluster%d: cpuutil %3d %3d %3d %3d (avg %3d)", __func__, cluster, util.avg, util.cpu0, util.cpu1, util.cpu2, util.cpu3);
+		// apply cluster-specific changes
+		boost_duration = recalculate_boostpulse_duration(boost_duration, util);
 
-	// apply cluster-specific changes
-	boost_duration = recalculate_boostpulse_duration(boost_duration, util);
+		if (powerhal_is_debugging())
+			ALOGD("%s: cluster%d: pulse-duration after cpuutil is %d", __func__, cluster, boost_duration);
+	}
 
-	if (powerhal_is_debugging())
-		ALOGD("%s: cluster%d: pulse-duration after cpuutil is %d", __func__, cluster, boost_duration);
+	if (current_power_profile == PROFILE_NORMAL) {
+		// apply divider to boost-duration
+		boost_duration /= 2;
+
+		// boostpulse should not be longer than 750ms
+		if (boost_duration > 750000) {
+			boost_duration = 750000;
+		}
+	}
 
 	// everything lower than 25 ms would
 	// be a useless boost-duration
 	if (boost_duration < 25000) {
 		boost_duration = 25000;
-	}
-
-	// boostpulse should not be longer than 750ms
-	// when balanced profile is activated
-	if (current_power_profile == PROFILE_NORMAL && boost_duration > 750000) {
-		boost_duration = 750000;
 	}
 
 	if (powerhal_is_debugging())
