@@ -6,7 +6,8 @@ net_domain(cpboot-daemon)
 init_daemon_domain(cpboot-daemon)
 wakelock_use(cpboot-daemon)
 
-allow cpboot-daemon self:capability { entrypoint dac_override setuid setgid };
+allow cpboot-daemon self:capability { dac_override setuid setgid };
+allow cpboot-daemon cpboot-daemon_exec:file { entrypoint };
 
 # FIXME neverallow rule
 # allow cpboot-daemon self:capability mknod;
