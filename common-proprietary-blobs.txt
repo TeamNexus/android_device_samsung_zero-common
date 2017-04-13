@@ -160,11 +160,16 @@ lib/omx/libOMX.Exynos.WMV.Decoder.so
 lib64/omx/libOMX.Exynos.WMV.Decoder.so
 
 # Radio
+bin/rild
+lib/libril.so
 lib/libsec-ril.so
 lib/libsec-ril-dsds.so
+lib/libreference-ril.so
 lib/libsecnativefeature.so
+lib64/libril.so
 lib64/libsec-ril.so
 lib64/libsec-ril-dsds.so
+lib64/libreference-ril.so
 lib64/libsecnativefeature.so
 
 # Sensors
