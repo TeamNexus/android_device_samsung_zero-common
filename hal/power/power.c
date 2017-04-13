@@ -47,8 +47,6 @@ struct sec_power_module {
 static int current_power_profile = PROFILE_NORMAL;
 static int screen_is_on = 1;
 static uint64_t power_pulse_ending[2] = { 0, 0 };
-static int debug_file_check = 0;
-static int debug_file_check_expire = 0;
 
 /***********************************
  * Public Methods
@@ -65,22 +63,7 @@ int exynos7420_power_get_current_profile() {
  * Initializing
  */
 static int powerhal_is_debugging() {
-	struct timespec tms;
-
-	if (debug_file_check_expire == 0) {
-		return POWERHAL_FORCE_DEBUG;
-	}
-
-	if (clock_gettime(CLOCK_REALTIME, &tms)) {
-		return POWERHAL_FORCE_DEBUG;
-	}
-
-	if (debug_file_check_expire < tms.tv_sec) {
-		debug_file_check = file_exists("/data/power/debug");
-		debug_file_check_expire = tms.tv_sec + 10;
-	}
-
-	return POWERHAL_FORCE_DEBUG || debug_file_check;
+	return POWERHAL_FORCE_DEBUG || file_exists("/data/power/debug");
 }
 
 static int power_open(const hw_module_t __unused * module, const char *name, hw_device_t **device) {
