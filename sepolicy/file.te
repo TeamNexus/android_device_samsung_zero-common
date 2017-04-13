@@ -31,3 +31,4 @@ type sysfs_debug, fs_type, sysfs_type, mlstrustedobject;
 #
 type power_hal_devfs, dev_type;
 type power_hal_sysfs, fs_type, sysfs_type, mlstrustedobject;
+type power_hal_data_files, file_type;

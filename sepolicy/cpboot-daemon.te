@@ -35,12 +35,6 @@ allow cpboot-daemon efs_file:dir r_dir_perms;
 # /efs/nv_data.bin
 allow cpboot-daemon bin_nv_data_efs_file:file rw_file_perms;
 
-####################################
-# Nexus7420 Power HAL
-#
-allow cpboot-daemon power_hal_devfs:file rw_file_perms;
-allow cpboot-daemon power_hal_sysfs:file rw_file_perms;
-
 # set properties on boot
 set_prop(cpboot-daemon, cpboot-daemon_prop)
 set_prop(cpboot-daemon, radio_prop)
