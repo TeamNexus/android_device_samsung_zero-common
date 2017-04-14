@@ -24,3 +24,7 @@ LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_MODULE_TAGS := optional
 LOCAL_C_INCLUDES := $(LOCAL_PATH)
 include $(BUILD_SHARED_LIBRARY)
+
+# Copy help-file
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/power/help.txt:data/power/help.txt
