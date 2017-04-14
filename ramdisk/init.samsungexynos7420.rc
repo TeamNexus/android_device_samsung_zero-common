@@ -63,16 +63,24 @@ on post-fs-data
 ################################################
 # Power-HAL
     mkdir /data/power 0771 system system
-    write /data/power/softkeys_active 0
+    write /data/power/debug 0
+    write /data/power/enable_boost 1
+    write /data/power/enable_profiles 1
     write /data/power/screen_on 1
-    rm /data/power/debug
+    write /data/power/softkeys_active 0
 
 ################################################
 # Power-HAL Permissions
-    chmod 0664 /data/power/softkeys_active
-    chown system system /data/power/softkeys_active
+    chmod 0664 /data/power/debug
+    chown system system /data/power/debug
+    chmod 0664 /data/power/enable_boost
+    chown system system /data/power/enable_boost
+    chmod 0664 /data/power/enable_profiles
+    chown system system /data/power/enable_profiles
     chmod 0664 /data/power/screen_on
     chown system system /data/power/screen_on
+    chmod 0664 /data/power/softkeys_active
+    chown system system /data/power/softkeys_active
 
 ################################################
 # cpu permissions

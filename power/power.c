@@ -63,7 +63,9 @@ int exynos7420_power_get_current_profile() {
  * Initializing
  */
 static int powerhal_is_debugging() {
-	return POWERHAL_FORCE_DEBUG || file_exists("/data/power/debug");
+	int debug = 0;
+	file_read_int("/data/power/debug", &debug);
+	return POWERHAL_FORCE_DEBUG || debug;
 }
 
 static int power_open(const hw_module_t __unused * module, const char *name, hw_device_t **device) {
@@ -170,6 +172,13 @@ static void power_hint_boost_apply(int boost_duration) {
 	char cluster0buffer[17], cluster1buffer[17];
 	int cluster0duration, cluster1duration;
 	struct interactive_cpu_util cluster0util, cluster1util;
+	int enable_boost = 1;
+
+	if (file_read_int("/data/power/enable_boost", &enable_boost)) {
+		if (!enable_boost) {
+			return;
+		}
+	}
 
 	if (powerhal_is_debugging()) {
 		ALOGD("%s: current screen state is %d", __func__, screen_is_on);
@@ -262,6 +271,14 @@ static void power_set_profile_by_name(char *data) {
 }
 
 static void power_set_profile(int profile) {
+	int enable_profiles = 1;
+
+	if (file_read_int("/data/power/enable_profiles", &enable_profiles)) {
+		if (!enable_profiles) {
+			return;
+		}
+	}
+
 	current_power_profile = profile;
 
 	/***********************************
@@ -465,6 +482,30 @@ static int file_write(const char *path, char *s) {
 
 	close(fd);
 	return len;
+}
+
+static int file_read_int(const char *path, int *v) {
+	char errbuf[80];
+	FILE *fp;
+
+	fp = fopen(path, "r");
+
+	if (fp == NULL) {
+		strerror_r(errno, errbuf, sizeof(errbuf));
+		ALOGE("Error opening %s: %s\n", path, errbuf);
+		return 0;
+	}
+
+	if (fscanf(fp, "%d", v)) {
+		strerror_r(errno, errbuf, sizeof(errbuf));
+		ALOGE("Error writing to %s: %s\n", path, errbuf);
+
+		fclose(fp);
+		return 0;
+	}
+
+	fclose(fp);
+	return 1;
 }
 
 static int file_exists(const char *path) {

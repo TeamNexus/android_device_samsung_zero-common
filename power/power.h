@@ -129,6 +129,7 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
  * Utilities
  */
 static int file_write(const char *path, char *s);
+static int file_read_int(const char *path, int *v);
 static int file_exists(const char *path);
 static int is_apollo_interactive();
 static int is_atlas_interactive();
