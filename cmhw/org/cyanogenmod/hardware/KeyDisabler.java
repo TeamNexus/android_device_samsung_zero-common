@@ -35,6 +35,7 @@ public class KeyDisabler {
 
     public static boolean isSupported() {
         return FileUtils.isFileWritable(CTRL_PATH) &&
+               FileUtils.isFileWritable(POWER_HAL_PATH) &&
                FileUtils.readOneLine(NAME_PATH).equals("sec_touchkey");
     }
 
