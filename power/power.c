@@ -201,6 +201,17 @@ static void power_hint_boost_apply(int boost_duration) {
 static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 	char durationbuf[17];
 	struct interactive_cpu_util util;
+	int powersave_aggression_level = 1,
+		maxmal_duration = 250000,
+		minimal_duration = 10000;
+
+	if (file_read_int("/data/power/powersave_aggression_level", &powersave_aggression_level)) {
+		if (powersave_aggression_level < 0) {
+			powersave_aggression_level = 0;
+		} else if (powersave_aggression_level > 4) {
+			powersave_aggression_level = 4;
+		}
+	}
 
 	if (power_pulse_is_active(cluster)) {
 		if (powerhal_is_debugging())
@@ -227,21 +238,24 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 		// apply divider to boost-duration
 		boost_duration /= 2;
 
-		// boostpulse should not be longer than 750ms
-		if (boost_duration > 750000) {
-			boost_duration = 750000;
+		// boostpulse should not be longer than 250ms
+		maxmal_duration = 250000 - (powersave_aggression_level * 25000);
+		if (boost_duration > maxmal_duration) {
+			boost_duration = maxmal_duration;
 		}
 	} else if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
-		// boostpulse should not be longer than 1.5s
-		if (boost_duration > 1500000) {
-			boost_duration = 1500000;
+		// boostpulse should not be longer than 500ms
+		maxmal_duration = 500000 - (powersave_aggression_level * 50000);
+		if (boost_duration > maxmal_duration) {
+			boost_duration = maxmal_duration;
 		}
 	}
 
-	// everything lower than 75 ms would
-	// be a useless boost-duration
-	if (boost_duration < 75000) {
-		boost_duration = 75000;
+	// everything lower beyond a specific
+	// limit would be useless
+	minimal_duration = 50000 - (powersave_aggression_level * 10000);
+	if (boost_duration < minimal_duration) {
+		boost_duration = minimal_duration;
 	}
 
 	if (powerhal_is_debugging())
@@ -360,7 +374,7 @@ static void power_set_profile(int profile) {
 				file_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
 				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
 				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "85");
-				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1600000");
+				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1200000");
 				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "85");
 			}
 
@@ -380,7 +394,7 @@ static void power_set_profile(int profile) {
 				file_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
 				file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
 				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "75");
-				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1500000");
+				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1300000");
 				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "75");
 			}
 
@@ -390,7 +404,7 @@ static void power_set_profile(int profile) {
 				file_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
 				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "80000");
 				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "75");
-				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "2100000");
+				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1800000");
 				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "75");
 			}
 
@@ -633,9 +647,21 @@ static int read_cpu_util_parse_int(char *str, int core, int *val) {
 }
 
 static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_util cpuutil) {
-	int avg = cpuutil.avg, init_duration = duration;
+	int avg = cpuutil.avg;
+	int minimal_duration = 15000;
 	int cpu0diff = 0, cpu1diff = 0,
 		cpu2diff = 0, cpu3diff = 0;
+	int powersave_aggression_level = 0;
+
+	if (file_read_int("/data/power/powersave_aggression_level", &powersave_aggression_level)) {
+		if (powersave_aggression_level < 0) {
+			powersave_aggression_level = 0;
+		} else if (powersave_aggression_level > 4) {
+			powersave_aggression_level = 4;
+		}
+	}
+
+	minimal_duration = duration / (powersave_aggression_level + 1);
 
 	// get the absolute differences from average load
 	cpu0diff = POWERHAL_POSITIVE(cpuutil.cpu0 - avg);
@@ -650,13 +676,13 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 	if ((avg / 10) - 5 > 0) {
 		duration += ((avg / 10) - 5) * (duration / 10);
 	} else {
-		duration += (((avg / 10) - 5) / 2) * (duration / 10);
+		duration -= (((avg / 10) - 5) / 2) * (duration / 10);
 	}
 
 	// the calculated boost-duration should not
 	// be lower than half of the initial duration
-	if (duration < init_duration / 2) {
-		duration = init_duration / 2;
+	if (duration < minimal_duration) {
+		duration = minimal_duration;
 	}
 
 	return duration;
