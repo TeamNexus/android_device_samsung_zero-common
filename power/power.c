@@ -510,9 +510,9 @@ static int file_read_int(const char *path, int *v) {
 		return 0;
 	}
 
-	if (fscanf(fp, "%d", v)) {
+	if (fscanf(fp, "%d", v) != 1) {
 		strerror_r(errno, errbuf, sizeof(errbuf));
-		ALOGE("Error writing to %s: %s\n", path, errbuf);
+		ALOGE("Error reading from %s: %s\n", path, errbuf);
 
 		fclose(fp);
 		return 0;
