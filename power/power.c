@@ -202,7 +202,7 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 	char durationbuf[17];
 	struct interactive_cpu_util util;
 	int powersave_aggression_level = 1,
-		maxmal_duration = 250000,
+		maximum_duration = 250000,
 		minimal_duration = 10000;
 
 	if (file_read_int("/data/power/powersave_aggression_level", &powersave_aggression_level)) {
@@ -239,15 +239,15 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 		boost_duration /= 2;
 
 		// boostpulse should not be longer than 250ms
-		maxmal_duration = 250000 - (powersave_aggression_level * 25000);
-		if (boost_duration > maxmal_duration) {
-			boost_duration = maxmal_duration;
+		maximum_duration = 250000 - (powersave_aggression_level * 25000);
+		if (boost_duration > maximum_duration) {
+			boost_duration = maximum_duration;
 		}
 	} else if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
 		// boostpulse should not be longer than 500ms
-		maxmal_duration = 500000 - (powersave_aggression_level * 50000);
-		if (boost_duration > maxmal_duration) {
-			boost_duration = maxmal_duration;
+		maximum_duration = 500000 - (powersave_aggression_level * 50000);
+		if (boost_duration > maximum_duration) {
+			boost_duration = maximum_duration;
 		}
 	}
 
