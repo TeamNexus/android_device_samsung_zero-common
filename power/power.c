@@ -225,7 +225,7 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 	// read current CPU-usage
 	if (read_cpu_util(cluster, &util)) {
 		if (powerhal_is_debugging())
-			ALOGD("%s: cluster%d: cpuutil %3d %3d %3d %3d (avg %3d)", __func__, cluster, util.avg, util.cpu0, util.cpu1, util.cpu2, util.cpu3);
+			ALOGD("%s: cluster%d: cpuutil %3d %3d %3d %3d (avg %3d)", __func__, cluster, util.cpu0, util.cpu1, util.cpu2, util.cpu3, util.avg);
 
 		// apply cluster-specific changes
 		boost_duration = recalculate_boostpulse_duration(boost_duration, util);
@@ -673,11 +673,7 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 		ALOGD("%s: cpudiff %3d - %3d %3d %3d %3d", __func__, avg, cpu0diff, cpu1diff, cpu2diff, cpu3diff);
 	}
 
-	if ((avg / 10) - 5 > 0) {
-		duration += ((avg / 10) - 5) * (duration / 10);
-	} else {
-		duration -= (((avg / 10) - 5) / 2) * (duration / 10);
-	}
+	duration += ((avg / 10) - 5) * (duration / 10);
 
 	// the calculated boost-duration should not
 	// be lower than half of the initial duration
