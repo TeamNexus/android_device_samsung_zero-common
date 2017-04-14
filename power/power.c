@@ -201,7 +201,7 @@ static void power_hint_boost_apply(int boost_duration) {
 static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 	char durationbuf[17];
 	struct interactive_cpu_util util;
-	int powersave_aggression_level = 1,
+	int powersave_aggression_level = 2,
 		maximum_duration = 250000,
 		minimal_duration = 10000;
 
@@ -651,7 +651,7 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 	int minimal_duration = 15000;
 	int cpu0diff = 0, cpu1diff = 0,
 		cpu2diff = 0, cpu3diff = 0;
-	int powersave_aggression_level = 0;
+	int powersave_aggression_level = 2;
 
 	if (file_read_int("/data/power/powersave_aggression_level", &powersave_aggression_level)) {
 		if (powersave_aggression_level < 0) {
