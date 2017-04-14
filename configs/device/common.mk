@@ -65,6 +65,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     power.exynos5
 
+# Power help-files
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/power/help.txt:data/power/help.txt
+
 # Torch
 PRODUCT_PACKAGES += \
     Torch
