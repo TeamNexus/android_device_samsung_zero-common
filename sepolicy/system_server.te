@@ -42,6 +42,11 @@ allow system_server sysfs_debug:file rw_file_perms;
 ####################################
 # Nexus7420 Power HAL
 #
-allow system_server power_hal_devfs:file rw_file_perms;
-allow system_server power_hal_sysfs:file rw_file_perms;
+# directory
+allow system_server power_hal_sysfs:dir       rw_dir_perms;
+allow system_server power_hal_sysfs:dir       rw_dir_perms;
+allow system_server power_hal_data_files:dir  rw_dir_perms;
+# files
+allow system_server power_hal_devfs:file      rw_file_perms;
+allow system_server power_hal_sysfs:file      rw_file_perms;
 allow system_server power_hal_data_files:file rw_file_perms;
