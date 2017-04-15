@@ -49,17 +49,6 @@ static int screen_is_on = 1;
 static uint64_t power_pulse_ending[2] = { 0, 0 };
 
 /***********************************
- * Public Methods
- */
-int exynos7420_power_is_screen_on() {
-	return screen_is_on;
-}
-
-int exynos7420_power_get_current_profile() {
-	return current_power_profile;
-}
-
-/***********************************
  * Initializing
  */
 static int powerhal_is_debugging() {
@@ -201,15 +190,15 @@ static void power_hint_boost_apply(int boost_duration) {
 static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 	char durationbuf[17];
 	struct interactive_cpu_util util;
-	int powersave_aggression_level = 2,
+	int powersave_level = 2,
 		maximum_duration = 250000,
 		minimal_duration = 10000;
 
-	if (file_read_int("/data/power/powersave_aggression_level", &powersave_aggression_level)) {
-		if (powersave_aggression_level < 0) {
-			powersave_aggression_level = 0;
-		} else if (powersave_aggression_level > 4) {
-			powersave_aggression_level = 4;
+	if (file_read_int("/data/power/powersave_level", &powersave_level)) {
+		if (powersave_level < 0) {
+			powersave_level = 0;
+		} else if (powersave_level > 4) {
+			powersave_level = 4;
 		}
 	}
 
@@ -239,13 +228,13 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 		boost_duration /= 2;
 
 		// boostpulse should not be longer than 250ms
-		maximum_duration = 250000 - (powersave_aggression_level * 25000);
+		maximum_duration = 250000 - (powersave_level * 25000);
 		if (boost_duration > maximum_duration) {
 			boost_duration = maximum_duration;
 		}
 	} else if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
 		// boostpulse should not be longer than 500ms
-		maximum_duration = 500000 - (powersave_aggression_level * 50000);
+		maximum_duration = 500000 - (powersave_level * 50000);
 		if (boost_duration > maximum_duration) {
 			boost_duration = maximum_duration;
 		}
@@ -253,7 +242,7 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 
 	// everything lower beyond a specific
 	// limit would be useless
-	minimal_duration = 50000 - (powersave_aggression_level * 10000);
+	minimal_duration = 50000 - (powersave_level * 10000);
 	if (boost_duration < minimal_duration) {
 		boost_duration = minimal_duration;
 	}
@@ -651,17 +640,17 @@ static int recalculate_boostpulse_duration(int duration, struct interactive_cpu_
 	int minimal_duration = 15000;
 	int cpu0diff = 0, cpu1diff = 0,
 		cpu2diff = 0, cpu3diff = 0;
-	int powersave_aggression_level = 2;
+	int powersave_level = 2;
 
-	if (file_read_int("/data/power/powersave_aggression_level", &powersave_aggression_level)) {
-		if (powersave_aggression_level < 0) {
-			powersave_aggression_level = 0;
-		} else if (powersave_aggression_level > 4) {
-			powersave_aggression_level = 4;
+	if (file_read_int("/data/power/powersave_level", &powersave_level)) {
+		if (powersave_level < 0) {
+			powersave_level = 0;
+		} else if (powersave_level > 4) {
+			powersave_level = 4;
 		}
 	}
 
-	minimal_duration = duration / (powersave_aggression_level + 1);
+	minimal_duration = duration / (powersave_level + 1);
 
 	// get the absolute differences from average load
 	cpu0diff = POWERHAL_POSITIVE(cpuutil.cpu0 - avg);

@@ -87,12 +87,6 @@ struct interactive_cpu_util {
 };
 
 /***********************************
- * Public Methods
- */
-int exynos7420_power_is_screen_on();
-int exynos7420_power_get_current_profile();
-
-/***********************************
  * Initializing
  */
 static int powerhal_is_debugging();

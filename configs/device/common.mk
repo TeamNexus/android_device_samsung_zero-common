@@ -32,47 +32,6 @@ TARGET_SCREEN_WIDTH := 1440
 $(call inherit-product, frameworks/native/build/phone-xxxhdpi-3072-dalvik-heap.mk)
 $(call inherit-product-if-exists, frameworks/native/build/phone-xxxhdpi-3072-hwui-memory.mk)
 
-# Browser
-PRODUCT_PACKAGES += \
-	Gello
-
-# Camera
-PRODUCT_PACKAGES += \
-    Snap
-
-# Dbthtool
-PRODUCT_PACKAGES += \
-    dtbhtoolExynos
-
-# Lights
-PRODUCT_PACKAGES += \
-    lights.universal7420
-
-# Libstlport
-PRODUCT_PACKAGES += \
-    libstlport
-
-# MobiCore
-PRODUCT_PACKAGES += \
-    mcDriverDaemon
-
-# Radio
-PRODUCT_PACKAGES += \
-    libxml2 \
-    libprotobuf-cpp-full
-
-# Power
-PRODUCT_PACKAGES += \
-    power.exynos5
-
-# Power help-files
-PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/power/help.txt:data/power/help.txt
-
-# Torch
-PRODUCT_PACKAGES += \
-    Torch
-
 # Set default USB interface
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.sys.usb.config=mtp

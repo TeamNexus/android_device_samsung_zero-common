@@ -14,9 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-########################################
-# Include path
-TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
 
 ########################################
 # Binder
@@ -25,6 +22,10 @@ TARGET_USES_64_BIT_BINDER := true
 ########################################
 # CPU sets
 ENABLE_CPUSETS := false
+
+########################################
+# Display
+BACKLIGHT_PATH := /sys/devices/13900000.dsim/backlight/panel/brightness
 
 ########################################
 # FIMG2D
@@ -38,16 +39,6 @@ EXTENDED_FONT_FOOTPRINT := true
 # (G)SCALER
 BOARD_USES_SCALER := true
 BOARD_USES_DT := true
-
-########################################
-# Hardware
-BOARD_HARDWARE_CLASS += device/samsung/zero-common/cmhw
-BOARD_HARDWARE_CLASS += hardware/samsung/cmhw
-
-########################################
-# HWCServices
-BOARD_USES_HWC_SERVICES := true
-BOARD_USES_WFD := true
 
 ########################################
 # HDMI
@@ -66,11 +57,3 @@ BOARD_RIL_CLASS := ../../../$(LOCAL_PATH)/ril
 ########################################
 # Sensors
 TARGET_NO_SENSOR_PERMISSION_CHECK := true
-
-########################################
-# Sepolicy
-BOARD_SEPOLICY_DIRS := $(LOCAL_PATH)/sepolicy
-
-########################################
-# Seccomp filters
-BOARD_SECCOMP_POLICY += device/samsung/zero-common/configs/seccomp

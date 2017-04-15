@@ -15,17 +15,12 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/samsung/zero-common
-BOARD_VENDOR := samsung
+########################################
+# Hardware
+BOARD_HARDWARE_CLASS += device/samsung/zero-common/cmhw
+BOARD_HARDWARE_CLASS += hardware/samsung/cmhw
 
 ########################################
-# set include-path
-TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
-
-########################################
-# inherit splitted configs
-include $(LOCAL_PATH)/configs/board/*.mk
-
-########################################
-# inherit from the proprietary version
--include vendor/samsung/zero-common/BoardConfigVendor.mk
+# HWCServices
+BOARD_USES_HWC_SERVICES := true
+BOARD_USES_WFD := true

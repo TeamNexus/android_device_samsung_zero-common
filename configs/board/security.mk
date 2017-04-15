@@ -15,17 +15,10 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/samsung/zero-common
-BOARD_VENDOR := samsung
+########################################
+# Sepolicy
+BOARD_SEPOLICY_DIRS := $(LOCAL_PATH)/sepolicy
 
 ########################################
-# set include-path
-TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
-
-########################################
-# inherit splitted configs
-include $(LOCAL_PATH)/configs/board/*.mk
-
-########################################
-# inherit from the proprietary version
--include vendor/samsung/zero-common/BoardConfigVendor.mk
+# Seccomp filters
+BOARD_SECCOMP_POLICY += device/samsung/zero-common/configs/seccomp

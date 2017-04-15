@@ -15,17 +15,10 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/samsung/zero-common
-BOARD_VENDOR := samsung
+# Power
+PRODUCT_PACKAGES += \
+    power.exynos5
 
-########################################
-# set include-path
-TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
-
-########################################
-# inherit splitted configs
-include $(LOCAL_PATH)/configs/board/*.mk
-
-########################################
-# inherit from the proprietary version
--include vendor/samsung/zero-common/BoardConfigVendor.mk
+# Power help-files
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/power/help.txt:system/etc/power-help.txt

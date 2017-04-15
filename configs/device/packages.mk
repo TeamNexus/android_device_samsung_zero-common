@@ -15,17 +15,35 @@
 # limitations under the License.
 #
 
-LOCAL_PATH := device/samsung/zero-common
-BOARD_VENDOR := samsung
+# Browser
+PRODUCT_PACKAGES += \
+	Gello
 
-########################################
-# set include-path
-TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
+# Camera
+PRODUCT_PACKAGES += \
+    Snap
 
-########################################
-# inherit splitted configs
-include $(LOCAL_PATH)/configs/board/*.mk
+# Dbthtool
+PRODUCT_PACKAGES += \
+    dtbhtoolExynos
 
-########################################
-# inherit from the proprietary version
--include vendor/samsung/zero-common/BoardConfigVendor.mk
+# Lights
+PRODUCT_PACKAGES += \
+    lights.universal7420
+
+# Libstlport
+PRODUCT_PACKAGES += \
+    libstlport
+
+# MobiCore
+PRODUCT_PACKAGES += \
+    mcDriverDaemon
+
+# Radio
+PRODUCT_PACKAGES += \
+    libxml2 \
+    libprotobuf-cpp-full
+
+# Torch
+PRODUCT_PACKAGES += \
+    Torch
