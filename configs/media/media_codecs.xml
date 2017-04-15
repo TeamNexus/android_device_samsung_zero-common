@@ -223,7 +223,7 @@ Only the three quirks included above are recognized at this point:
         </MediaCodec>
 
         <!-- SEC Software -->
-        <MediaCodec name="somx263dsw" type="video/3gpp" >
+        <!-- <MediaCodec name="somx263dsw" type="video/3gpp" >
             <Quirk name="decoder-ignores-streamcorrupt-error" />
         </MediaCodec>
         <MediaCodec name="somx264dsw" type="video/avc" >
@@ -252,7 +252,7 @@ Only the three quirks included above are recognized at this point:
             <Quirk name="decoder-ignores-streamcorrupt-error" />
             <Limit name="size" min="64x64" max="2048x2048" />
             <Feature name="adaptive-playback" />
-        </MediaCodec>
+        </MediaCodec> -->
     </Decoders>
 
     <Encoders>
@@ -315,11 +315,11 @@ Only the three quirks included above are recognized at this point:
     <Include href="media_codecs_google_video.xml" />
     <!-- sec sw hevc move behind google sw hevc   -->
     <Decoders>
-        <MediaCodec name="OMX.SEC.hevc.sw.dec" type="video/hevc" >
+        <!-- <MediaCodec name="OMX.SEC.hevc.sw.dec" type="video/hevc" >
             <Quirk name="decoder-ignores-streamcorrupt-error" />
             <Limit name="size" min="64x64" max="2048x2048" />
             <Feature name="adaptive-playback" />
-        </MediaCodec>
+        </MediaCodec> -->
     </Decoders>
     <Include href="media_codecs_google_audio.xml" />
     <Include href="media_codecs_google_telephony.xml" />
