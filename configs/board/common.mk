@@ -21,7 +21,7 @@ TARGET_USES_64_BIT_BINDER := true
 
 ########################################
 # CPU sets
-ENABLE_CPUSETS := false
+ENABLE_CPUSETS := true
 
 ########################################
 # Display
