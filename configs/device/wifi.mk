@@ -18,7 +18,7 @@
 # Wifi
 PRODUCT_PACKAGES += \
     hostapd \
-    libnetcmdiface \
+    libwpa_client \
     macloader \
     wifiloader \
     wpa_supplicant \
