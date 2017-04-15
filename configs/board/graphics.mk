@@ -29,7 +29,3 @@ BOARD_USE_METADATABUFFERTYPE := true
 # Renderscript
 BOARD_OVERRIDE_RS_CPU_VARIANT_32 := cortex-a53
 BOARD_OVERRIDE_RS_CPU_VARIANT_64 := exynos-a57
-
-########################################
-# Video scaling issue workaround
-TARGET_OMX_LEGACY_RESCALING := true
