@@ -116,7 +116,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 			if (data) {
 				power_hint_boost_apply(*((intptr_t *)data));
 			} else {
-				power_hint_boost_apply(25000); // 25ms
+				power_hint_boost_apply(25000, 0); // 25ms
 			}
 			break;
 
@@ -124,13 +124,16 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 			if (data) {
 				power_hint_boost_apply((*((intptr_t *)data)) * 1000);
 			} else {
-				power_hint_boost_apply(25000); // 25ms
+				power_hint_boost_apply(25000, 0); // 25ms
 			}
 			break;
 
 		case POWER_HINT_VSYNC:
-		case POWER_HINT_LAUNCH:
-			power_hint_boost_apply(250000); // 250ms
+			power_hint_boost_apply(1000 / 59.95, 1); // 1 Frame
+			break;
+
+		case POWER_HINT_VSYNC:
+			power_hint_boost_apply(250000, 0); // 250ms
 			break;
 
 		/***********************************
@@ -157,7 +160,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	pthread_mutex_unlock(&sec->lock);
 }
 
-static void power_hint_boost_apply(int boost_duration) {
+static void power_hint_boost_apply(int boost_duration, int enforce_low_duration) {
 	char cluster0buffer[17], cluster1buffer[17];
 	int cluster0duration, cluster1duration;
 	struct interactive_cpu_util cluster0util, cluster1util;
@@ -183,8 +186,8 @@ static void power_hint_boost_apply(int boost_duration) {
 	if (powerhal_is_debugging())
 		ALOGD("%s: generic pulse-duration is %d", __func__, boost_duration);
 
-	power_hint_boost_apply_pulse(0, boost_duration);
-	power_hint_boost_apply_pulse(1, boost_duration);
+	power_hint_boost_apply_pulse(0, boost_duration, enforce_low_duration);
+	power_hint_boost_apply_pulse(1, boost_duration, enforce_low_duration);
 }
 
 static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
@@ -240,11 +243,13 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 		}
 	}
 
-	// everything lower beyond a specific
-	// limit would be useless
-	minimal_duration = 50000 - (powersave_level * 10000);
-	if (boost_duration < minimal_duration) {
-		boost_duration = minimal_duration;
+	if (!enforce_low_duration) {
+		// everything lower beyond a specific
+		// limit would be useless
+		minimal_duration = 50000 - (powersave_level * 10000);
+		if (boost_duration < minimal_duration) {
+			boost_duration = minimal_duration;
+		}
 	}
 
 	if (powerhal_is_debugging())
