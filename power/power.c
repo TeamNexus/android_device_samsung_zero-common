@@ -93,7 +93,8 @@ static void power_init(struct power_module __unused * module) {
 	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
 
 	// give it some speed
-	power_hint_boost_apply(750000);
+	power_hint_boost_apply_pulse(0, 750000, 1);
+	power_hint_boost_apply_pulse(1, 750000, 1);
 
 	// set to normal power profile
 	power_set_profile(PROFILE_NORMAL);
@@ -114,7 +115,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 		 */
 		case POWER_HINT_CPU_BOOST:
 			if (data) {
-				power_hint_boost_apply(*((intptr_t *)data));
+				power_hint_boost_apply(*((intptr_t *)data), 0);
 			} else {
 				power_hint_boost_apply(25000, 0); // 25ms
 			}
@@ -122,7 +123,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 
 		case POWER_HINT_INTERACTION:
 			if (data) {
-				power_hint_boost_apply((*((intptr_t *)data)) * 1000);
+				power_hint_boost_apply((*((intptr_t *)data)) * 1000, 0);
 			} else {
 				power_hint_boost_apply(25000, 0); // 25ms
 			}
@@ -132,7 +133,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 			power_hint_boost_apply(1000 / 59.95, 1); // 1 Frame
 			break;
 
-		case POWER_HINT_VSYNC:
+		case POWER_HINT_LAUNCH:
 			power_hint_boost_apply(250000, 0); // 250ms
 			break;
 
@@ -160,7 +161,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	pthread_mutex_unlock(&sec->lock);
 }
 
-static void power_hint_boost_apply(int boost_duration, int enforce_low_duration) {
+static void power_hint_boost_apply(int boost_duration, int disable_duration_bounds) {
 	char cluster0buffer[17], cluster1buffer[17];
 	int cluster0duration, cluster1duration;
 	struct interactive_cpu_util cluster0util, cluster1util;
@@ -186,11 +187,11 @@ static void power_hint_boost_apply(int boost_duration, int enforce_low_duration)
 	if (powerhal_is_debugging())
 		ALOGD("%s: generic pulse-duration is %d", __func__, boost_duration);
 
-	power_hint_boost_apply_pulse(0, boost_duration, enforce_low_duration);
-	power_hint_boost_apply_pulse(1, boost_duration, enforce_low_duration);
+	power_hint_boost_apply_pulse(0, boost_duration, disable_duration_bounds);
+	power_hint_boost_apply_pulse(1, boost_duration, disable_duration_bounds);
 }
 
-static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
+static void power_hint_boost_apply_pulse(int cluster, int boost_duration, int disable_duration_bounds) {
 	char durationbuf[17];
 	struct interactive_cpu_util util;
 	int powersave_level = 2,
@@ -226,24 +227,24 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration) {
 			ALOGD("%s: cluster%d: pulse-duration after cpuutil is %d", __func__, cluster, boost_duration);
 	}
 
-	if (current_power_profile == PROFILE_NORMAL) {
-		// apply divider to boost-duration
-		boost_duration /= 2;
+	if (!disable_duration_bounds) {
+		if (current_power_profile == PROFILE_NORMAL) {
+			// apply divider to boost-duration
+			boost_duration /= 2;
 
-		// boostpulse should not be longer than 250ms
-		maximum_duration = 250000 - (powersave_level * 25000);
-		if (boost_duration > maximum_duration) {
-			boost_duration = maximum_duration;
+			// boostpulse should not be longer than 250ms
+			maximum_duration = 250000 - (powersave_level * 25000);
+			if (boost_duration > maximum_duration) {
+				boost_duration = maximum_duration;
+			}
+		} else if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
+			// boostpulse should not be longer than 500ms
+			maximum_duration = 500000 - (powersave_level * 50000);
+			if (boost_duration > maximum_duration) {
+				boost_duration = maximum_duration;
+			}
 		}
-	} else if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
-		// boostpulse should not be longer than 500ms
-		maximum_duration = 500000 - (powersave_level * 50000);
-		if (boost_duration > maximum_duration) {
-			boost_duration = maximum_duration;
-		}
-	}
 
-	if (!enforce_low_duration) {
 		// everything lower beyond a specific
 		// limit would be useless
 		minimal_duration = 50000 - (powersave_level * 10000);
