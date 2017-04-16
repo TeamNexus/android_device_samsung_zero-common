@@ -27,6 +27,9 @@ allow cpboot-daemon emmcblk_device:blk_file r_file_perms;
 # /dev/block/mmcblk0p13
 allow cpboot-daemon block_device:dir r_dir_perms;
 
+# /dev/block/sda8 || /dev/block/platform/15570000.ufs/by-name/RADIO
+allow cpboot-daemon radio_block_device:blk_file r_file_perms;
+
 # /dev/mipi-lli/lli_control
 allow cpboot-daemon sysfs_mipi_writable:file rw_file_perms;
 

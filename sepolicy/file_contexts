@@ -16,6 +16,7 @@
 /dev/bbd_patch               u:object_r:bbd_device:s0
 /dev/bbd_sensor              u:object_r:bbd_device:s0
 /dev/bbd_packet              u:object_r:bbd_device:s0
+/dev/bbd_reliable            u:object_r:bbd_device:s0
 
 /dev/s5p-smem                u:object_r:secmem_device:s0
 /dev/mobicore                u:object_r:tee_device:s0
