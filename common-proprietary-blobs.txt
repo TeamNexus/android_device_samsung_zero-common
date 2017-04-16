@@ -76,10 +76,15 @@ lib/libsensorlistener.so
 lib64/libsensorlistener.so
 lib/libuniplugin.so
 lib64/libuniplugin.so
-lib/libexif.so
-lib64/libexif.so
-lib/libexifa.so
-lib64/libexifa.so
+lib64/libsdid.so
+lib/libcsc.so
+lib64/libcsc.so
+lib/libexynosgscaler.so
+lib64/libexynosgscaler.so
+lib/libexynosscaler.so
+lib64/libexynosscaler.so
+lib64/libagc_max.so
+lib64/libmaxflicker.so
 lib64/libsdid.so
 
 # Fingerprint
@@ -98,6 +103,7 @@ vendor/lib/egl/libGLES_mali.so
 vendor/lib64/egl/libGLES_mali.so
 
 # GPS
+bin/gps.cer
 bin/gpsd
 lib64/hw/gps.default.so
 lib/libwrappergps.so
@@ -175,15 +181,18 @@ lib64/libreference-ril.so
 lib64/libsecnativefeature.so
 
 # Sensors
+lib64/libhr.so
 lib/hw/sensors.universal7420.so
 lib64/hw/sensors.universal7420.so
+lib/hw/sensorhubs.universal7420.so
+lib64/hw/sensorhubs.universal7420.so
+lib/libsensorservice.so
+lib64/libsensorservice.so
 bin/bcm_sensorhub_a2.patch
 bin/lhd
 
 # Widevine
 vendor/lib/mediadrm/libwvdrmengine.so
-vendor/lib/mediadrm/libdrmclearkeyplugin.so
-vendor/lib64/mediadrm/libdrmclearkeyplugin.so
 
 # Wifi
 etc/wifi/bcmdhd_apsta.bin
