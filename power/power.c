@@ -161,7 +161,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	pthread_mutex_unlock(&sec->lock);
 }
 
-static void power_hint_boost_apply(int boost_duration, int disable_duration_bounds) {
+static void power_hint_boost_apply(int boost_duration, int enforce_duration) {
 	char cluster0buffer[17], cluster1buffer[17];
 	int cluster0duration, cluster1duration;
 	struct interactive_cpu_util cluster0util, cluster1util;
@@ -187,11 +187,11 @@ static void power_hint_boost_apply(int boost_duration, int disable_duration_boun
 	if (powerhal_is_debugging())
 		ALOGD("%s: generic pulse-duration is %d", __func__, boost_duration);
 
-	power_hint_boost_apply_pulse(0, boost_duration, disable_duration_bounds);
-	power_hint_boost_apply_pulse(1, boost_duration, disable_duration_bounds);
+	power_hint_boost_apply_pulse(0, boost_duration, enforce_duration);
+	power_hint_boost_apply_pulse(1, boost_duration, enforce_duration);
 }
 
-static void power_hint_boost_apply_pulse(int cluster, int boost_duration, int disable_duration_bounds) {
+static void power_hint_boost_apply_pulse(int cluster, int boost_duration, int enforce_duration) {
 	char durationbuf[17];
 	struct interactive_cpu_util util;
 	int powersave_level = 2,
@@ -215,19 +215,19 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration, int di
 		return;
 	}
 
-	// read current CPU-usage
-	if (read_cpu_util(cluster, &util)) {
-		if (powerhal_is_debugging())
-			ALOGD("%s: cluster%d: cpuutil %3d %3d %3d %3d (avg %3d)", __func__, cluster, util.cpu0, util.cpu1, util.cpu2, util.cpu3, util.avg);
+	if (!enforce_duration) {
+		// read current CPU-usage
+		if (read_cpu_util(cluster, &util)) {
+			if (powerhal_is_debugging())
+				ALOGD("%s: cluster%d: cpuutil %3d %3d %3d %3d (avg %3d)", __func__, cluster, util.cpu0, util.cpu1, util.cpu2, util.cpu3, util.avg);
 
-		// apply cluster-specific changes
-		boost_duration = recalculate_boostpulse_duration(boost_duration, util);
+			// apply cluster-specific changes
+			boost_duration = recalculate_boostpulse_duration(boost_duration, util);
 
-		if (powerhal_is_debugging())
-			ALOGD("%s: cluster%d: pulse-duration after cpuutil is %d", __func__, cluster, boost_duration);
-	}
+			if (powerhal_is_debugging())
+				ALOGD("%s: cluster%d: pulse-duration after cpuutil is %d", __func__, cluster, boost_duration);
+		}
 
-	if (!disable_duration_bounds) {
 		if (current_power_profile == PROFILE_NORMAL) {
 			// apply divider to boost-duration
 			boost_duration /= 2;
@@ -442,8 +442,17 @@ static void power_input_device_state(int state) {
 }
 
 static void power_set_interactive(struct power_module __unused * module, int on) {
-	screen_is_on = (on != 0);
-	power_input_device_state(on ? 1 : 0);
+	int new_state = (on != 0);
+
+	// if the screen is on and the current screen-state
+	// changed, activate boost for both clusters
+	if (new_state && screen_is_on != new_state) {
+		power_hint_boost_apply_pulse(0, 1000000, 1);
+		power_hint_boost_apply_pulse(1, 1000000, 1);
+	}
+
+	screen_is_on = new_state;
+	power_input_device_state(new_state);
 }
 
 /***********************************

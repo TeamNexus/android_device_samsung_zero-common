@@ -97,8 +97,8 @@ static void power_init(struct power_module __unused * module);
  * Hinting
  */
 static void power_hint(struct power_module *module, power_hint_t hint, void *data);
-static void power_hint_boost_apply(int boost_duration, int disable_duration_bounds);
-static void power_hint_boost_apply_pulse(int cluster, int boost_duration, int enforce_low_duration);
+static void power_hint_boost_apply(int boost_duration, int enforce_duration);
+static void power_hint_boost_apply_pulse(int cluster, int boost_duration, int enforce_duration);
 
 /***********************************
  * Profiles
