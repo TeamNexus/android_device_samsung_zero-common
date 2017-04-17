@@ -354,8 +354,8 @@ on post-fs-data
     chown system audio /sys/class/dsm/maxdsm_cal/rdc
     mkdir /data/firmware 0770 audioserver system
     mkdir /efs/maxim 0770 system audio
-    chown system audio /efs/maxim/temp_cal
-    chown system audio /efs/maxim/rdc_cal
+    chown system radio /efs/maxim/temp_cal
+    chown system radio /efs/maxim/rdc_cal
     chmod 0660 /efs/maxim/temp_cal
     chmod 0660 /efs/maxim/rdc_cal
     chown audioserver system /data/firmware
@@ -671,6 +671,7 @@ on boot
 ################################################
 # Switch Device
     chown system radio /sys/class/sec/switch/afc_disable
+    chown system radio /sys/class/sec/switch/afc_set_voltage
 
 ################################################
 # DRK permission
@@ -754,7 +755,6 @@ on fs
     mkdir /persdata/absolute 0750 system system
 
     wait /dev/block/platform/15570000.ufs/by-name/PERSDATA
-    check_fs /dev/block/platform/15570000.ufs/by-name/PERSDATA ext4
     mount ext4 /dev/block/platform/15570000.ufs/by-name/PERSDATA /persdata/absolute nosuid nodev noatime noauto_da_alloc,discard,journal_async_commit,errors=panic
 
     chown system system /persdata
@@ -798,6 +798,18 @@ on fs
     chown system system /sys/class/sec/sec_touchkey/input/enabled
 
 ################################################
+# Permissions for epen
+    chown system radio /sys/class/sec/sec_epen/epen_firm_update
+    chown system radio /sys/class/sec/sec_epen/epen_reset
+    chown system radio /sys/class/sec/sec_epen/epen_reset_result
+    chown system radio /sys/class/sec/sec_epen/epen_checksum
+    chown system radio /sys/class/sec/sec_epen/epen_checksum_result
+    chown system radio /sys/class/sec/sec_epen/epen_saving_mode
+    chown system radio /sys/class/sec/sec_epen/boost_level
+    chown system radio /sys/class/sec/sec_epen/epen_wcharging_mode
+    chown system system /sys/class/sec/sec_epen/input/enabled
+
+################################################
 # Permissions for touchkey
     chown system system /sys/class/sec/sec_touchkey/touchkey_enable
     chmod 0660 /sys/class/sec/sec_touchkey/touchkey_enable
@@ -834,10 +846,18 @@ on fs
 
 ################################################
 # Permissions for backlight
-    chmod 0664 /sys/class/backlight/panel/brightness
     chown system system /sys/class/backlight/panel/brightness
-    chmod 0664 /sys/class/backlight/panel/auto_brightness
     chown system system /sys/class/backlight/panel/auto_brightness
+    chown system media_rw /sys/class/backlight/panel/weakness_hbm_comp
+
+################################################
+# Permissions for LCD
+    chown system radio /sys/class/lcd/panel/lcd_type
+    chown system system /sys/class/lcd/panel/lux
+    chown system radio /sys/class/lcd/panel/manufacture_code
+    chown system system /sys/class/lcd/panel/siop_enable
+    chown system system /sys/class/lcd/panel/temperature
+    chown system media_rw /sys/class/lcd/panel/adaptive_control
 
 ################################################
 # Permissions for LCD HMT
@@ -848,14 +868,6 @@ on fs
 ################################################
 # Permissions for LCD ALPM
     chown system system /sys/class/lcd/panel/alpm
-
-################################################
-# Permissions for LCD
-    chown system radio /sys/class/lcd/panel/lcd_type
-    chown system radio /sys/class/lcd/panel/manufacture_code
-    chown system system /sys/class/lcd/panel/siop_enable
-    chown system system /sys/class/lcd/panel/temperature
-    chown system media_rw /sys/class/backlight/panel/weakness_hbm_comp
 
 ################################################
 # Permissions for MDNIE
@@ -1085,6 +1097,10 @@ on fs
     chown system radio /sys/class/sensors/irled_remote/vendor
     chown system radio /sys/class/sensors/irled_remote/irled_send
     chown system radio /sys/class/sensors/irled_remote/irled_send_result
+
+################################################
+# Default MDNIE mode (cinema)
+    write /sys/class/mdnie/mdnie/mode 3
 
 ################################################
 # Copy DRM Key
