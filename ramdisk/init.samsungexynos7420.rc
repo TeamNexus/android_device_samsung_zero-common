@@ -295,8 +295,8 @@ on post-fs-data
 
 ################################################
 # Kernel tweaks: Permissions
-    chown root system /sys/module/workqueue/parameters/power_efficient
-    chmod 0664 /sys/module/workqueue/parameters/power_efficient
+    chown root system /proc/sys/net/ipv4/tcp_congestion_control
+    chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control
     chown root system /proc/sys/net/ipv6/conf/all/optimistic_dad
     chmod 0664 /proc/sys/net/ipv6/conf/all/optimistic_dad
     chown root system /proc/sys/net/ipv6/conf/all/use_optimistic
@@ -307,15 +307,18 @@ on post-fs-data
     chmod 0664 /proc/sys/kernel/random/write_wakeup_threshold
     chown root system /sys/devices/virtual/fingerprint/fingerprint/disable_wake_lock
     chmod 0664 /sys/devices/virtual/fingerprint/fingerprint/disable_wake_lock
+    chown root system /sys/module/workqueue/parameters/power_efficient
+    chmod 0664 /sys/module/workqueue/parameters/power_efficient
 
 ################################################
 # Kernel tweaks
-    write /sys/module/workqueue/parameters/power_efficient 1
+    write /proc/sys/net/ipv4/tcp_congestion_control "westwood"
     write /proc/sys/net/ipv6/conf/all/optimistic_dad 1
     write /proc/sys/net/ipv6/conf/all/use_optimistic 1
     write /proc/sys/kernel/random/read_wakeup_threshold 512
     write /proc/sys/kernel/random/write_wakeup_threshold 256
     write /sys/devices/virtual/fingerprint/fingerprint/disable_wake_lock 1
+    write /sys/module/workqueue/parameters/power_efficient 1
 
 ################################################
 # Sickness-Kernel: Google Play Store Fix
@@ -723,7 +726,15 @@ on boot
 
 ################################################
 # SSWAP
+    write /proc/sys/vm/laptop_mode 3
     write /proc/sys/vm/swappiness 200
+    write /proc/sys/vm/vfs_cache_pressure 100
+    write /proc/sys/vm/vfs_cache_pressure 100
+
+################################################
+# ZSWAP
+    write /sys/module/zswap/parameters/enabled "Y"
+    write /sys/module/zswap/parameters/max_pool_percent 25
 
 ################################################
 # MST HW Support
@@ -1092,20 +1103,24 @@ on fs
     chown system system /dev/i2c-7
     chmod 0660 /dev/i2c-7
 
-    # NFC_NXP
+################################################
+# NFC_NXP
     setprop ro.nfc.port "I2C"
     chmod 0660 /dev/pn547
     chown nfc nfc /dev/pn547
 
-    # NFC_BROADCOM
+################################################
+# NFC_BROADCOM
     chmod 0600 /dev/bcm2079x
     chown nfc nfc /dev/bcm2079x
 
-    # NFC_SLSI
+################################################
+# NFC_SLSI
     chmod 0660 /dev/sec-nfc
     chown nfc nfc /dev/sec-nfc
 
-    # MST/NFC Switch
+################################################
+# MST/NFC Switch
     chown spay system /dev/mst_ctrl
     chmod 0660 /dev/mst_ctrl
 
@@ -1278,7 +1293,11 @@ on charger
 
 ################################################
 # Do not set any USB mode while charging
-    setprop sys.usb.config charging
+setprop sys.usb.config charging
+
+################################################
+# EHCI runtime enable for LPA
+    write /sys/devices/platform/s5p-ehci/power/control auto
 
 ################################################
 # Battery charger daemon
