@@ -41,34 +41,6 @@ static union {
 
 static fingerprint_notify_t original_notify;
 
-static bool exynos7420_power_is_screen_on() {
-	char errbuf[80];
-	FILE *fd;
-	int screen_on;
-
-	fd = fopen("/data/power/screen_on", "r");
-
-	if (fd == NULL) {
-		strerror_r(errno, errbuf, sizeof(errbuf));
-		ALOGE("Error opening /data/power/screen_on: %s\n", errbuf);
-		return 1; // if failed, indicate that screen is on
-	}
-
-	if (fscanf(fd, "%d", &screen_on) != 1) {
-		strerror_r(errno, errbuf, sizeof(errbuf));
-		ALOGE("Error reading from /data/power/screen_on: %s\n", errbuf);
-
-		// close file when finished reading
-		fclose(fd);
-		return 1; // if failed, indicate that screen is on
-	}
-
-	// close file when finished reading
-	fclose(fd);
-
-	return screen_on;
-}
-
 static bool ensure_vendor_module_is_loaded(void)
 {
     android::Mutex::Autolock lock(vendor_mutex);
@@ -116,11 +88,6 @@ static uint64_t pre_enroll(struct fingerprint_device *dev)
 {
     device_t *device = (device_t *) dev;
 
-    // deactivate fp-sensor if screen is off
-    if (!exynos7420_power_is_screen_on()) {
-        return -EINVAL;
-    }
-
     return device->vendor.device->pre_enroll(device->vendor.device);
 }
 
@@ -129,22 +96,12 @@ static int enroll(struct fingerprint_device *dev, const hw_auth_token_t *hat, ui
 {
     device_t *device = (device_t *) dev;
 
-    // deactivate fp-sensor if screen is off
-    if (!exynos7420_power_is_screen_on()) {
-        return -EINVAL;
-    }
-
     return device->vendor.device->enroll(device->vendor.device, hat, gid, timeout_sec);
 }
 
 static int post_enroll(struct fingerprint_device *dev)
 {
     device_t *device = (device_t *) dev;
-
-    // deactivate fp-sensor if screen is off
-    if (!exynos7420_power_is_screen_on()) {
-        return -EINVAL;
-    }
 
     return device->vendor.device->post_enroll(device->vendor.device);
 }
@@ -153,11 +110,6 @@ static uint64_t get_authenticator_id(struct fingerprint_device *dev)
 {
     device_t *device = (device_t *) dev;
 
-    // deactivate fp-sensor if screen is off
-    if (!exynos7420_power_is_screen_on()) {
-        return -EINVAL;
-    }
-
     return device->vendor.device->get_authenticator_id(device->vendor.device);
 }
 
@@ -165,22 +117,12 @@ static int cancel(struct fingerprint_device *dev)
 {
     device_t *device = (device_t *) dev;
 
-    // deactivate fp-sensor if screen is off
-    if (!exynos7420_power_is_screen_on()) {
-        return -EINVAL;
-    }
-
     return device->vendor.device->cancel(device->vendor.device);
 }
 
 static int enumerate(struct fingerprint_device *dev)
 {
     device_t *device = (device_t *) dev;
-
-    // deactivate fp-sensor if screen is off
-    if (!exynos7420_power_is_screen_on()) {
-        return -EINVAL;
-    }
 
     return device->vendor.device->enumerate(device->vendor.device);
 }
@@ -196,22 +138,12 @@ static int set_active_group(struct fingerprint_device *dev, uint32_t gid, const 
 {
     device_t *device = (device_t *) dev;
 
-    // deactivate fp-sensor if screen is off
-    if (!exynos7420_power_is_screen_on()) {
-        return -EINVAL;
-    }
-
     return device->vendor.device->set_active_group(device->vendor.device, gid, store_path);
 }
 
 static int authenticate(struct fingerprint_device *dev, uint64_t operation_id, uint32_t gid)
 {
     device_t *device = (device_t *) dev;
-
-    // deactivate fp-sensor if screen is off
-    if (!exynos7420_power_is_screen_on()) {
-        return -EINVAL;
-    }
 
     return device->vendor.device->authenticate(device->vendor.device, operation_id, gid);
 }
