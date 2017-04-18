@@ -102,21 +102,13 @@ on post-fs-data
 # cpu permissions
     chmod 0664 /sys/power/enable_dm_hotplug
     chown system system /sys/power/enable_dm_hotplug
-    chmod 0664 /sys/devices/system/cpu/cpu0/online
     chown system system /sys/devices/system/cpu/cpu0/online
-    chmod 0664 /sys/devices/system/cpu/cpu1/online
     chown system system /sys/devices/system/cpu/cpu1/online
-    chmod 0664 /sys/devices/system/cpu/cpu2/online
     chown system system /sys/devices/system/cpu/cpu2/online
-    chmod 0664 /sys/devices/system/cpu/cpu3/online
     chown system system /sys/devices/system/cpu/cpu3/online
-    chmod 0664 /sys/devices/system/cpu/cpu4/online
     chown system system /sys/devices/system/cpu/cpu4/online
-    chmod 0664 /sys/devices/system/cpu/cpu5/online
     chown system system /sys/devices/system/cpu/cpu5/online
-    chmod 0664 /sys/devices/system/cpu/cpu6/online
     chown system system /sys/devices/system/cpu/cpu6/online
-    chmod 0664 /sys/devices/system/cpu/cpu7/online
     chown system system /sys/devices/system/cpu/cpu7/online
 
 ################################################
@@ -132,95 +124,35 @@ on post-fs-data
     write /sys/devices/system/cpu/cpu7/online 1
 
 ################################################
-# cpufreq permissions
-    chmod 0664 /sys/power/ipa/little_max_freq
-    chown system system /sys/power/ipa/little_max_freq
-    chmod 0664 /sys/power/ipa/big_max_freq
-    chown system system /sys/power/ipa/big_max_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-
-################################################
-# cpufreq settings
-    write /sys/power/ipa/little_max_freq 1500000
-    write /sys/power/ipa/big_max_freq 2100000
-    # Cluster0 (Apollo)
-    write /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq 400000
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 400000
-    write /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq 1500000
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1500000
-    # Cluster1 (Atlas)
-    write /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_min_freq 800000
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq 800000
-    write /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq 2100000
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 2100000
-
-################################################
 # cpugov: apollo
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
 
 ################################################
 # cpugov permissions: interactive/apollo
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse_duration
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse_duration
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
-    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 
 ################################################
 # cpugov: atlas
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
     write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "interactive"
 
 ################################################
 # cpugov permissions: interactive/atlas
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/boostpulse
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/boostpulse
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/boostpulse_duration
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/boostpulse_duration
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
-    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
 
 ################################################
@@ -229,59 +161,17 @@ on post-fs-data
     chmod 0660 /dev/cpuctl
 
 ################################################
-# cpuset permissions
-    # chmod 0664 /dev/cpuset/foreground/cpus
-    # chown system system /dev/cpuset/foreground/cpus
-    # chmod 0664 /dev/cpuset/foreground/boost/cpus
-    # chown system system /dev/cpuset/foreground/boost/cpus
-    # chmod 0664 /dev/cpuset/background/cpus
-    # chown system system /dev/cpuset/background/cpus
-    # chmod 0664 /dev/cpuset/system-background/cpus
-    # chown system system /dev/cpuset/system-background/cpus
-    # chmod 0664 /dev/cpuset/top-app/cpus
-    # chown system system /dev/cpuset/top-app/cpus
-    # chmod 0664 /dev/cpuset/camera-daemon/cpus
-    # chown system system /dev/cpuset/camera-daemon/cpus
-
-################################################
-# cpuset setup for camera-daemon
-    # mkdir /dev/cpuset/camera-daemon
-    # chown system system /dev/cpuset/camera-daemon
-    # chmod 0664 /dev/cpuset/camera-daemon
-    # chown system system /dev/cpuset/camera-daemon/cpus
-    # chmod 0664 /dev/cpuset/camera-daemon/cpus
-    # chown system system /dev/cpuset/camera-daemon/mems
-    # chmod 0664 /dev/cpuset/camera-daemon/mems
-    # chown system system /dev/cpuset/camera-daemon/tasks
-    # chmod 0664 /dev/cpuset/camera-daemon/tasks
-    # write /dev/cpuset/camera-daemon/cpus 0
-    # write /dev/cpuset/camera-daemon/mems 0
-
-################################################
-# cpuset settings
-    # write /dev/cpuset/foreground/cpus 0-2,4-7
-    # write /dev/cpuset/foreground/boost/cpus 4-7
-    # write /dev/cpuset/background/cpus 0,7
-    # write /dev/cpuset/system-background/cpus 0,1,6,7
-    # write /dev/cpuset/top-app/cpus 0-7
-    # write /dev/cpuset/camera-daemon/cpus 0-7
-
-################################################
 # gpu permissions
-    chown radio system /sys/class/misc/mali0/device/dvfs
-    chmod 664 /sys/class/misc/mali0/device/dvfs
-    chown radio system /sys/class/misc/mali0/device/dvfs_governor
-    chmod 664 /sys/class/misc/mali0/device/dvfs_governor
-    chown radio system /sys/class/misc/mali0/device/dvfs_table
-    chmod 664 /sys/class/misc/mali0/device/dvfs_table
-    chown radio system /sys/class/misc/mali0/device/dvfs_min_lock
-    chmod 664 /sys/class/misc/mali0/device/dvfs_min_lock
-    chown radio system /sys/class/misc/mali0/device/dvfs_max_lock
-    chmod 664 /sys/class/misc/mali0/device/dvfs_max_lock
-    chown radio system /sys/devices/platform/gpusysfs/gpu_min_clock
-    chmod 664 /sys/devices/platform/gpusysfs/gpu_min_clock
-    chown radio system /sys/devices/platform/gpusysfs/gpu_max_clock
-    chmod 664 /sys/devices/platform/gpusysfs/gpu_max_clock
+    chown system system /sys/class/misc/mali0/device/dvfs
+    chmod 0664 /sys/class/misc/mali0/device/dvfs
+    chown system system /sys/class/misc/mali0/device/dvfs_governor
+    chmod 0664 /sys/class/misc/mali0/device/dvfs_governor
+    chown system system /sys/class/misc/mali0/device/dvfs_table
+    chmod 0664 /sys/class/misc/mali0/device/dvfs_table
+    chown system system /sys/class/misc/mali0/device/dvfs_min_lock
+    chmod 0664 /sys/class/misc/mali0/device/dvfs_min_lock
+    chown system system /sys/class/misc/mali0/device/dvfs_max_lock
+    chmod 0664 /sys/class/misc/mali0/device/dvfs_max_lock
 
 ################################################
 # gpu settings
@@ -296,19 +186,12 @@ on post-fs-data
 ################################################
 # Kernel tweaks: Permissions
     chown root system /proc/sys/net/ipv4/tcp_congestion_control
-    chmod 0664 /proc/sys/net/ipv4/tcp_congestion_control
     chown root system /proc/sys/net/ipv6/conf/all/optimistic_dad
-    chmod 0664 /proc/sys/net/ipv6/conf/all/optimistic_dad
     chown root system /proc/sys/net/ipv6/conf/all/use_optimistic
-    chmod 0664 /proc/sys/net/ipv6/conf/all/use_optimistic
     chown root system /proc/sys/kernel/random/read_wakeup_threshold
-    chmod 0664 /proc/sys/kernel/random/read_wakeup_threshold
     chown root system /proc/sys/kernel/random/write_wakeup_threshold
-    chmod 0664 /proc/sys/kernel/random/write_wakeup_threshold
     chown root system /sys/devices/virtual/fingerprint/fingerprint/disable_wake_lock
-    chmod 0664 /sys/devices/virtual/fingerprint/fingerprint/disable_wake_lock
     chown root system /sys/module/workqueue/parameters/power_efficient
-    chmod 0664 /sys/module/workqueue/parameters/power_efficient
 
 ################################################
 # Kernel tweaks
@@ -319,19 +202,6 @@ on post-fs-data
     write /proc/sys/kernel/random/write_wakeup_threshold 256
     write /sys/devices/virtual/fingerprint/fingerprint/disable_wake_lock 1
     write /sys/module/workqueue/parameters/power_efficient 1
-
-################################################
-# Sickness-Kernel: Google Play Store Fix
-    pm enable com.google.android.gms/.update.SystemUpdateActivity
-    pm enable com.google.android.gms/.update.SystemUpdateService
-    pm enable com.google.android.gms/.update.SystemUpdateService$ActiveReceiver
-    pm enable com.google.android.gms/.update.SystemUpdateService$Receiver
-    pm enable com.google.android.gms/.update.SystemUpdateService$SecretCodeReceiver
-    pm enable com.google.android.gsf/.update.SystemUpdateActivity
-    pm enable com.google.android.gsf/.update.SystemUpdatePanoActivity
-    pm enable com.google.android.gsf/.update.SystemUpdateService
-    pm enable com.google.android.gsf/.update.SystemUpdateService$Receiver
-    pm enable com.google.android.gsf/.update.SystemUpdateService$SecretCodeReceiver
 
 ################################################
 # JPN: For MobileTV [ISDBT] \android\device\samsung\zeroltedcm\init.carrier.rc
