@@ -31,7 +31,7 @@ CPU-governor if it is set to "interactive"
 
 -------------
 
-[ powersave_aggression_level ]
+[ powersave_level ]
 This file can take values from 0 to 4, which
 indicates the current powersave-level. It goes from
 0 (Performance)over 2 (Balanced) to 4 (Power-Save)
