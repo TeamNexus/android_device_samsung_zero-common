@@ -28,6 +28,7 @@
 /dev/i2c-2                0660   system     system
 /dev/HPD                  0660   system     system
 
+################################################
 # gscalers
 /dev/video23              0660   media      graphics
 /dev/video26              0660   media      graphics
@@ -35,6 +36,7 @@
 /dev/video24              0660   media      graphics
 /dev/video27              0660   media      graphics
 
+################################################
 # scalers
 /dev/video50              0666   media      graphics
 /dev/video51              0666   media      graphics
@@ -45,29 +47,35 @@
 /dev/media0               0660   system     camera
 /dev/media1               0660   system     camera
 
+################################################
 # seiren Audio
 /dev/seiren               0660   mediacodec mediadrm
 
-#mixer
+################################################
+# mixer
 /dev/video16              0660   system     audio
 /dev/video17              0660   system     system
 /dev/video18              0660   system     system
 /dev/video19              0660   system     system
 
-#CEC
+################################################
+# CEC
 /dev/CEC                  0660   system     system
 
+################################################
 # JPEG
 /dev/m2m1shot_jpeg	  0660   cameraserver      media
 /dev/video13              0660   media      media
 /dev/video14              0660   media      media
 
+################################################
 # mfc
 /dev/video6               0660   mediacodec     mediadrm
 /dev/video7               0660   media      mediadrm
 /dev/video8               0660   media      mediadrm
 /dev/video9               0660   media      mediadrm
 
+################################################
 # camera
 /dev/video101             0660   cameraserver      cameraserver
 /dev/video102             0660   cameraserver      cameraserver
@@ -92,13 +100,21 @@
 /dev/video160             0660   cameraserver      cameraserver
 /dev/media2               0660   media      media
 
+################################################
 # MobiCore
-#/dev/mobicore             0600   drmrpc     drmrpc
-#/dev/mobicore-user        0660   drm        drmrpc
+/dev/mobicore             0700   system     system
+/dev/mobicore-user        0666   radio      system
 
+################################################
+# Fingerprint
+/dev/vfsspi               0660   system     system
+/dev/esfp0                0660   system     system
+
+################################################
 # Secure MEM driver
 #/dev/s5p-smem             0660   drm        drmrpc
 
+################################################
 # interactive governor parameters
 /sys/devices/system/cpu/cpu*   cpufreq/interactive/timer_rate                  0660    system  system
 /sys/devices/system/cpu/cpu*   cpufreq/interactive/timer_slack                 0660    system  system
@@ -127,6 +143,7 @@
 /sys/devices/system/cpu/cpu*   cpufreq/interactive/single_exit_load            0660    system  system
 /sys/devices/system/cpu/cpu*   cpufreq/interactive/single_exit_time            0660    system  system
 
+################################################
 # MIF
 /dev/block/platform/15570000.ufs/by-name/RADIO     0660   system     radio
 /dev/block/platform/15570000.ufs/by-name/DNT     0660   system     system
@@ -136,15 +153,18 @@
 /dev/umts_csd             0660   system     loop_radio
 /dev/smd4		  0660	 system	    radio
 
+################################################
 # QCOM MIF
 /dev/subsys_esoc*         0660   system     radio
 /dev/mhi_pipe_*             0660   radio      radio
 /dev/esoc-*             0660   system    radio
 
+################################################
 # sensor sysfs properties
 /sys/devices/virtual/input/input*	poll_delay	0660	system	radio
 /sys/devices/virtual/input/input*	enable		0660	system	radio
 
+################################################
 # Sensorhub IIO
 /dev/ssp_sensorhub        0660   system		system
 /dev/iio:device*          0660   system		system
@@ -152,20 +172,35 @@
 /sys/devices/14d30000.spi/spi_master/spi1/spi1.0/iio:device*    buffer/length       0660    system    system
 /sys/bus/iio/devices/iio:device*    0664   system     radio
 
+################################################
 # Broadcom Sensorhub Bridge Driver
-/dev/bbd_sensor           0660   system     system
-/dev/bbd_control          0660   system     system
-/dev/bbd_packet           0660   system     system
-/dev/bbd_reliable         0660   system     system
-/dev/bbd_sio              0660   system     system
-/dev/bbd_patch            0660   system     system
-/dev/ttyBCM*              0660   system     system
+/dev/bbd_sensor                          0660   system   system
+/dev/bbd_control                         0660   system   system
+/dev/bbd_packet                          0660   system   system
+/dev/bbd_reliable                        0660   system   system
+/dev/bbd_sio                             0660   system   system
+/dev/bbd_patch                           0660   system   system
+/dev/ttyBCM*                             0660   system   system
+/sys/devices/platform/bbd.0/BBD          0220   system   system
+/sys/devices/platform/bbd.0/DEV          0220   system   system
+/sys/devices/platform/bbd.0/ESW          0220   system   system
+/sys/devices/platform/bbd.0/baud         0660   system   system
+/sys/devices/platform/bbd.0/debug        0660   system   system
+/sys/devices/platform/bbd.0/buf          0440   system   system
+/sys/devices/platform/bbd.0/pl           0440   system   system
+/sys/devices/platform/bbd.0/passthru     0440   system   system
+/sys/devices/platform/bbd.0/ssi_xfer     0440   system   system
+/sys/devices/platform/bbd.0/ssi_count    0440   system   system
+/sys/devices/platform/bbd.0/ssi_trace    0440   system   system
 
+################################################
 # Reactivation lock
 /dev/block/platform/15570000.ufs/by-name/STEADY    0660    system    system
 
+################################################
 # Google FRP solution
 /dev/block/platform/15570000.ufs/by-name/PERSISTENT    0660    system    system
 
+################################################
 # FM Radio
 /dev/radio0               0660   system     audio
