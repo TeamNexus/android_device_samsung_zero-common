@@ -27,6 +27,9 @@
 #include <stdbool.h>
 #include <cutils/properties.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #define LOG_TAG "Exynos5PowerHAL"
 #define LOG_NDEBUG 0
 #include <utils/Log.h>
@@ -527,18 +530,8 @@ static int file_read_int(const char *path, int *v) {
 }
 
 static int file_exists(const char *path) {
-	char buf[80];
-	int len, fd;
-
-	fd = open(path, O_RDONLY);
-
-	if (fd < 0) {
-		close(fd);
-		return 0;
-	}
-
-	close(fd);
-	return 1;
+	struct stat fstat;
+	return !stat(path, &fstat);
 }
 
 static int is_apollo_interactive() {
