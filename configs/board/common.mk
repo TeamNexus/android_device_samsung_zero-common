@@ -20,6 +20,10 @@
 TARGET_USES_64_BIT_BINDER := true
 
 ########################################
+# CPU sets
+ENABLE_CPUSETS := true
+
+########################################
 # Display
 BACKLIGHT_PATH := /sys/devices/13900000.dsim/backlight/panel/brightness
 
