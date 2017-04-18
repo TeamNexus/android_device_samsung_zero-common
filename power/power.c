@@ -325,7 +325,7 @@ static void power_set_profile(int profile) {
 
 			// apply settings for apollo
 			if (is_apollo_interactive()) {
-				file_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "19000");
+				file_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "25000 600000:12500");
 				file_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
 				file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "20000");
 				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "95");
@@ -335,7 +335,7 @@ static void power_set_profile(int profile) {
 
 			// apply settings for atlas
 			if (is_atlas_interactive()) {
-				file_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "39000");
+				file_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "50000 1000000:25000");
 				file_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
 				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "40000");
 				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "95");
@@ -355,22 +355,22 @@ static void power_set_profile(int profile) {
 
 			// apply settings for apollo
 			if (is_apollo_interactive()) {
-				file_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "49000");
+				file_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "50000 1200000:25000");
 				file_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
 				file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "30000");
-				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "85");
+				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "85 1000000:95");
 				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1000000");
-				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "85");
+				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "85 1000000:95");
 			}
 
 			// apply settings for atlas
 			if (is_atlas_interactive()) {
-				file_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
+				file_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "75000 1400000:37500");
 				file_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
 				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
-				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "85");
+				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "85 1200000:95");
 				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1200000");
-				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "85");
+				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "85 1200000:95");
 			}
 
 			break;
@@ -385,22 +385,22 @@ static void power_set_profile(int profile) {
 
 			// apply settings for apollo
 			if (is_apollo_interactive()) {
-				file_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "69000");
+				file_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "75000 1500000:37500");
 				file_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
 				file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
-				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "75");
+				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "75 1300000:95");
 				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1300000");
-				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "75");
+				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "75 1300000:95");
 			}
 
 			// apply settings for atlas
 			if (is_atlas_interactive()) {
-				file_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "89000");
+				file_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "100000 2100000:50000");
 				file_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
 				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "80000");
-				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "75");
-				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1800000");
-				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "75");
+				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "75 1900000:95");
+				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1900000");
+				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "75 1900000:95");
 			}
 
 			break;
