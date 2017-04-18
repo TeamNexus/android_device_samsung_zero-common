@@ -242,7 +242,7 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration, int en
 			}
 		} else if (current_power_profile == PROFILE_HIGH_PERFORMANCE) {
 			// boostpulse should not be longer than 500ms
-			maximum_duration = 500000 - (powersave_level * 50000);
+			maximum_duration = 750000 - (powersave_level * 75000);
 			if (boost_duration > maximum_duration) {
 				boost_duration = maximum_duration;
 			}
