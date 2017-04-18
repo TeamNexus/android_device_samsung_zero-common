@@ -34,7 +34,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.radio.apm_sim_not_pwdn=1 \
     rild.libpath=/system/lib64/libsec-ril.so \
     rild.libpath2=/system/lib64/libsec-ril-dsds.so \
-    rild.libargs=-d /dev/ttyS0 \
     ro.telephony.ril_class=SlteRIL \
     ro.ril.telephony.mqanelements=6 \
     telephony.lteOnGsmDevice=1 \
