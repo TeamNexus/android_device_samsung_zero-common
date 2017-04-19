@@ -1,3 +1,6 @@
 allow untrusted_app battery_service:service_manager find;
 allow untrusted_app device:dir read;
 allow untrusted_app untrusted_app:udp_socket ioctl;
+
+# allow access to some minor system-files
+allow zygote sysfs_debug_untrusted:file r_file_perms;
