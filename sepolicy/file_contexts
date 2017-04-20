@@ -130,9 +130,9 @@
 
 ####################################
 # debugging
-/sys/kernel/debug/mali/mem                -- u:object_r:sysfs_debug:s0
-/sys/kernel/debug/tracing/trace_marker    -- u:object_r:sysfs_debug:s0
-/sys/kernel/debug/wakeup_sources          -- u:object_r:sysfs_debug_untrusted:s0
+/sys/kernel/debug/mali/mem                   -- u:object_r:sysfs_debug:s0
+/sys/kernel/debug/tracing/(trace_marker)     -- u:object_r:sysfs_debug:s0
+/sys/kernel/debug/wakeup_sources             -- u:object_r:sysfs_debug_untrusted:s0
 
 ####################################
 # Nexus7420 Power HAL
