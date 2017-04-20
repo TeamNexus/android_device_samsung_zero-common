@@ -133,11 +133,11 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 			break;
 
 		case POWER_HINT_VSYNC:
-			power_hint_boost_apply(1000 / 59.95, 1); // 1 Frame
+			// power_hint_boost_apply((1000 / 59.95) * 1000 * 30, 1); // 30 Frame
 			break;
 
 		case POWER_HINT_LAUNCH:
-			power_hint_boost_apply(250000, 0); // 250ms
+			power_hint_boost_apply(750000, 0); // 250ms
 			break;
 
 		/***********************************
