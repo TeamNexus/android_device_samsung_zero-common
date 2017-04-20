@@ -467,7 +467,8 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 
 	// if the screen is on and the current screen-state
 	// changed, activate boost for both clusters
-	if (new_state && screen_is_on != new_state) {
+	if (profile != PROFILE_POWER_SAVE &&
+		(new_state && screen_is_on != new_state)) {
 		power_hint_boost_apply_pulse(0, 1000000, 1);
 		power_hint_boost_apply_pulse(1, 1000000, 1);
 	}
