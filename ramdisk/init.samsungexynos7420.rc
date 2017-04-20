@@ -53,19 +53,19 @@ on init
 on post-fs
 ################################################
 # sda block device
-    write /sys/block/sda/queue/scheduler "bfq"
+    write /sys/block/sda/queue/scheduler "cfq"
     write /sys/block/sda/queue/read_ahead_kb 3072
     write /sys/block/sda/queue/rq_affinity 2
 
 ################################################
 # sdb block device
-    write /sys/block/sdb/queue/scheduler "bfq"
+    write /sys/block/sdb/queue/scheduler "cfq"
     write /sys/block/sdb/queue/read_ahead_kb 3072
     write /sys/block/sdb/queue/rq_affinity 2
 
 ################################################
 # sdc block device
-    write /sys/block/sdc/queue/scheduler "bfq"
+    write /sys/block/sdc/queue/scheduler "cfq"
     write /sys/block/sdc/queue/read_ahead_kb 3072
     write /sys/block/sdc/queue/rq_affinity 2
 
@@ -125,7 +125,7 @@ on post-fs-data
 
 ################################################
 # cpugov: apollo
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "intergalactic"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
 
 ################################################
 # cpugov permissions: interactive/apollo
@@ -136,17 +136,12 @@ on post-fs-data
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/hotplug_in_load
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/hotplug_max_in_cores
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/hotplug_min_in_cores
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/hotplug_out_load
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/hotplugging
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 
 ################################################
 # cpugov: atlas
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "intergalactic"
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "interactive"
 
 ################################################
 # cpugov permissions: interactive/atlas
@@ -157,11 +152,6 @@ on post-fs-data
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/hotplug_in_load
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/hotplug_max_in_cores
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/hotplug_min_in_cores
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/hotplug_out_load
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/hotplugging
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
 
