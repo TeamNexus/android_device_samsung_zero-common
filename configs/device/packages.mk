@@ -17,11 +17,11 @@
 
 # Browser
 PRODUCT_PACKAGES += \
-	Gello
+    Gello
 
 # Camera
 PRODUCT_PACKAGES += \
-    Snap
+    HTCCamera
 
 # Dbthtool
 PRODUCT_PACKAGES += \
