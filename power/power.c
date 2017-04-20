@@ -333,6 +333,11 @@ static void power_set_profile(int profile) {
 				file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "20000");
 				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "95");
 				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "400000");
+				file_write(POWER_APOLLO_INTERACTIVE_HOTPLUG_IN_LOAD, "85");
+				file_write(POWER_APOLLO_INTERACTIVE_HOTPLUG_MAX_IN_CORES, "4");
+				file_write(POWER_APOLLO_INTERACTIVE_HOTPLUG_MIN_IN_CORES, "1");
+				file_write(POWER_APOLLO_INTERACTIVE_HOTPLUG_OUT_LOAD, "60");
+				file_write(POWER_APOLLO_INTERACTIVE_HOTPLUGGING, "1");
 				file_write(POWER_APOLLO_INTERACTIVE_MIN_SAMPLE_TIME, "125");
 				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "95");
 				file_write(POWER_APOLLO_INTERACTIVE_TIMER_RATE, "85");
@@ -346,6 +351,11 @@ static void power_set_profile(int profile) {
 				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "40000");
 				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "95");
 				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "800000");
+				file_write(POWER_ATLAS_INTERACTIVE_HOTPLUG_IN_LOAD, "95");
+				file_write(POWER_ATLAS_INTERACTIVE_HOTPLUG_MAX_IN_CORES, "2");
+				file_write(POWER_ATLAS_INTERACTIVE_HOTPLUG_MIN_IN_CORES, "1");
+				file_write(POWER_ATLAS_INTERACTIVE_HOTPLUG_OUT_LOAD, "80");
+				file_write(POWER_ATLAS_INTERACTIVE_HOTPLUGGING, "1");
 				file_write(POWER_ATLAS_INTERACTIVE_MIN_SAMPLE_TIME, "150");
 				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "95");
 				file_write(POWER_ATLAS_INTERACTIVE_TIMER_RATE, "100");
@@ -369,6 +379,11 @@ static void power_set_profile(int profile) {
 				file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "30000");
 				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "85 1000000:95");
 				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1000000");
+				file_write(POWER_APOLLO_INTERACTIVE_HOTPLUG_IN_LOAD, "75");
+				file_write(POWER_APOLLO_INTERACTIVE_HOTPLUG_MAX_IN_CORES, "4");
+				file_write(POWER_APOLLO_INTERACTIVE_HOTPLUG_MIN_IN_CORES, "1");
+				file_write(POWER_APOLLO_INTERACTIVE_HOTPLUG_OUT_LOAD, "50");
+				file_write(POWER_APOLLO_INTERACTIVE_HOTPLUGGING, "1");
 				file_write(POWER_APOLLO_INTERACTIVE_MIN_SAMPLE_TIME, "75");
 				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "85 1000000:95");
 				file_write(POWER_APOLLO_INTERACTIVE_TIMER_RATE, "70");
@@ -382,6 +397,11 @@ static void power_set_profile(int profile) {
 				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
 				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "85 1200000:95");
 				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1200000");
+				file_write(POWER_ATLAS_INTERACTIVE_HOTPLUG_IN_LOAD, "90");
+				file_write(POWER_ATLAS_INTERACTIVE_HOTPLUG_MAX_IN_CORES, "4");
+				file_write(POWER_ATLAS_INTERACTIVE_HOTPLUG_MIN_IN_CORES, "1");
+				file_write(POWER_ATLAS_INTERACTIVE_HOTPLUG_OUT_LOAD, "70");
+				file_write(POWER_ATLAS_INTERACTIVE_HOTPLUGGING, "1");
 				file_write(POWER_ATLAS_INTERACTIVE_MIN_SAMPLE_TIME, "100");
 				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "85 1200000:95");
 				file_write(POWER_ATLAS_INTERACTIVE_TIMER_RATE, "85");
@@ -391,6 +411,16 @@ static void power_set_profile(int profile) {
 			break;
 
 		case PROFILE_HIGH_PERFORMANCE:
+
+			// online all cores
+			file_write("/sys/devices/system/cpu/cpu0/online", "1");
+			file_write("/sys/devices/system/cpu/cpu1/online", "1");
+			file_write("/sys/devices/system/cpu/cpu2/online", "1");
+			file_write("/sys/devices/system/cpu/cpu3/online", "1");
+			file_write("/sys/devices/system/cpu/cpu4/online", "1");
+			file_write("/sys/devices/system/cpu/cpu5/online", "1");
+			file_write("/sys/devices/system/cpu/cpu6/online", "1");
+			file_write("/sys/devices/system/cpu/cpu7/online", "1");
 
 			// manage GPU DVFS
 			file_write(POWER_MALI_GPU_DVFS, "1");
@@ -405,6 +435,7 @@ static void power_set_profile(int profile) {
 				file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
 				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "75 1300000:95");
 				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1300000");
+				file_write(POWER_APOLLO_INTERACTIVE_HOTPLUGGING, "0");
 				file_write(POWER_APOLLO_INTERACTIVE_MIN_SAMPLE_TIME, "50");
 				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "75 1300000:95");
 				file_write(POWER_APOLLO_INTERACTIVE_TIMER_RATE, "55");
@@ -418,6 +449,7 @@ static void power_set_profile(int profile) {
 				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "80000");
 				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "75 1900000:95");
 				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1900000");
+				file_write(POWER_ATLAS_INTERACTIVE_HOTPLUGGING, "0");
 				file_write(POWER_ATLAS_INTERACTIVE_MIN_SAMPLE_TIME, "75");
 				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "75 1900000:95");
 				file_write(POWER_ATLAS_INTERACTIVE_TIMER_RATE, "70");
