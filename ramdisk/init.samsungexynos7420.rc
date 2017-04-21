@@ -125,35 +125,47 @@ on post-fs-data
 
 ################################################
 # cpugov: apollo
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "interactive"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "intergalactic"
 
 ################################################
 # cpugov permissions: interactive/apollo
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse_duration
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/enforced_mode
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/above_hispeed_delay
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/boost
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/boostpulse
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/boostpulse_duration
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/enforced_mode
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/go_hispeed_load
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/hispeed_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/hotplug_in_load
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/hotplug_max_in_cores
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/hotplug_min_in_cores
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/hotplug_min_plug_time
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/hotplug_out_load
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/hotplugging
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/io_is_busy
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/intergalactic/target_loads
 
 ################################################
 # cpugov: atlas
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "interactive"
+    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor "intergalactic"
 
 ################################################
 # cpugov permissions: interactive/atlas
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/boost
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/boostpulse
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/boostpulse_duration
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/enforced_mode
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
-    chown system system /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/above_hispeed_delay
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/boost
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/boostpulse
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/boostpulse_duration
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/enforced_mode
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/go_hispeed_load
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/hispeed_freq
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/hotplug_in_load
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/hotplug_max_in_cores
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/hotplug_min_in_cores
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/hotplug_min_plug_time
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/hotplug_out_load
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/hotplugging
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/io_is_busy
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/intergalactic/target_loads
 
 ################################################
 # cpuctl permissions

@@ -78,7 +78,7 @@ static int power_open(const hw_module_t __unused * module, const char *name, hw_
 			dev->powerHint = power_hint;
 			dev->getFeature = power_get_feature;
 			dev->setFeature = power_set_feature;
-			dev->setInteractive = power_set_interactive;
+			dev->setInteractive = POWER_set_INTERGALACTIC;
 
 			*device = (hw_device_t *)dev;
 		} else {
@@ -266,11 +266,11 @@ static void power_hint_boost_apply_pulse(int cluster, int boost_duration, int en
 	power_pulse_set_timer(cluster, boost_duration);
 
 	if (cluster == 0 && is_apollo_interactive()) {
-		file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, durationbuf);
-		file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE, "1");
+		file_write(POWER_APOLLO_INTERGALACTIC_BOOSTPULSE_DURATION, durationbuf);
+		file_write(POWER_APOLLO_INTERGALACTIC_BOOSTPULSE, "1");
 	} else if (cluster == 1 && is_atlas_interactive()) {
-		file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, durationbuf);
-		file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE, "1");
+		file_write(POWER_APOLLO_INTERGALACTIC_BOOSTPULSE_DURATION, durationbuf);
+		file_write(POWER_APOLLO_INTERGALACTIC_BOOSTPULSE, "1");
 	}
 }
 
@@ -310,10 +310,10 @@ static void power_set_profile(int profile) {
 
 	// disable enforced mode
 	if (is_apollo_interactive()) {
-		file_write(POWER_APOLLO_INTERACTIVE_ENFORCED_MODE, "0");
+		file_write(POWER_APOLLO_INTERGALACTIC_ENFORCED_MODE, "0");
 	}
 	if (is_atlas_interactive()) {
-		file_write(POWER_ATLAS_INTERACTIVE_ENFORCED_MODE, "0");
+		file_write(POWER_ATLAS_INTERGALACTIC_ENFORCED_MODE, "0");
 	}
 
 	switch (profile) {
@@ -328,28 +328,40 @@ static void power_set_profile(int profile) {
 
 			// apply settings for apollo
 			if (is_apollo_interactive()) {
-				file_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "90000 600000:70000");
-				file_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
-				file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "20000");
-				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "95");
-				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "400000");
-				file_write(POWER_APOLLO_INTERACTIVE_MIN_SAMPLE_TIME, "125");
-				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "95");
-				file_write(POWER_APOLLO_INTERACTIVE_TIMER_RATE, "85");
-				file_write(POWER_APOLLO_INTERACTIVE_TIMER_SLACK, "50");
+				file_write(POWER_APOLLO_INTERGALACTIC_ABOVE_HISPEED_DELAY, "90000 600000:70000");
+				file_write(POWER_APOLLO_INTERGALACTIC_BOOST, "0");
+				file_write(POWER_APOLLO_INTERGALACTIC_BOOSTPULSE_DURATION, "20000");
+				file_write(POWER_APOLLO_INTERGALACTIC_GO_HISPEED_LOAD, "95");
+				file_write(POWER_APOLLO_INTERGALACTIC_HISPEED_FREQ, "400000");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUGGING, "1");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUG_IN_LOAD, "75");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUG_OUT_LOAD, "50");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUG_MAX_IN_CORES, "4");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUG_MIN_IN_CORES, "1");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUG_MIN_PLUG_TIME, "100000");
+				file_write(POWER_APOLLO_INTERGALACTIC_MIN_SAMPLE_TIME, "125");
+				file_write(POWER_APOLLO_INTERGALACTIC_TARGET_LOADS, "95");
+				file_write(POWER_APOLLO_INTERGALACTIC_TIMER_RATE, "85");
+				file_write(POWER_APOLLO_INTERGALACTIC_TIMER_SLACK, "50");
 			}
 
 			// apply settings for atlas
 			if (is_atlas_interactive()) {
-				file_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "100000 1000000:75000");
-				file_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
-				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "40000");
-				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "95");
-				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "800000");
-				file_write(POWER_ATLAS_INTERACTIVE_MIN_SAMPLE_TIME, "150");
-				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "95");
-				file_write(POWER_ATLAS_INTERACTIVE_TIMER_RATE, "100");
-				file_write(POWER_ATLAS_INTERACTIVE_TIMER_SLACK, "50");
+				file_write(POWER_ATLAS_INTERGALACTIC_ABOVE_HISPEED_DELAY, "100000 1000000:75000");
+				file_write(POWER_ATLAS_INTERGALACTIC_BOOST, "0");
+				file_write(POWER_ATLAS_INTERGALACTIC_BOOSTPULSE_DURATION, "40000");
+				file_write(POWER_ATLAS_INTERGALACTIC_GO_HISPEED_LOAD, "95");
+				file_write(POWER_ATLAS_INTERGALACTIC_HISPEED_FREQ, "800000");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUGGING, "1");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUG_IN_LOAD, "75");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUG_OUT_LOAD, "50");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUG_MAX_IN_CORES, "4");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUG_MIN_IN_CORES, "1");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUG_MIN_PLUG_TIME, "100000");
+				file_write(POWER_ATLAS_INTERGALACTIC_MIN_SAMPLE_TIME, "150");
+				file_write(POWER_ATLAS_INTERGALACTIC_TARGET_LOADS, "95");
+				file_write(POWER_ATLAS_INTERGALACTIC_TIMER_RATE, "100");
+				file_write(POWER_ATLAS_INTERGALACTIC_TIMER_SLACK, "50");
 			}
 
 			break;
@@ -364,28 +376,30 @@ static void power_set_profile(int profile) {
 
 			// apply settings for apollo
 			if (is_apollo_interactive()) {
-				file_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "70000 1200000:45000");
-				file_write(POWER_APOLLO_INTERACTIVE_BOOST, "0");
-				file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "30000");
-				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "85 1000000:95");
-				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1000000");
-				file_write(POWER_APOLLO_INTERACTIVE_MIN_SAMPLE_TIME, "75");
-				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "85 1000000:95");
-				file_write(POWER_APOLLO_INTERACTIVE_TIMER_RATE, "70");
-				file_write(POWER_APOLLO_INTERACTIVE_TIMER_SLACK, "35");
+				file_write(POWER_APOLLO_INTERGALACTIC_ABOVE_HISPEED_DELAY, "70000 1200000:45000");
+				file_write(POWER_APOLLO_INTERGALACTIC_BOOST, "0");
+				file_write(POWER_APOLLO_INTERGALACTIC_BOOSTPULSE_DURATION, "30000");
+				file_write(POWER_APOLLO_INTERGALACTIC_GO_HISPEED_LOAD, "85 1000000:95");
+				file_write(POWER_APOLLO_INTERGALACTIC_HISPEED_FREQ, "1000000");
+				file_write(POWER_APOLLO_INTERGALACTIC_HOTPLUGGING, "0");
+				file_write(POWER_APOLLO_INTERGALACTIC_MIN_SAMPLE_TIME, "75");
+				file_write(POWER_APOLLO_INTERGALACTIC_TARGET_LOADS, "85 1000000:95");
+				file_write(POWER_APOLLO_INTERGALACTIC_TIMER_RATE, "70");
+				file_write(POWER_APOLLO_INTERGALACTIC_TIMER_SLACK, "35");
 			}
 
 			// apply settings for atlas
 			if (is_atlas_interactive()) {
-				file_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "75000 1400000:50000");
-				file_write(POWER_ATLAS_INTERACTIVE_BOOST, "0");
-				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
-				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "85 1200000:95");
-				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1200000");
-				file_write(POWER_ATLAS_INTERACTIVE_MIN_SAMPLE_TIME, "100");
-				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "85 1200000:95");
-				file_write(POWER_ATLAS_INTERACTIVE_TIMER_RATE, "85");
-				file_write(POWER_ATLAS_INTERACTIVE_TIMER_SLACK, "35");
+				file_write(POWER_ATLAS_INTERGALACTIC_ABOVE_HISPEED_DELAY, "75000 1400000:50000");
+				file_write(POWER_ATLAS_INTERGALACTIC_BOOST, "0");
+				file_write(POWER_ATLAS_INTERGALACTIC_BOOSTPULSE_DURATION, "60000");
+				file_write(POWER_ATLAS_INTERGALACTIC_GO_HISPEED_LOAD, "85 1200000:95");
+				file_write(POWER_ATLAS_INTERGALACTIC_HISPEED_FREQ, "1200000");
+				file_write(POWER_ATLAS_INTERGALACTIC_HOTPLUGGING, "0");
+				file_write(POWER_ATLAS_INTERGALACTIC_MIN_SAMPLE_TIME, "100");
+				file_write(POWER_ATLAS_INTERGALACTIC_TARGET_LOADS, "85 1200000:95");
+				file_write(POWER_ATLAS_INTERGALACTIC_TIMER_RATE, "85");
+				file_write(POWER_ATLAS_INTERGALACTIC_TIMER_SLACK, "35");
 			}
 
 			break;
@@ -395,33 +409,35 @@ static void power_set_profile(int profile) {
 			// manage GPU DVFS
 			file_write(POWER_MALI_GPU_DVFS, "1");
 			file_write(POWER_MALI_GPU_DVFS_GOVERNOR, "3");
-			file_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "420");
+			file_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "700");
 			file_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
 
 			// apply settings for apollo
 			if (is_apollo_interactive()) {
-				file_write(POWER_APOLLO_INTERACTIVE_ABOVE_HISPEED_DELAY, "40000 1500000:30000");
-				file_write(POWER_APOLLO_INTERACTIVE_BOOST, "1");
-				file_write(POWER_APOLLO_INTERACTIVE_BOOSTPULSE_DURATION, "60000");
-				file_write(POWER_APOLLO_INTERACTIVE_GO_HISPEED_LOAD, "75 1300000:95");
-				file_write(POWER_APOLLO_INTERACTIVE_HISPEED_FREQ, "1300000");
-				file_write(POWER_APOLLO_INTERACTIVE_MIN_SAMPLE_TIME, "50");
-				file_write(POWER_APOLLO_INTERACTIVE_TARGET_LOADS, "75 1300000:95");
-				file_write(POWER_APOLLO_INTERACTIVE_TIMER_RATE, "55");
-				file_write(POWER_APOLLO_INTERACTIVE_TIMER_SLACK, "25");
+				file_write(POWER_APOLLO_INTERGALACTIC_ABOVE_HISPEED_DELAY, "40000 1500000:30000");
+				file_write(POWER_APOLLO_INTERGALACTIC_BOOST, "0");
+				file_write(POWER_APOLLO_INTERGALACTIC_BOOSTPULSE_DURATION, "60000");
+				file_write(POWER_APOLLO_INTERGALACTIC_GO_HISPEED_LOAD, "75 1300000:95");
+				file_write(POWER_APOLLO_INTERGALACTIC_HISPEED_FREQ, "1300000");
+				file_write(POWER_APOLLO_INTERGALACTIC_HOTPLUGGING, "0");
+				file_write(POWER_APOLLO_INTERGALACTIC_MIN_SAMPLE_TIME, "50");
+				file_write(POWER_APOLLO_INTERGALACTIC_TARGET_LOADS, "75 1300000:95");
+				file_write(POWER_APOLLO_INTERGALACTIC_TIMER_RATE, "55");
+				file_write(POWER_APOLLO_INTERGALACTIC_TIMER_SLACK, "25");
 			}
 
 			// apply settings for atlas
 			if (is_atlas_interactive()) {
-				file_write(POWER_ATLAS_INTERACTIVE_ABOVE_HISPEED_DELAY, "50000 2100000:35000");
-				file_write(POWER_ATLAS_INTERACTIVE_BOOST, "1");
-				file_write(POWER_ATLAS_INTERACTIVE_BOOSTPULSE_DURATION, "80000");
-				file_write(POWER_ATLAS_INTERACTIVE_GO_HISPEED_LOAD, "75 1900000:95");
-				file_write(POWER_ATLAS_INTERACTIVE_HISPEED_FREQ, "1900000");
-				file_write(POWER_ATLAS_INTERACTIVE_MIN_SAMPLE_TIME, "75");
-				file_write(POWER_ATLAS_INTERACTIVE_TARGET_LOADS, "75 1900000:95");
-				file_write(POWER_ATLAS_INTERACTIVE_TIMER_RATE, "70");
-				file_write(POWER_ATLAS_INTERACTIVE_TIMER_SLACK, "25");
+				file_write(POWER_ATLAS_INTERGALACTIC_ABOVE_HISPEED_DELAY, "50000 2100000:35000");
+				file_write(POWER_ATLAS_INTERGALACTIC_BOOST, "0");
+				file_write(POWER_ATLAS_INTERGALACTIC_BOOSTPULSE_DURATION, "80000");
+				file_write(POWER_ATLAS_INTERGALACTIC_GO_HISPEED_LOAD, "75 1900000:95");
+				file_write(POWER_ATLAS_INTERGALACTIC_HISPEED_FREQ, "1900000");
+				file_write(POWER_APOLLO_INTERGALACTIC_HOTPLUGGING, "0");
+				file_write(POWER_ATLAS_INTERGALACTIC_MIN_SAMPLE_TIME, "75");
+				file_write(POWER_ATLAS_INTERGALACTIC_TARGET_LOADS, "75 1900000:95");
+				file_write(POWER_ATLAS_INTERGALACTIC_TIMER_RATE, "70");
+				file_write(POWER_ATLAS_INTERGALACTIC_TIMER_SLACK, "25");
 			}
 
 			break;
@@ -462,7 +478,7 @@ static void power_input_device_state(int state) {
 	}
 }
 
-static void power_set_interactive(struct power_module __unused * module, int on) {
+static void POWER_set_INTERGALACTIC(struct power_module __unused * module, int on) {
 	int new_state = (on != 0);
 
 	// if the screen is on and the current screen-state
@@ -554,11 +570,11 @@ static int file_exists(const char *path) {
 }
 
 static int is_apollo_interactive() {
-	return file_exists(POWER_APOLLO_INTERACTIVE_BOOSTPULSE);
+	return file_exists(POWER_APOLLO_INTERGALACTIC_BOOSTPULSE);
 }
 
 static int is_atlas_interactive() {
-	return file_exists(POWER_ATLAS_INTERACTIVE_BOOSTPULSE);
+	return file_exists(POWER_ATLAS_INTERGALACTIC_BOOSTPULSE);
 }
 
 static int softkeys_active() {
@@ -598,9 +614,9 @@ static int read_cpu_util(int cluster, struct interactive_cpu_util *cpuutil) {
 	memset(cpuutil, 0, sizeof(struct interactive_cpu_util));
 
 	if (cluster == 0) {
-		path = POWER_APOLLO_INTERACTIVE_CPU_UTIL;
+		path = POWER_APOLLO_INTERGALACTIC_CPU_UTIL;
 	} else if (cluster == 1) {
-		path = POWER_ATLAS_INTERACTIVE_CPU_UTIL;
+		path = POWER_ATLAS_INTERGALACTIC_CPU_UTIL;
 	} else {
 		return 0; // invalid cluster
 	}
@@ -791,7 +807,7 @@ struct sec_power_module HAL_MODULE_INFO_SYM = {
 		.powerHint = power_hint,
 		.getFeature = power_get_feature,
 		.setFeature = power_set_feature,
-		.setInteractive = power_set_interactive,
+		.setInteractive = POWER_set_INTERGALACTIC,
 	},
 
 	.lock = PTHREAD_MUTEX_INITIALIZER,
