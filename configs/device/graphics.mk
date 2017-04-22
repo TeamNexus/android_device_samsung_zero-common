@@ -17,5 +17,4 @@
 
 # stagefright and device specific modules
 PRODUCT_PACKAGES += \
-    libstagefrighthw \
-    libExynosOMX_Core
+    libstagefrighthw
