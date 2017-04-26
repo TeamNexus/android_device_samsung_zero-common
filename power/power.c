@@ -359,7 +359,7 @@ static void power_set_profile(int profile) {
 			// manage GPU DVFS
 			file_write(POWER_MALI_GPU_DVFS, "1");
 			file_write(POWER_MALI_GPU_DVFS_GOVERNOR, "1");
-			file_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "266");
+			file_write(POWER_MALI_GPU_DVFS_MIN_LOCK, "350");
 			file_write(POWER_MALI_GPU_DVFS_MAX_LOCK, "772");
 
 			// apply settings for apollo
