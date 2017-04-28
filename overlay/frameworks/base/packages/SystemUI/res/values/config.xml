@@ -26,7 +26,7 @@
     <bool name="config_recents_use_hardware_layers">true</bool>
 
     <!-- Doze: does this device support STATE_DOZE and STATE_DOZE_SUSPEND?  -->
-    <bool name="doze_display_state_supported">true</bool>
+    <bool name="doze_display_state_supported">false</bool>
 
     <!-- When true,show the AutoBrightness checkbox -->
     <bool name="config_show_auto_brightness">true</bool>
