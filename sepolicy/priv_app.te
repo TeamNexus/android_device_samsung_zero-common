@@ -1,0 +1,1 @@
+allow priv_app power_hal_data_files:file rw_file_perms;
