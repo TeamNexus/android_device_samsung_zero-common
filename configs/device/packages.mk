@@ -40,6 +40,10 @@ PRODUCT_PACKAGES += \
     libxml2 \
     libprotobuf-cpp-full
 
+# TheNexus
+PRODUCT_PACKAGES += \
+    TheNexus
+
 # Torch
 PRODUCT_PACKAGES += \
     Torch
