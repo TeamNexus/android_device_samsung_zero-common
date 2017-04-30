@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2016 The CyanogenMod Project
-# Copyright (C) 2017 Team Nexus7420
+# Copyright (C) 2017 TeamNexus
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # media build properties
 PRODUCT_PROPERTY_OVERRIDES += \
 	media.sf.omx-plugin=libffmpeg_omx.so,libsomxcore.so
-	
+
 # radio build properties
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.radio.add_power_save=1 \
