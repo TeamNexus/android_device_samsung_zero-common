@@ -16,6 +16,7 @@
 
 BOARD_POWER_CAPABILITIES := is_big_little has_mali has_touchkeys has_gpio_keys
 
-BOARD_POWER_INPUT_TOUCHSCREEN := input1
-BOARD_POWER_INPUT_TOUCHKEYS := input0
-BOARD_POWER_INPUT_GPIO_KEYS := input16
+# input-nodes ("/sys/class/input/inputX/enabled")
+BOARD_POWER_INPUT_TOUCHSCREEN := 1
+BOARD_POWER_INPUT_TOUCHKEYS := 0
+BOARD_POWER_INPUT_GPIO_KEYS := 6
