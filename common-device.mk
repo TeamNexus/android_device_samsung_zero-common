@@ -21,5 +21,10 @@ LOCAL_PATH := device/samsung/zero-common
 # inherit splitted configs
 include $(LOCAL_PATH)/configs/device/*.mk
 
+########################################
 # Get non-open-source specific aspects
 $(call inherit-product-if-exists, vendor/samsung/zero-common/zero-common-vendor.mk)
+
+########################################
+# Get TeamNexus-specific files
+$(call inherit-product-if-exists, vendor/nexus/vendor-nexus.mk)

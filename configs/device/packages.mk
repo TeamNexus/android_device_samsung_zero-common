@@ -19,10 +19,6 @@
 PRODUCT_PACKAGES += \
     Gello
 
-# Camera
-PRODUCT_PACKAGES += \
-    HTCCamera
-
 # Dbthtool
 PRODUCT_PACKAGES += \
     dtbhtoolExynos
@@ -43,10 +39,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     libxml2 \
     libprotobuf-cpp-full
-
-# TheNexus
-PRODUCT_PACKAGES += \
-    TheNexus
 
 # Torch
 PRODUCT_PACKAGES += \
