@@ -19,7 +19,7 @@ LOCAL_PATH := device/samsung/zero-common
 
 ########################################
 # inherit splitted configs
-include $(LOCAL_PATH)/configs/device/*.mk
+include $(LOCAL_PATH)/configs/product/*.mk
 
 ########################################
 # Get non-open-source specific aspects
