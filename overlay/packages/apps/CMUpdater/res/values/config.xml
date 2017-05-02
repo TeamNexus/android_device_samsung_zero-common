@@ -8,5 +8,5 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Updater Config Strings -->
-    <string name="conf_update_server_url_def" translatable="false">https://download.nexus7420.cf/api</string>
+    <string name="conf_update_server_url_def" translatable="false">https://update.nexus7420.cf/api</string>
 </resources>
