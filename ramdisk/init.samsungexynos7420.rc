@@ -173,42 +173,6 @@ on post-fs-data
     chmod 0660 /dev/cpuctl
 
 ################################################
-# cpusets
-    write /dev/cpuset/top-app/cpus 0-7
-    write /dev/cpuset/foreground/cpus 0-2,4-7
-    write /dev/cpuset/background/cpus 0-1
-    write /dev/cpuset/system-background/cpus 0-2
-    # cpuset: cached
-    mkdir /dev/cpuset/cached 0664 system system
-    write /dev/cpuset/cached/cpus 1
-    write /dev/cpuset/cached/mems 0
-    # cpuset: abnormal
-    mkdir /dev/cpuset/abnormal 0664 system system
-    write /dev/cpuset/abnormal/cpus 1
-    write /dev/cpuset/abnormal/mems 0
-    # cpuset: dex2oat
-    mkdir /dev/cpuset/dex2oat 0664 system system
-    write /dev/cpuset/dex2oat/cpus 0-2,4-7
-    write /dev/cpuset/dex2oat/mems 0
-
-################################################
-# cpusets permissions
-    chown system system /dev/cpuset/top-app/tasks
-    chmod 0664 /dev/cpuset/top-app/tasks
-    chown system system /dev/cpuset/foreground/tasks
-    chmod 0664 /dev/cpuset/foreground/tasks
-    chown system system /dev/cpuset/background/tasks
-    chmod 0664 /dev/cpuset/background/tasks
-    chown system system /dev/cpuset/system-background/tasks
-    chmod 0664 /dev/cpuset/system-background/tasks
-    chown system system /dev/cpuset/cached/tasks
-    chmod 0664 /dev/cpuset/cached/tasks
-    chown system system /dev/cpuset/abnormal/tasks
-    chmod 0664 /dev/cpuset/abnormal/tasks
-    chown system system /dev/cpuset/dex2oat/tasks
-    chmod 0664 /dev/cpuset/dex2oat/tasks
-
-################################################
 # gpu permissions
     chown system system /sys/class/misc/mali0/device/dvfs
     chmod 0664 /sys/class/misc/mali0/device/dvfs
