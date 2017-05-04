@@ -38,6 +38,7 @@ PRODUCT_PACKAGES += \
 # Radio
 PRODUCT_PACKAGES += \
     libxml2 \
+    libsecril-client \
     libprotobuf-cpp-full
 
 # Torch
