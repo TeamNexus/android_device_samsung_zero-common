@@ -338,7 +338,7 @@ public class SlteRIL extends RIL {
          /* response[2] %= 256;
          response[4] %= 256; */
 
-        if ((lteSignalStrength & 0xff) == 255 || lteSignalStrength == 99) {
+        if ((response[7] & 0xff) == 255 || response[7] == 99) {
             response[7] = 99;
             response[8] = SignalStrength.INVALID;
             response[9] = SignalStrength.INVALID;
