@@ -17,6 +17,7 @@
 
 import init.samsungexynos7420.usb.rc
 import init.wifi.rc
+import init.rilchip.rc
 import init.baseband.rc
 import init.power.rc
 import init.gps.rc
