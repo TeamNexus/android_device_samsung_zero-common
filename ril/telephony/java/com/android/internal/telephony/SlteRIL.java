@@ -330,13 +330,23 @@ public class SlteRIL extends RIL {
         for (int i = 0; i < numInts; i++) {
             response[i] = p.readInt();
         }
-        // gsm
-        response[0] &= 0xff;
-        // cdma
-        response[2] %= 256;
-        response[4] %= 256;
-        // lte
-        response[7] &= 0xff;
+
+         // gsm
+         response[0] &= 0xff;
+
+         // cdma
+         /* response[2] %= 256;
+         response[4] %= 256; */
+
+        if ((lteSignalStrength & 0xff) == 255 || lteSignalStrength == 99) {
+            response[7] = 99;
+            response[8] = SignalStrength.INVALID;
+            response[9] = SignalStrength.INVALID;
+            response[10] = SignalStrength.INVALID;
+            response[11] = SignalStrength.INVALID;
+        } else {
+            response[7] &= 0xff;
+        }
 
         return new SignalStrength(response[0],
                                   response[1],
