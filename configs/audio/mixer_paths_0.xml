@@ -980,6 +980,6 @@
 		<ctl name="Headset Mic Switch" value="1"/>
 		<path name="gain-recognition-headset-mic"/>
 	</path>
-	
+
 	<!-- END - OSS Audio HAL Paths -->
 </mixer>
