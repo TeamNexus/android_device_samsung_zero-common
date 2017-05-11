@@ -30,4 +30,11 @@
 
     <!-- When true,show the AutoBrightness checkbox -->
     <bool name="config_show_auto_brightness">true</bool>
+
+    <!-- Should "4G" be shown instead of "LTE" when the network is NETWORK_TYPE_LTE? -->
+    <bool name="config_show4GForLTE">true</bool>
+
+    <!-- Should "LTE"/"4G" be shown instead of "LTE+"/"4G+" when on NETWORK_TYPE_LTE_CA? -->
+    <bool name="config_hideLtePlus">false</bool>
+
 </resources>
