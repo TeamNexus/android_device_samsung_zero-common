@@ -40,6 +40,38 @@ on fs
     chmod 0660 /sys/devices/virtual/misc/umts_dm0/dm_state
     chown radio system /sys/devices/virtual/misc/umts_dm0/dm_state
 
+on property:ril.clatd.v4-rmnet0=up
+    write /sys/class/net/rmnet0/queues/rx-0/rps_cpus 4
+    write /sys/class/net/v4-rmnet0/queues/rx-0/rps_cpus 2
+
+on property:ril.clatd.v4-rmnet1=up
+    write /sys/class/net/rmnet1/queues/rx-0/rps_cpus 4
+    write /sys/class/net/v4-rmnet1/queues/rx-0/rps_cpus 2
+
+on property:ril.clatd.v4-rmnet2=up
+    write /sys/class/net/rmnet2/queues/rx-0/rps_cpus 4
+    write /sys/class/net/v4-rmnet2/queues/rx-0/rps_cpus 2
+
+on property:ril.clatd.v4-rmnet3=up
+    write /sys/class/net/rmnet3/queues/rx-0/rps_cpus 4
+    write /sys/class/net/v4-rmnet3/queues/rx-0/rps_cpus 2
+
+on property:ril.clatd.v4-rmnet4=up
+    write /sys/class/net/rmnet4/queues/rx-0/rps_cpus 4
+    write /sys/class/net/v4-rmnet4/queues/rx-0/rps_cpus 2
+
+on property:ril.clatd.v4-rmnet5=up
+    write /sys/class/net/rmnet5/queues/rx-0/rps_cpus 4
+    write /sys/class/net/v4-rmnet5/queues/rx-0/rps_cpus 2
+
+on property:ril.clatd.v4-rmnet6=up
+    write /sys/class/net/rmnet6/queues/rx-0/rps_cpus 4
+    write /sys/class/net/v4-rmnet6/queues/rx-0/rps_cpus 2
+
+on property:ril.clatd.v4-rmnet7=up
+    write /sys/class/net/rmnet7/queues/rx-0/rps_cpus 4
+    write /sys/class/net/v4-rmnet7/queues/rx-0/rps_cpus 2
+
 ################################################
 # CP Boot Daemon (CBD)
 service cpboot-daemon /sbin/cbd -d -t ss333 -b s -m l -P platform/15570000.ufs/by-name/RADIO
@@ -60,5 +92,6 @@ service DIAG-daemon /system/bin/diagexe
 
 on property:ro.debuggable=1
     write /sys/kernel/debug/tracing/buffer_size_kb 1408
-    write /sys/kernel/debug/tracing/set_event modem_if:mif_log
-    write /sys/kernel/debug/tracing/tracing_on 1
+    write /d/tracing/events/modem_if/mif_log/enable 1
+    write /d/tracing/tracing_on 1
+    write /sys/module/modem_utils/parameters/dflags 13
