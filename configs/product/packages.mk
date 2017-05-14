@@ -17,7 +17,7 @@
 
 # Browser
 PRODUCT_PACKAGES += \
-    Gello
+    Jelly
 
 # Dbthtool
 PRODUCT_PACKAGES += \
