@@ -218,13 +218,13 @@ on post-fs-data
 
 ################################################
 # Kernel tweaks: Permissions
-    chown root system /proc/sys/net/ipv4/tcp_congestion_control
-    chown root system /proc/sys/net/ipv6/conf/all/optimistic_dad
-    chown root system /proc/sys/net/ipv6/conf/all/use_optimistic
-    chown root system /proc/sys/kernel/random/read_wakeup_threshold
-    chown root system /proc/sys/kernel/random/write_wakeup_threshold
-    chown root system /sys/devices/virtual/fingerprint/fingerprint/disable_wake_lock
-    chown root system /sys/module/workqueue/parameters/power_efficient
+    chown system system /proc/sys/net/ipv4/tcp_congestion_control
+    chown system system /proc/sys/net/ipv6/conf/all/optimistic_dad
+    chown system system /proc/sys/net/ipv6/conf/all/use_optimistic
+    chown system system /proc/sys/kernel/random/read_wakeup_threshold
+    chown system system /proc/sys/kernel/random/write_wakeup_threshold
+    chown system system /sys/devices/virtual/fingerprint/fingerprint/enabled
+    chown system system /sys/module/workqueue/parameters/power_efficient
 
 ################################################
 # Kernel tweaks
@@ -233,7 +233,7 @@ on post-fs-data
     write /proc/sys/net/ipv6/conf/all/use_optimistic 1
     write /proc/sys/kernel/random/read_wakeup_threshold 512
     write /proc/sys/kernel/random/write_wakeup_threshold 256
-    write /sys/devices/virtual/fingerprint/fingerprint/disable_wake_lock 1
+    write /sys/devices/virtual/fingerprint/fingerprint/enabled 1
     write /sys/module/workqueue/parameters/power_efficient 1
 
 ################################################
