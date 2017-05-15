@@ -207,9 +207,9 @@ on post-fs-data
     chmod 0664 /sys/class/misc/mali0/device/dvfs_max_lock
 
 ################################################
-# gpu settings
+# gpu settings (dvfs_governor: 1 = Interactive)
     write /sys/class/misc/mali0/device/dvfs 1
-    write /sys/class/misc/mali0/device/dvfs_governor "Interactive"
+    write /sys/class/misc/mali0/device/dvfs_governor "1" 
     write /sys/class/misc/mali0/device/dvfs_table "772 700 600 544 420 350 266"
     write /sys/class/misc/mali0/device/dvfs_min_lock 266
     write /sys/class/misc/mali0/device/dvfs_max_lock 772
