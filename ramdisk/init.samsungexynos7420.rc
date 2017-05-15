@@ -1361,6 +1361,11 @@ on fs
     chmod 0664 /sys/class/usb_notify/usb_control/disable
 
 ################################################
+# IPSec for VOLTE
+    chown root system /dev/socket
+    chmod 0775 /dev/socket
+
+################################################
 # MobiCore startup
 service mobicore /system/bin/mcDriverDaemon -r /system/app/FFFFFFFF000000000000000000000001.drbin -r /system/app/mcRegistry/ffffffffd0000000000000000000000a.tlbin -r /system/app/mcRegistry/ffffffffd00000000000000000000016.tlbin
     class core
