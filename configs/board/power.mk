@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-BOARD_POWER_CAPABILITIES := is_big_little has_mali has_touchkeys has_gpio_keys
+BOARD_POWER_CAPABILITIES := is_big_little has_mali has_touchkeys has_gpio_keys disable_boost
 
 # input-nodes ("/sys/class/input/inputX/enabled")
 BOARD_POWER_INPUT_TOUCHSCREEN := 1
