@@ -35,6 +35,12 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     mcDriverDaemon
 
+# Radio
+PRODUCT_PACKAGES += \
+    libxml2 \
+    libsecril-client \
+    libprotobuf-cpp-full
+
 # Torch
 PRODUCT_PACKAGES += \
     Torch

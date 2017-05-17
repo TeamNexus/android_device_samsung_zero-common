@@ -17,8 +17,5 @@
 
 # Radio
 PRODUCT_PACKAGES += \
-	rild \
-	libril \
-	libsecril-client \
 	libxml2 \
 	libprotobuf-cpp-full
