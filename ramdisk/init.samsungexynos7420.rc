@@ -83,7 +83,7 @@ on post-fs-data
     # write /data/power/powersave_level 2
     # write /data/power/screen_on 1
     # write /data/power/softkeys_active 0
-
+    
 ################################################
 # Power-HAL Permissions
     chmod 0664 /data/power/debug
@@ -98,6 +98,23 @@ on post-fs-data
     chown system system /data/power/screen_on
     chmod 0664 /data/power/softkeys_active
     chown system system /data/power/softkeys_active
+    
+    chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu5/cpufreq/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpu5/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
+    chmod 0664 /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq
+    chown system system /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq
 
 ################################################
 # cpu permissions
