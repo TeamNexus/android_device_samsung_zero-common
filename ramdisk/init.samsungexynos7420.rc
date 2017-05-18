@@ -1199,6 +1199,10 @@ on fs
     chown system radio /sys/class/power_supply/battery/batt_tx_firmware
     chown system radio /sys/class/power_supply/battery/batt_hv_wireless_status
     chown system radio /sys/class/power_supply/battery/batt_hv_wireless_pad_ctrl
+    chown system radio /sys/devices/battery.53/power_supply/battery/hv_charger_set
+    chown system radio /sys/devices/battery.53/power_supply/battery/hv_charger_status
+    chown system radio /sys/devices/battery.53/power_supply/battery/hv_wc_charger_support
+    chown system radio /sys/devices/battery.53/power_supply/battery/hv_charger_support
     chmod 0664 /sys/class/power_supply/max77833-charger/charge_otg_control
     chmod 0664 /sys/class/power_supply/max77843-charger/charge_otg_control
     chmod 0664 /sys/class/power_supply/battery/charge_otg_control
@@ -1213,6 +1217,10 @@ on fs
     chmod 0664 /sys/class/power_supply/battery/batt_tx_firmware
     chmod 0664 /sys/class/power_supply/battery/batt_hv_wireless_status
     chmod 0664 /sys/class/power_supply/battery/batt_hv_wireless_pad_ctrl
+    chmod 0664 /sys/devices/battery.53/power_supply/battery/hv_charger_set
+    chmod 0664 /sys/devices/battery.53/power_supply/battery/hv_charger_status
+    chmod 0664 /sys/devices/battery.53/power_supply/battery/hv_wc_charger_support
+    chmod 0664 /sys/devices/battery.53/power_supply/battery/hv_charger_support
     chown system radio /sys/class/power_supply/battery/tx_firmware_result
     chown system radio /sys/class/power_supply/battery/batt_tune_chg_limit_cur
     chown system radio /sys/class/power_supply/battery/batt_tune_chg_temp_high
