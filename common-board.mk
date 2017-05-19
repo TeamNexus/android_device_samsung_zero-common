@@ -20,7 +20,7 @@ BOARD_VENDOR := samsung
 
 ########################################
 # set include-path
-TARGET_SPECIFIC_HEADER_PATH := $(LOCAL_PATH)/include
+TARGET_SPECIFIC_HEADER_PATH += $(LOCAL_PATH)/include
 
 ########################################
 # inherit splitted configs
