@@ -568,7 +568,7 @@
 		<ctl name="Main Mic Switch" value="1" />
 		<ctl name="Sub Mic Switch" value="1" />
 		<ctl name="Sample Rate 2" value="16kHz" />
-	   	 <ctl name="Sample Rate 2" value="8kHz" />
+	   	<ctl name="Sample Rate 3" value="8kHz" />
 		<ctl name="DSP2 Rate" value="SYNCCLK rate 2" />
 		<ctl name="DSP3 Rate" value="SYNCCLK rate 2" />
 		<ctl name="ISRC2 FSL" value="SYNCCLK rate 2" />
