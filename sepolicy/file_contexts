@@ -87,9 +87,10 @@
 
 ####################################
 # sysfs files
-/sys/class/power_supply/battery/music -- u:object_r:sysfs_writable:s0
-/sys/class/devfreq/exynos5-busfreq-mif(/.*)? -- u:object_r:sysfs_writable:s0
-/sys/class/lcd(/.*)?         -- u:object_r:sysfs_writable:s0
+/sys/class/power_supply/battery/music			-- u:object_r:sysfs_writable:s0
+/sys/class/devfreq/exynos5-busfreq-mif(/.*)?	-- u:object_r:sysfs_writable:s0
+/sys/class/lcd(/.*)?							-- u:object_r:sysfs_writable:s0
+/sys/devices/virtual/earsmart/control(/.*)?    	-- u:object_r:sysfs_audience_control:s0   
 
 ####################################
 # bluetooth
