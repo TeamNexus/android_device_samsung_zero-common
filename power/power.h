@@ -40,6 +40,7 @@
 #define POWER_TOUCHKEYS_ENABLED   "/sys/class/input/input0/enabled"
 #define POWER_FINGERPRINT_ENABLED "/sys/class/fingerprint/fingerprint/enabled"
 #define POWER_MALI_GPU_DVFS       "/sys/devices/14ac0000.mali/dvfs"
+#define POWER_DT2W_ENABLED        "/sys/android_touch/doubletap2wake"
 
 /***********************************
  * CPU-settings

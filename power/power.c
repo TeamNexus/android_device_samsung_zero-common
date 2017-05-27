@@ -249,9 +249,12 @@ static void power_set_interactive(struct power_module __unused * module, int on)
  */
 static int power_get_feature(struct power_module *module __unused, feature_t feature) {
 	switch (feature) {
-		case POWER_FEATURE_SUPPORTED_PROFILES: return 3;
-		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE: return 0;
-		default: return -EINVAL;
+		case POWER_FEATURE_SUPPORTED_PROFILES: 
+			return 3;
+		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE: 
+			return is_file(POWER_DT2W_ENABLED);
+		default:
+			return -EINVAL;
 	}
 }
 
@@ -259,6 +262,13 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
 	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
 
 	switch (feature) {
+		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE:
+			if (state) {
+				file_write(POWER_DT2W_ENABLED, "1");
+			} else {
+				file_write(POWER_DT2W_ENABLED, "0");
+			}
+			
 		default:
 			ALOGW("Error setting the feature %d and state %d, it doesn't exist\n",
 				  feature, state);
