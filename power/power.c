@@ -91,6 +91,9 @@ static void power_init(struct power_module __unused * module) {
 	// set to normal power profile
 	power_set_profile(PROFILE_NORMAL);
 	
+	// initialize all input-devices
+	power_input_device_state(1);
+	
 	// set the default settings
 	//if (!is_dir("/data/power"))
 		mkdir("/data/power", 0771);
@@ -223,8 +226,9 @@ static void power_apply_profile(struct power_profile data) {
  * Inputs
  */
 static void power_input_device_state(int state) {
-	int dt2w = 1, always_on_fp = 1;
+	int dt2w = 1, dt2w_sysfs = 1, always_on_fp = 1;
 	file_read_int(POWER_CONFIG_DT2W, &dt2w);
+	file_read_int(POWER_DT2W_ENABLED, &dt2w_sysfs);
 	file_read_int(POWER_CONFIG_ALWAYS_ON_FP, &always_on_fp);
 
 	switch (state) {
@@ -232,14 +236,14 @@ static void power_input_device_state(int state) {
 
 			file_write(POWER_TOUCHSCREEN_ENABLED, "0");
 			file_write(POWER_TOUCHKEYS_ENABLED, "0");
-			
+
 			if (always_on_fp) {
 				file_write(POWER_FINGERPRINT_ENABLED, "1");
 			} else {
 				file_write(POWER_FINGERPRINT_ENABLED, "0");
 			}
-			
-			if (dt2w) {
+
+			if (dt2w && !dt2w_sysfs) {
 				file_write(POWER_DT2W_ENABLED, "1");
 			} else {
 				file_write(POWER_DT2W_ENABLED, "0");
@@ -252,7 +256,10 @@ static void power_input_device_state(int state) {
 			file_write(POWER_TOUCHSCREEN_ENABLED, "1");
 			file_write(POWER_TOUCHKEYS_ENABLED, "1");
 			file_write(POWER_FINGERPRINT_ENABLED, "1");
-			file_write(POWER_DT2W_ENABLED, "0");
+
+			if (!dt2w) {
+				file_write(POWER_DT2W_ENABLED, "0");
+			}
 
 			break;
 	}
