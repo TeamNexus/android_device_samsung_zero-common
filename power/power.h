@@ -133,6 +133,7 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
 static int file_write(const char *path, char *s);
 static int file_write_defaults(const char *path, char *def);
 static int file_read_int(const char *path, int *v);
+static int is_dir(const char *path);
 static int is_file(const char *path);
 static int is_cluster0_interactive();
 static int is_cluster1_interactive();

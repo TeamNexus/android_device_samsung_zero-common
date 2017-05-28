@@ -95,7 +95,7 @@ static void power_init(struct power_module __unused * module) {
 	power_input_device_state(1);
 	
 	// set the default settings
-	//if (!is_dir("/data/power"))
+	if (!is_dir("/data/power"))
 		mkdir("/data/power", 0771);
 
 	file_write_defaults("/data/power/always_on_fp", "0");
@@ -376,6 +376,12 @@ static int file_read_int(const char *path, int *v) {
 
 	fclose(fd);
 	return 1;
+}
+
+static int is_dir(const char *path) {
+	struct stat fstat;
+	return !stat(path, &fstat) &&
+		(fstat.st_mode & S_IFDIR) == S_IFDIR;
 }
 
 static int is_file(const char *path) {
