@@ -92,7 +92,7 @@ static void power_init(struct power_module __unused * module) {
 	power_set_profile(PROFILE_NORMAL);
 	
 	// set the default settings
-	if (!is_dir("/data/power"))
+	//if (!is_dir("/data/power"))
 		mkdir("/data/power", 0771);
 
 	file_write_defaults("/data/power/always_on_fp", "0");
