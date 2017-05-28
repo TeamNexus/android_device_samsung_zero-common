@@ -90,6 +90,14 @@ static void power_init(struct power_module __unused * module) {
 
 	// set to normal power profile
 	power_set_profile(PROFILE_NORMAL);
+	
+	// set the default settings
+	if (!is_dir("/data/power"))
+		mkdir("/data/power", 0771);
+
+	file_write_defaults("/data/power/always_on_fp", "0");
+	file_write_defaults("/data/power/dt2w", "0");
+	file_write_defaults("/data/power/profiles", "1");
 }
 
 /***********************************
@@ -135,7 +143,10 @@ static void power_set_profile_by_name(char *data) {
 }
 
 static void power_set_profile(int profile) {
-	int enable_profiles = 1;
+	int profiles = 1;	
+	if(file_read_int(POWER_CONFIG_PROFILES, &profiles) && !profiles) {
+		return;
+	}
 
 #if POWERHAL_DEBUG
  		ALOGD("%s: apply profile %d", __func__, profile);
@@ -212,12 +223,27 @@ static void power_apply_profile(struct power_profile data) {
  * Inputs
  */
 static void power_input_device_state(int state) {
+	int dt2w = 1, always_on_fp = 1;
+	file_read_int(POWER_CONFIG_DT2W, &dt2w);
+	file_read_int(POWER_CONFIG_ALWAYS_ON_FP, &always_on_fp);
+
 	switch (state) {
 		case STATE_DISABLE:
 
 			file_write(POWER_TOUCHSCREEN_ENABLED, "0");
 			file_write(POWER_TOUCHKEYS_ENABLED, "0");
-			file_write(POWER_FINGERPRINT_ENABLED, "0");
+			
+			if (always_on_fp) {
+				file_write(POWER_FINGERPRINT_ENABLED, "1");
+			} else {
+				file_write(POWER_FINGERPRINT_ENABLED, "0");
+			}
+			
+			if (dt2w) {
+				file_write(POWER_DT2W_ENABLED, "1");
+			} else {
+				file_write(POWER_DT2W_ENABLED, "0");
+			}
 
 			break;
 
@@ -226,6 +252,7 @@ static void power_input_device_state(int state) {
 			file_write(POWER_TOUCHSCREEN_ENABLED, "1");
 			file_write(POWER_TOUCHKEYS_ENABLED, "1");
 			file_write(POWER_FINGERPRINT_ENABLED, "1");
+			file_write(POWER_DT2W_ENABLED, "0");
 
 			break;
 	}
@@ -300,6 +327,41 @@ static int file_write(const char *path, char *s) {
 	if (fputs(s, fd) < 0) {
 		strerror_r(errno, buf, sizeof(buf));
 		ALOGE("Error writing to %s: %s\n", path, buf);
+
+		fclose(fd);
+		return 0;
+	}
+
+	fclose(fd);
+	return 1;
+}
+
+static int file_write_defaults(const char *path, char *def) {
+	if (!is_file(path))
+		file_write(path, def);
+	return 1;
+}
+
+static int file_read_int(const char *path, int *v) {
+	char errbuf[80];
+	FILE *fd;
+	
+	if (!v) {
+		ALOGE("Error reading from %s: Invalid pointer was passed\n", path);
+		return 0;
+	}
+
+	fd = fopen(path, "r");
+
+	if (fd == NULL) {
+		strerror_r(errno, errbuf, sizeof(errbuf));
+		ALOGE("Error opening %s: %s\n", path, errbuf);
+		return 0;
+	}
+
+	if (fscanf(fd, "%d", v) != 1) {
+		strerror_r(errno, errbuf, sizeof(errbuf));
+		ALOGE("Error reading from %s: %s\n", path, errbuf);
 
 		fclose(fd);
 		return 0;

@@ -36,6 +36,10 @@
 #define STATE_DISABLE	0
 #define STATE_ENABLE	1
 
+#define POWER_CONFIG_ALWAYS_ON_FP "/data/power/always_on_fp"
+#define POWER_CONFIG_DT2W         "/data/power/dt2w"
+#define POWER_CONFIG_PROFILES     "/data/power/profiles"
+
 #define POWER_TOUCHSCREEN_ENABLED "/sys/class/input/input1/enabled"
 #define POWER_TOUCHKEYS_ENABLED   "/sys/class/input/input0/enabled"
 #define POWER_FINGERPRINT_ENABLED "/sys/class/fingerprint/fingerprint/enabled"
@@ -127,6 +131,8 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
  * Utilities
  */
 static int file_write(const char *path, char *s);
+static int file_write_defaults(const char *path, char *def);
+static int file_read_int(const char *path, int *v);
 static int is_file(const char *path);
 static int is_cluster0_interactive();
 static int is_cluster1_interactive();
