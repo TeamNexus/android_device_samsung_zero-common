@@ -99,16 +99,16 @@ struct power_profile {
 			/* cluster1 = */ {
 				/* cores = */ {
 					/* core0online = */ "1",
-					/* core1online = */ "1",
+					/* core1online = */ "0",
 					/* core2online = */ "0",
 					/* core3online = */ "0"
 				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "139000",
 					/* go_hispeed_load = */ "99",
-					/* hispeed_freq = */ "600000",
+					/* hispeed_freq = */ "400000",
 					/* enforce_hispeed_freq_limit = */ "1",
-					/* freq_max = */ "600000",
+					/* freq_max = */ "400000",
 					/* freq_min = */ "200000",
 					/* min_sample_time = */ "20000",
 					/* target_loads = */ "99",
@@ -132,7 +132,7 @@ struct power_profile {
 	 */
 	{
 		/* .cpu = */ {
-			/* hotplugging = */ "1",
+			/* hotplugging = */ "0",
 			/* cluster0 = */ {
 				/* cores = */ {
 					/* core0online = */ "1",
@@ -157,8 +157,8 @@ struct power_profile {
 				/* cores = */ {
 					/* core0online = */ "1",
 					/* core1online = */ "1",
-					/* core2online = */ "1",
-					/* core3online = */ "1"
+					/* core2online = */ "0",
+					/* core3online = */ "0"
 				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "180000 1000000:79000",
@@ -175,7 +175,7 @@ struct power_profile {
 			}
 		},
 		/* ipa = */ {
-			/* control_temp = */ "65",
+			/* control_temp = */ "45",
 		},
 		/* gpu = */ {
 			/* .dvfs = */ {
@@ -189,7 +189,7 @@ struct power_profile {
 	 */
 	{
 		/* .cpu = */ {
-			/* hotplugging = */ "1",
+			/* hotplugging = */ "0",
 			/* cluster0 = */ {
 				/* cores = */ {
 					/* core0online = */ "1",
@@ -200,7 +200,7 @@ struct power_profile {
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "120000 1100000:49000",
 					/* go_hispeed_load = */ "80",
-					/* hispeed_freq = */ "1100000",
+					/* hispeed_freq = */ "900000",
 					/* enforce_hispeed_freq_limit = */ "0",
 					/* freq_max = */ "1500000",
 					/* freq_min = */ "400000",
@@ -220,7 +220,7 @@ struct power_profile {
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "120000 1700000:49000",
 					/* go_hispeed_load = */ "85",
-					/* hispeed_freq = */ "1700000",
+					/* hispeed_freq = */ "1300000",
 					/* enforce_hispeed_freq_limit = */ "0",
 					/* freq_max = */ "2100000",
 					/* freq_min = */ "600000",
@@ -232,7 +232,7 @@ struct power_profile {
 			}
 		},
 		/* ipa = */ {
-			/* control_temp = */ "65",
+			/* control_temp = */ "55",
 		},
 		/* gpu = */ {
 			/* .dvfs = */ {
@@ -246,7 +246,7 @@ struct power_profile {
 	 */
 	{
 		/* .cpu = */ {
-			/* hotplugging = */ "1",
+			/* hotplugging = */ "0",
 			/* cluster0 = */ {
 				/* cores = */ {
 					/* core0online = */ "1",
