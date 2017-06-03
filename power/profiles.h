@@ -142,13 +142,13 @@ struct power_profile {
 				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "180000 600000:79000",
-					/* go_hispeed_load = */ "90",
+					/* go_hispeed_load = */ "99",
 					/* hispeed_freq = */ "600000",
 					/* enforce_hispeed_freq_limit = */ "0",
 					/* freq_max = */ "1000000",
 					/* freq_min = */ "200000",
 					/* min_sample_time = */ "20000",
-					/* target_loads = */ "90",
+					/* target_loads = */ "99",
 					/* timer_rate = */ "20000",
 					/* timer_slack = */ "50"
 				}
@@ -157,18 +157,18 @@ struct power_profile {
 				/* cores = */ {
 					/* core0online = */ "1",
 					/* core1online = */ "1",
-					/* core2online = */ "0",
-					/* core3online = */ "0"
+					/* core2online = */ "1",
+					/* core3online = */ "1"
 				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "180000 1000000:79000",
-					/* go_hispeed_load = */ "95",
+					/* go_hispeed_load = */ "99",
 					/* hispeed_freq = */ "1000000",
 					/* enforce_hispeed_freq_limit = */ "0",
 					/* freq_max = */ "1200000",
 					/* freq_min = */ "200000",
 					/* min_sample_time = */ "20000",
-					/* target_loads = */ "95",
+					/* target_loads = */ "99",
 					/* timer_rate = */ "20000",
 					/* timer_slack = */ "50"
 				}
