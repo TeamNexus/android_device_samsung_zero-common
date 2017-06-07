@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2017 Lukas Berger <mail@lukasberger.at>
+ * Copyright (C) 2017 Philip (corewell) Jacobs <contact@jacobs-mg.de>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +26,10 @@ struct power_profile_cpu_cluster {
 		char *core2online;
 		char *core3online;
 	} cores;
+
+	struct {
+		char *governor;
+	} govoverride;
 
 	struct {
 		char *above_hispeed_delay;
@@ -83,6 +88,9 @@ struct power_profile {
 					/* core2online = */ "0",
 					/* core3online = */ "0"
 				},
+				/* govoverride = */ {
+					/* governor = */ "",
+				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "139000",
 					/* go_hispeed_load = */ "99",
@@ -102,6 +110,9 @@ struct power_profile {
 					/* core1online = */ "0",
 					/* core2online = */ "0",
 					/* core3online = */ "0"
+				},
+				/* govoverride = */ {
+					/* governor = */ "",
 				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "139000",
@@ -140,6 +151,9 @@ struct power_profile {
 					/* core2online = */ "1",
 					/* core3online = */ "1"
 				},
+				/* govoverride = */ {
+					/* governor = */ "",
+				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "99000 600000:79000",
 					/* go_hispeed_load = */ "99",
@@ -159,6 +173,9 @@ struct power_profile {
 					/* core1online = */ "1",
 					/* core2online = */ "1",
 					/* core3online = */ "1"
+				},
+				/* govoverride = */ {
+					/* governor = */ "",
 				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "99000 1000000:79000",
@@ -197,6 +214,9 @@ struct power_profile {
 					/* core2online = */ "1",
 					/* core3online = */ "1"
 				},
+				/* govoverride = */ {
+					/* governor = */ "alucard",
+				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "79000 1100000:49000",
 					/* go_hispeed_load = */ "80",
@@ -216,6 +236,9 @@ struct power_profile {
 					/* core1online = */ "1",
 					/* core2online = */ "1",
 					/* core3online = */ "1"
+				},
+				/* govoverride = */ {
+					/* governor = */ "alucard",
 				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "79000 1700000:49000",
@@ -254,6 +277,9 @@ struct power_profile {
 					/* core2online = */ "1",
 					/* core3online = */ "1"
 				},
+				/* govoverride = */ {
+					/* governor = */ "",
+				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "49000 1300000:19000",
 					/* go_hispeed_load = */ "70",
@@ -273,6 +299,9 @@ struct power_profile {
 					/* core1online = */ "1",
 					/* core2online = */ "1",
 					/* core3online = */ "1"
+				},
+				/* govoverride = */ {
+					/* governor = */ "",
 				},
 				/* cpugov = */ {
 					/* above_hispeed_delay = */ "49000 1900000:19000",

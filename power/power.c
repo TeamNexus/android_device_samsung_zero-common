@@ -2,6 +2,7 @@
  * Copyright (C) 2013 The Android Open Source Project
  * Copyright (C) 2017 Jesse Chan <cjx123@outlook.com>
  * Copyright (C) 2017 Lukas Berger <mail@lukasberger.at>
+ * Copyright (C) 2017 Philip (corewell) Jacobs <contact@jacobs-mg.de>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +50,7 @@ struct sec_power_module {
 
 static int current_power_profile = PROFILE_NORMAL;
 static int last_power_profile = PROFILE_NORMAL;
+bool shouldOverride;
 
 /***********************************
  * Initializing
@@ -173,8 +175,18 @@ static void power_apply_profile(struct power_profile data) {
 	file_write(POWER_CLUSTER0_ONLINE_CORE2, data.cpu.cluster0.cores.core2online);
 	file_write(POWER_CLUSTER0_ONLINE_CORE3, data.cpu.cluster0.cores.core3online);
 
+	// governor override
+	shouldOverride = false;
+	if (data.cpu.cluster0.govoverride.governor != NULL) && (data.cpu.cluster0.govoverride.governor[0] != '\0')
+	{
+		shouldOverride = true;
+
+		// apply cpu-governor override for cluster0
+		file_write(POWER_CLUSTER0_GOVERNOR, data.cpu.cluster0.govoverride.governor);
+	}
+
 	// apply cpugov-settings for cluster0
-	if (is_cluster0_interactive()) {
+	if (is_cluster0_interactive() && !shouldOverride) {
 		// static settings
 		file_write(POWER_CLUSTER0_INTERACTIVE_BOOST, "0");
 		file_write(POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE_DURATION, "50000");
@@ -199,8 +211,18 @@ static void power_apply_profile(struct power_profile data) {
 	file_write(POWER_CLUSTER1_ONLINE_CORE2, data.cpu.cluster1.cores.core2online);
 	file_write(POWER_CLUSTER1_ONLINE_CORE3, data.cpu.cluster1.cores.core3online);
 
+	// governor override
+	shouldOverride = false;
+	if (data.cpu.cluster1.govoverride.governor != NULL) && (data.cpu.cluster1.govoverride.governor[0] != '\0')
+	{
+		shouldOverride = true;
+		
+		// apply cpu-governor override for cluster1
+		file_write(POWER_CLUSTER1_GOVERNOR, data.cpu.cluster1.govoverride.governor);
+	}
+
 	// apply cpugov-settings for cluster1
-	if (is_cluster1_interactive()) {
+	if (is_cluster1_interactive() && !shouldOverride) {
 		// static settings
 		file_write(POWER_CLUSTER1_INTERACTIVE_BOOST, "0");
 		file_write(POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE_DURATION, "50000");

@@ -2,6 +2,7 @@
  * Copyright (C) 2013 The Android Open Source Project
  * Copyright (C) 2017 Jesse Chan <cjx123@outlook.com>
  * Copyright (C) 2017 Lukas Berger <mail@lukasberger.at>
+ * Copyright (C) 2017 Philip (corewell) Jacobs <contact@jacobs-mg.de>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +61,7 @@
 #define POWER_CLUSTER0_ONLINE_CORE1								"/sys/devices/system/cpu/cpu1/online"
 #define POWER_CLUSTER0_ONLINE_CORE2								"/sys/devices/system/cpu/cpu2/online"
 #define POWER_CLUSTER0_ONLINE_CORE3								"/sys/devices/system/cpu/cpu3/online"
+#define POWER_CLUSTER0_GOVERNOR									"/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
 #define POWER_CLUSTER0_INTERACTIVE								"/sys/devices/system/cpu/cpu0/cpufreq/interactive/"
 #define POWER_CLUSTER0_INTERACTIVE_ABOVE_HISPEED_DELAY			POWER_CLUSTER0_INTERACTIVE "above_hispeed_delay"
 #define POWER_CLUSTER0_INTERACTIVE_BOOST						POWER_CLUSTER0_INTERACTIVE "boost"
@@ -81,6 +83,7 @@
 #define POWER_CLUSTER1_ONLINE_CORE1								"/sys/devices/system/cpu/cpu5/online"
 #define POWER_CLUSTER1_ONLINE_CORE2								"/sys/devices/system/cpu/cpu6/online"
 #define POWER_CLUSTER1_ONLINE_CORE3								"/sys/devices/system/cpu/cpu7/online"
+#define POWER_CLUSTER1_GOVERNOR									"/sys/devices/system/cpu/cpu4/cpufreq/scaling_governor"
 #define POWER_CLUSTER1_INTERACTIVE								"/sys/devices/system/cpu/cpu4/cpufreq/interactive/"
 #define POWER_CLUSTER1_INTERACTIVE_ABOVE_HISPEED_DELAY			POWER_CLUSTER1_INTERACTIVE "above_hispeed_delay"
 #define POWER_CLUSTER1_INTERACTIVE_BOOST						POWER_CLUSTER1_INTERACTIVE "boost"
