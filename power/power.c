@@ -177,7 +177,7 @@ static void power_apply_profile(struct power_profile data) {
 
 	// governor override
 	shouldOverride = false;
-	if (data.cpu.cluster0.govoverride.governor != NULL) && (data.cpu.cluster0.govoverride.governor[0] != '\0')
+	if ((data.cpu.cluster0.govoverride.governor != NULL) && (data.cpu.cluster0.govoverride.governor[0] != '\0'))
 	{
 		shouldOverride = true;
 
@@ -213,7 +213,7 @@ static void power_apply_profile(struct power_profile data) {
 
 	// governor override
 	shouldOverride = false;
-	if (data.cpu.cluster1.govoverride.governor != NULL) && (data.cpu.cluster1.govoverride.governor[0] != '\0')
+	if ((data.cpu.cluster1.govoverride.governor != NULL) && (data.cpu.cluster1.govoverride.governor[0] != '\0'))
 	{
 		shouldOverride = true;
 		
