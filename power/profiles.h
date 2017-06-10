@@ -87,7 +87,7 @@ struct power_profile {
 					/* freq_max = */ "400000",
 					/* freq_min = */ "200000",
 					/* io_is_busy = */ "1",
-					/* sampling_rate = */ "30000"
+					/* sampling_rate = */ "30000",
 					/* up_load = */ "80",
 					/* up_step = */ "1"
 				}
@@ -105,7 +105,7 @@ struct power_profile {
 					/* freq_max = */ "400000",
 					/* freq_min = */ "200000",
 					/* io_is_busy = */ "1",
-					/* sampling_rate = */ "30000"
+					/* sampling_rate = */ "30000",
 					/* up_load = */ "85",
 					/* up_step = */ "1"
 				}
@@ -140,7 +140,7 @@ struct power_profile {
 					/* freq_max = */ "800000",
 					/* freq_min = */ "200000",
 					/* io_is_busy = */ "1",
-					/* sampling_rate = */ "25000"
+					/* sampling_rate = */ "25000",
 					/* up_load = */ "70",
 					/* up_step = */ "1"
 				}
@@ -158,7 +158,7 @@ struct power_profile {
 					/* freq_max = */ "1000000",
 					/* freq_min = */ "200000",
 					/* io_is_busy = */ "1",
-					/* sampling_rate = */ "25000"
+					/* sampling_rate = */ "25000",
 					/* up_load = */ "70",
 					/* up_step = */ "1"
 				}
@@ -193,7 +193,7 @@ struct power_profile {
 					/* freq_max = */ "1200000",
 					/* freq_min = */ "400000",
 					/* io_is_busy = */ "1",
-					/* sampling_rate = */ "20000"
+					/* sampling_rate = */ "20000",
 					/* up_load = */ "60",
 					/* up_step = */ "1"
 				}
@@ -211,7 +211,7 @@ struct power_profile {
 					/* freq_max = */ "1704000",
 					/* freq_min = */ "600000",
 					/* io_is_busy = */ "1",
-					/* sampling_rate = */ "15000"
+					/* sampling_rate = */ "15000",
 					/* up_load = */ "60",
 					/* up_step = */ "1"
 				}
@@ -246,7 +246,7 @@ struct power_profile {
 					/* freq_max = */ "1500000",
 					/* freq_min = */ "600000",
 					/* io_is_busy = */ "1",
-					/* sampling_rate = */ "10000"
+					/* sampling_rate = */ "10000",
 					/* up_load = */ "50",
 					/* up_step = */ "1"
 				}
@@ -264,7 +264,7 @@ struct power_profile {
 					/* freq_max = */ "2100000",
 					/* freq_min = */ "800000",
 					/* io_is_busy = */ "1",
-					/* sampling_rate = */ "10000"
+					/* sampling_rate = */ "10000",
 					/* up_load = */ "50",
 					/* up_step = */ "1"
 				}

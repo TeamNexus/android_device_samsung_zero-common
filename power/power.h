@@ -77,7 +77,7 @@
 #define POWER_CLUSTER1_ONLINE_CORE1								"/sys/devices/system/cpu/cpu5/online"
 #define POWER_CLUSTER1_ONLINE_CORE2								"/sys/devices/system/cpu/cpu6/online"
 #define POWER_CLUSTER1_ONLINE_CORE3								"/sys/devices/system/cpu/cpu7/online"
-#define POWER_CLUSTER1_NEXUS									"/sys/devices/system/cpu/cpu1/cpufreq/nexus/"
+#define POWER_CLUSTER1_NEXUS									"/sys/devices/system/cpu/cpu4/cpufreq/nexus/"
 #define POWER_CLUSTER1_NEXUS_BOOST								POWER_CLUSTER1_NEXUS "boost"
 #define POWER_CLUSTER1_NEXUS_BOOSTPULSE							POWER_CLUSTER1_NEXUS "boostpulse"
 #define POWER_CLUSTER1_NEXUS_DOWN_LOAD							POWER_CLUSTER1_NEXUS "down_load"
