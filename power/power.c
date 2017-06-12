@@ -90,10 +90,10 @@ static void power_init(struct power_module __unused * module) {
 
 	// set to normal power profile
 	power_set_profile(PROFILE_NORMAL);
-	
+
 	// initialize all input-devices
 	power_input_device_state(1);
-	
+
 	// set the default settings
 	if (!is_dir("/data/power"))
 		mkdir("/data/power", 0771);
@@ -146,7 +146,7 @@ static void power_set_profile_by_name(char *data) {
 }
 
 static void power_set_profile(int profile) {
-	int profiles = 1;	
+	int profiles = 1;
 	if(file_read_int(POWER_CONFIG_PROFILES, &profiles) && !profiles) {
 		return;
 	}
@@ -167,57 +167,106 @@ static void power_apply_profile(struct power_profile data) {
 	file_write(POWER_CPU_HOTPLUG, data.cpu.hotplugging);
 	file_write(POWER_IPA_CONTROL_TEMP, data.ipa.control_temp);
 
-	// apply cpu-settings for cluster0
+	/*****************************************************************
+	 *************                                       *************
+	 *************               CLUSTER 0               *************
+	 *************                                       *************
+	 *****************************************************************/
+
+	// apply cpu-settings
 	file_write(POWER_CLUSTER0_ONLINE_CORE0, data.cpu.cluster0.cores.core0online);
 	file_write(POWER_CLUSTER0_ONLINE_CORE1, data.cpu.cluster0.cores.core1online);
 	file_write(POWER_CLUSTER0_ONLINE_CORE2, data.cpu.cluster0.cores.core2online);
 	file_write(POWER_CLUSTER0_ONLINE_CORE3, data.cpu.cluster0.cores.core3online);
 
-	// apply cpugov-settings for cluster0
-	if (is_cluster0_interactive()) {
+	// apply cpugov
+	file_write(POWER_CLUSTER0_SCALING_GOVERNOR, data.cpu.cluster0.cpugov.governor);
+
+	// apply cpugov-settings
+	if (!strcmp(data.cpu.cluster0.cpugov.governor, "interactive")) {
 		// static settings
 		file_write(POWER_CLUSTER0_INTERACTIVE_BOOST, "0");
 		file_write(POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE_DURATION, "50000");
 		file_write(POWER_CLUSTER0_INTERACTIVE_ENFORCED_MODE, "0");
 
 		// dynamic settings
-		file_write(POWER_CLUSTER0_INTERACTIVE_ABOVE_HISPEED_DELAY, data.cpu.cluster0.cpugov.above_hispeed_delay);
-		file_write(POWER_CLUSTER0_INTERACTIVE_GO_HISPEED_LOAD, data.cpu.cluster0.cpugov.go_hispeed_load);
-		file_write(POWER_CLUSTER0_INTERACTIVE_HISPEED_FREQ, data.cpu.cluster0.cpugov.hispeed_freq);
-		file_write(POWER_CLUSTER0_INTERACTIVE_ENFORCE_HISPEED_FREQ_LIMIT, data.cpu.cluster0.cpugov.enforce_hispeed_freq_limit);
-		file_write(POWER_CLUSTER0_INTERACTIVE_FREQ_MAX, data.cpu.cluster0.cpugov.freq_max);
-		file_write(POWER_CLUSTER0_INTERACTIVE_FREQ_MIN, data.cpu.cluster0.cpugov.freq_min);
-		file_write(POWER_CLUSTER0_INTERACTIVE_MIN_SAMPLE_TIME, data.cpu.cluster0.cpugov.min_sample_time);
-		file_write(POWER_CLUSTER0_INTERACTIVE_TARGET_LOADS, data.cpu.cluster0.cpugov.target_loads);
-		file_write(POWER_CLUSTER0_INTERACTIVE_TIMER_RATE, data.cpu.cluster0.cpugov.timer_rate);
-		file_write(POWER_CLUSTER0_INTERACTIVE_TIMER_SLACK, data.cpu.cluster0.cpugov.timer_slack);
+		file_write(POWER_CLUSTER0_INTERACTIVE_ABOVE_HISPEED_DELAY, data.cpu.cluster0.cpugov.interactive.above_hispeed_delay);
+		file_write(POWER_CLUSTER0_INTERACTIVE_GO_HISPEED_LOAD, data.cpu.cluster0.cpugov.interactive.go_hispeed_load);
+		file_write(POWER_CLUSTER0_INTERACTIVE_HISPEED_FREQ, data.cpu.cluster0.cpugov.interactive.hispeed_freq);
+		file_write(POWER_CLUSTER0_INTERACTIVE_ENFORCE_HISPEED_FREQ_LIMIT, data.cpu.cluster0.cpugov.interactive.enforce_hispeed_freq_limit);
+		file_write(POWER_CLUSTER0_INTERACTIVE_FREQ_MAX, data.cpu.cluster0.cpugov.interactive.freq_max);
+		file_write(POWER_CLUSTER0_INTERACTIVE_FREQ_MIN, data.cpu.cluster0.cpugov.interactive.freq_min);
+		file_write(POWER_CLUSTER0_INTERACTIVE_MIN_SAMPLE_TIME, data.cpu.cluster0.cpugov.interactive.min_sample_time);
+		file_write(POWER_CLUSTER0_INTERACTIVE_TARGET_LOADS, data.cpu.cluster0.cpugov.interactive.target_loads);
+		file_write(POWER_CLUSTER0_INTERACTIVE_TIMER_RATE, data.cpu.cluster0.cpugov.interactive.timer_rate);
+		file_write(POWER_CLUSTER0_INTERACTIVE_TIMER_SLACK, data.cpu.cluster0.cpugov.interactive.timer_slack);
+	} else if (!strcmp(data.cpu.cluster0.cpugov.governor, "nexus")) {
+		// static settings
+		file_write(POWER_CLUSTER0_NEXUS_BOOST, "0");
+		file_write(POWER_CLUSTER0_NEXUS_BOOSTPULSE, "0");
+
+		// dynamic settings
+		file_write(POWER_CLUSTER0_NEXUS_DOWN_LOAD, data.cpu.cluster0.cpugov.nexus.down_load);
+		file_write(POWER_CLUSTER0_NEXUS_DOWN_STEP, data.cpu.cluster0.cpugov.nexus.down_step);
+		file_write(POWER_CLUSTER0_NEXUS_FREQ_MAX, data.cpu.cluster0.cpugov.nexus.freq_max);
+		file_write(POWER_CLUSTER0_NEXUS_FREQ_MIN, data.cpu.cluster0.cpugov.nexus.freq_min);
+		file_write(POWER_CLUSTER0_NEXUS_IO_IS_BUSY, data.cpu.cluster0.cpugov.nexus.io_is_busy);
+		file_write(POWER_CLUSTER0_NEXUS_SAMPLING_RATE, data.cpu.cluster0.cpugov.nexus.sampling_rate);
+		file_write(POWER_CLUSTER0_NEXUS_UP_LOAD, data.cpu.cluster0.cpugov.nexus.up_load);
+		file_write(POWER_CLUSTER0_NEXUS_UP_STEP, data.cpu.cluster0.cpugov.nexus.up_step);
 	}
 
-	// apply cpu-settings for cluster1
+	/*****************************************************************
+	 *************                                       *************
+	 *************               CLUSTER 1               *************
+	 *************                                       *************
+	 *****************************************************************/
+
+	// apply cpu-settings
 	file_write(POWER_CLUSTER1_ONLINE_CORE0, data.cpu.cluster1.cores.core0online);
 	file_write(POWER_CLUSTER1_ONLINE_CORE1, data.cpu.cluster1.cores.core1online);
 	file_write(POWER_CLUSTER1_ONLINE_CORE2, data.cpu.cluster1.cores.core2online);
 	file_write(POWER_CLUSTER1_ONLINE_CORE3, data.cpu.cluster1.cores.core3online);
 
-	// apply cpugov-settings for cluster1
-	if (is_cluster1_interactive()) {
+	// apply cpugov
+	file_write(POWER_CLUSTER1_SCALING_GOVERNOR, data.cpu.cluster1.cpugov.governor);
+
+	// apply cpugov-settings
+	if (!strcmp(data.cpu.cluster1.cpugov.governor, "interactive")) {
 		// static settings
 		file_write(POWER_CLUSTER1_INTERACTIVE_BOOST, "0");
 		file_write(POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE_DURATION, "50000");
 		file_write(POWER_CLUSTER1_INTERACTIVE_ENFORCED_MODE, "0");
 
 		// dynamic settings
-		file_write(POWER_CLUSTER1_INTERACTIVE_ABOVE_HISPEED_DELAY, data.cpu.cluster1.cpugov.above_hispeed_delay);
-		file_write(POWER_CLUSTER1_INTERACTIVE_GO_HISPEED_LOAD, data.cpu.cluster1.cpugov.go_hispeed_load);
-		file_write(POWER_CLUSTER1_INTERACTIVE_HISPEED_FREQ, data.cpu.cluster1.cpugov.hispeed_freq);
-		file_write(POWER_CLUSTER1_INTERACTIVE_ENFORCE_HISPEED_FREQ_LIMIT, data.cpu.cluster1.cpugov.enforce_hispeed_freq_limit);
-		file_write(POWER_CLUSTER1_INTERACTIVE_FREQ_MAX, data.cpu.cluster1.cpugov.freq_max);
-		file_write(POWER_CLUSTER1_INTERACTIVE_FREQ_MIN, data.cpu.cluster1.cpugov.freq_min);
-		file_write(POWER_CLUSTER1_INTERACTIVE_MIN_SAMPLE_TIME, data.cpu.cluster1.cpugov.min_sample_time);
-		file_write(POWER_CLUSTER1_INTERACTIVE_TARGET_LOADS, data.cpu.cluster1.cpugov.target_loads);
-		file_write(POWER_CLUSTER1_INTERACTIVE_TIMER_RATE, data.cpu.cluster1.cpugov.timer_rate);
-		file_write(POWER_CLUSTER1_INTERACTIVE_TIMER_SLACK, data.cpu.cluster1.cpugov.timer_slack);
+		file_write(POWER_CLUSTER1_INTERACTIVE_ABOVE_HISPEED_DELAY, data.cpu.cluster1.cpugov.interactive.above_hispeed_delay);
+		file_write(POWER_CLUSTER1_INTERACTIVE_GO_HISPEED_LOAD, data.cpu.cluster1.cpugov.interactive.go_hispeed_load);
+		file_write(POWER_CLUSTER1_INTERACTIVE_HISPEED_FREQ, data.cpu.cluster1.cpugov.interactive.hispeed_freq);
+		file_write(POWER_CLUSTER1_INTERACTIVE_ENFORCE_HISPEED_FREQ_LIMIT, data.cpu.cluster1.cpugov.interactive.enforce_hispeed_freq_limit);
+		file_write(POWER_CLUSTER1_INTERACTIVE_FREQ_MAX, data.cpu.cluster1.cpugov.interactive.freq_max);
+		file_write(POWER_CLUSTER1_INTERACTIVE_FREQ_MIN, data.cpu.cluster1.cpugov.interactive.freq_min);
+		file_write(POWER_CLUSTER1_INTERACTIVE_MIN_SAMPLE_TIME, data.cpu.cluster1.cpugov.interactive.min_sample_time);
+		file_write(POWER_CLUSTER1_INTERACTIVE_TARGET_LOADS, data.cpu.cluster1.cpugov.interactive.target_loads);
+		file_write(POWER_CLUSTER1_INTERACTIVE_TIMER_RATE, data.cpu.cluster1.cpugov.interactive.timer_rate);
+		file_write(POWER_CLUSTER1_INTERACTIVE_TIMER_SLACK, data.cpu.cluster1.cpugov.interactive.timer_slack);
+	} else if (!strcmp(data.cpu.cluster1.cpugov.governor, "nexus")) {
+		// static settings
+		file_write(POWER_CLUSTER1_NEXUS_BOOST, "0");
+		file_write(POWER_CLUSTER1_NEXUS_BOOSTPULSE, "0");
+
+		// dynamic settings
+		file_write(POWER_CLUSTER1_NEXUS_DOWN_LOAD, data.cpu.cluster1.cpugov.nexus.down_load);
+		file_write(POWER_CLUSTER1_NEXUS_DOWN_STEP, data.cpu.cluster1.cpugov.nexus.down_step);
+		file_write(POWER_CLUSTER1_NEXUS_FREQ_MAX, data.cpu.cluster1.cpugov.nexus.freq_max);
+		file_write(POWER_CLUSTER1_NEXUS_FREQ_MIN, data.cpu.cluster1.cpugov.nexus.freq_min);
+		file_write(POWER_CLUSTER1_NEXUS_IO_IS_BUSY, data.cpu.cluster1.cpugov.nexus.io_is_busy);
+		file_write(POWER_CLUSTER1_NEXUS_SAMPLING_RATE, data.cpu.cluster1.cpugov.nexus.sampling_rate);
+		file_write(POWER_CLUSTER1_NEXUS_UP_LOAD, data.cpu.cluster1.cpugov.nexus.up_load);
+		file_write(POWER_CLUSTER1_NEXUS_UP_STEP, data.cpu.cluster1.cpugov.nexus.up_step);
 	}
+
+	/*****************************************************************
+	 *****************************************************************/
 
 	file_write(POWER_MALI_GPU_DVFS, data.gpu.dvfs.enabled);
 }
@@ -283,9 +332,9 @@ static void power_set_interactive(struct power_module __unused * module, int on)
  */
 static int power_get_feature(struct power_module *module __unused, feature_t feature) {
 	switch (feature) {
-		case POWER_FEATURE_SUPPORTED_PROFILES: 
+		case POWER_FEATURE_SUPPORTED_PROFILES:
 			return 3;
-		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE: 
+		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE:
 			return is_file(POWER_DT2W_ENABLED);
 		default:
 			return -EINVAL;
@@ -302,7 +351,7 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
 			} else {
 				file_write(POWER_DT2W_ENABLED, "0");
 			}
-			
+
 		default:
 			ALOGW("Error setting the feature %d and state %d, it doesn't exist\n",
 				  feature, state);
@@ -352,7 +401,7 @@ static int file_write_defaults(const char *path, char *def) {
 static int file_read_int(const char *path, int *v) {
 	char errbuf[80];
 	FILE *fd;
-	
+
 	if (!v) {
 		ALOGE("Error reading from %s: Invalid pointer was passed\n", path);
 		return 0;
@@ -388,14 +437,6 @@ static int is_file(const char *path) {
 	struct stat fstat;
 	return !stat(path, &fstat) &&
 		(fstat.st_mode & S_IFREG) == S_IFREG;
-}
-
-static int is_cluster0_interactive() {
-	return is_file(POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE);
-}
-
-static int is_cluster1_interactive() {
-	return is_file(POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE);
 }
 
 static struct hw_module_methods_t power_module_methods = {
