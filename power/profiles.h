@@ -364,14 +364,14 @@ struct power_profile {
 						/* timer_slack = */ "50"
 					},
 					/* nexus = */ {
-						/* down_load = */ "25",
-						/* down_step = */ "1",
+						/* down_load = */ "45",
+						/* down_step = */ "2",
 						/* freq_max = */ "1500000",
 						/* freq_min = */ "600000",
 						/* io_is_busy = */ "1",
 						/* sampling_rate = */ "10000"
 						/* up_load = */ "50",
-						/* up_step = */ "1"
+						/* up_step = */ "4"
 					}
 				}
 			},
@@ -397,14 +397,14 @@ struct power_profile {
 						/* timer_slack = */ "50"
 					},
 					/* nexus = */ {
-						/* down_load = */ "25",
+						/* down_load = */ "35",
 						/* down_step = */ "1",
 						/* freq_max = */ "2100000",
 						/* freq_min = */ "800000",
 						/* io_is_busy = */ "1",
 						/* sampling_rate = */ "10000"
 						/* up_load = */ "50",
-						/* up_step = */ "1"
+						/* up_step = */ "2"
 					}
 				}
 			}
