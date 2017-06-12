@@ -174,20 +174,23 @@ static void power_apply_profile(struct power_profile data) {
 	file_write(POWER_CLUSTER0_ONLINE_CORE3, data.cpu.cluster0.cores.core3online);
 
 	// apply cpugov-settings for cluster0
-	if (is_cluster0_nexus()) {
+	if (is_cluster0_interactive()) {
 		// static settings
-		file_write(POWER_CLUSTER0_NEXUS_BOOST, "0");
-		file_write(POWER_CLUSTER0_NEXUS_BOOSTPULSE, "0");
+		file_write(POWER_CLUSTER0_INTERACTIVE_BOOST, "0");
+		file_write(POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE_DURATION, "50000");
+		file_write(POWER_CLUSTER0_INTERACTIVE_ENFORCED_MODE, "0");
 
 		// dynamic settings
-		file_write(POWER_CLUSTER0_NEXUS_DOWN_LOAD, data.cpu.cluster0.cpugov.down_load);
-		file_write(POWER_CLUSTER0_NEXUS_DOWN_STEP, data.cpu.cluster0.cpugov.down_step);
-		file_write(POWER_CLUSTER0_NEXUS_FREQ_MAX, data.cpu.cluster0.cpugov.freq_max);
-		file_write(POWER_CLUSTER0_NEXUS_FREQ_MIN, data.cpu.cluster0.cpugov.freq_min);
-		file_write(POWER_CLUSTER0_NEXUS_IO_IS_BUSY, data.cpu.cluster0.cpugov.io_is_busy);
-		file_write(POWER_CLUSTER0_NEXUS_SAMPLING_RATE, data.cpu.cluster0.cpugov.sampling_rate);
-		file_write(POWER_CLUSTER0_NEXUS_UP_LOAD, data.cpu.cluster0.cpugov.up_load);
-		file_write(POWER_CLUSTER0_NEXUS_UP_STEP, data.cpu.cluster0.cpugov.up_step);
+		file_write(POWER_CLUSTER0_INTERACTIVE_ABOVE_HISPEED_DELAY, data.cpu.cluster0.cpugov.above_hispeed_delay);
+		file_write(POWER_CLUSTER0_INTERACTIVE_GO_HISPEED_LOAD, data.cpu.cluster0.cpugov.go_hispeed_load);
+		file_write(POWER_CLUSTER0_INTERACTIVE_HISPEED_FREQ, data.cpu.cluster0.cpugov.hispeed_freq);
+		file_write(POWER_CLUSTER0_INTERACTIVE_ENFORCE_HISPEED_FREQ_LIMIT, data.cpu.cluster0.cpugov.enforce_hispeed_freq_limit);
+		file_write(POWER_CLUSTER0_INTERACTIVE_FREQ_MAX, data.cpu.cluster0.cpugov.freq_max);
+		file_write(POWER_CLUSTER0_INTERACTIVE_FREQ_MIN, data.cpu.cluster0.cpugov.freq_min);
+		file_write(POWER_CLUSTER0_INTERACTIVE_MIN_SAMPLE_TIME, data.cpu.cluster0.cpugov.min_sample_time);
+		file_write(POWER_CLUSTER0_INTERACTIVE_TARGET_LOADS, data.cpu.cluster0.cpugov.target_loads);
+		file_write(POWER_CLUSTER0_INTERACTIVE_TIMER_RATE, data.cpu.cluster0.cpugov.timer_rate);
+		file_write(POWER_CLUSTER0_INTERACTIVE_TIMER_SLACK, data.cpu.cluster0.cpugov.timer_slack);
 	}
 
 	// apply cpu-settings for cluster1
@@ -197,20 +200,23 @@ static void power_apply_profile(struct power_profile data) {
 	file_write(POWER_CLUSTER1_ONLINE_CORE3, data.cpu.cluster1.cores.core3online);
 
 	// apply cpugov-settings for cluster1
-	if (is_cluster1_nexus()) {
+	if (is_cluster1_interactive()) {
 		// static settings
-		file_write(POWER_CLUSTER1_NEXUS_BOOST, "0");
-		file_write(POWER_CLUSTER1_NEXUS_BOOSTPULSE, "0");
+		file_write(POWER_CLUSTER1_INTERACTIVE_BOOST, "0");
+		file_write(POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE_DURATION, "50000");
+		file_write(POWER_CLUSTER1_INTERACTIVE_ENFORCED_MODE, "0");
 
 		// dynamic settings
-		file_write(POWER_CLUSTER1_NEXUS_DOWN_LOAD, data.cpu.cluster1.cpugov.down_load);
-		file_write(POWER_CLUSTER1_NEXUS_DOWN_STEP, data.cpu.cluster1.cpugov.down_step);
-		file_write(POWER_CLUSTER1_NEXUS_FREQ_MAX, data.cpu.cluster1.cpugov.freq_max);
-		file_write(POWER_CLUSTER1_NEXUS_FREQ_MIN, data.cpu.cluster1.cpugov.freq_min);
-		file_write(POWER_CLUSTER1_NEXUS_IO_IS_BUSY, data.cpu.cluster1.cpugov.io_is_busy);
-		file_write(POWER_CLUSTER1_NEXUS_SAMPLING_RATE, data.cpu.cluster1.cpugov.sampling_rate);
-		file_write(POWER_CLUSTER1_NEXUS_UP_LOAD, data.cpu.cluster1.cpugov.up_load);
-		file_write(POWER_CLUSTER1_NEXUS_UP_STEP, data.cpu.cluster1.cpugov.up_step);
+		file_write(POWER_CLUSTER1_INTERACTIVE_ABOVE_HISPEED_DELAY, data.cpu.cluster1.cpugov.above_hispeed_delay);
+		file_write(POWER_CLUSTER1_INTERACTIVE_GO_HISPEED_LOAD, data.cpu.cluster1.cpugov.go_hispeed_load);
+		file_write(POWER_CLUSTER1_INTERACTIVE_HISPEED_FREQ, data.cpu.cluster1.cpugov.hispeed_freq);
+		file_write(POWER_CLUSTER1_INTERACTIVE_ENFORCE_HISPEED_FREQ_LIMIT, data.cpu.cluster1.cpugov.enforce_hispeed_freq_limit);
+		file_write(POWER_CLUSTER1_INTERACTIVE_FREQ_MAX, data.cpu.cluster1.cpugov.freq_max);
+		file_write(POWER_CLUSTER1_INTERACTIVE_FREQ_MIN, data.cpu.cluster1.cpugov.freq_min);
+		file_write(POWER_CLUSTER1_INTERACTIVE_MIN_SAMPLE_TIME, data.cpu.cluster1.cpugov.min_sample_time);
+		file_write(POWER_CLUSTER1_INTERACTIVE_TARGET_LOADS, data.cpu.cluster1.cpugov.target_loads);
+		file_write(POWER_CLUSTER1_INTERACTIVE_TIMER_RATE, data.cpu.cluster1.cpugov.timer_rate);
+		file_write(POWER_CLUSTER1_INTERACTIVE_TIMER_SLACK, data.cpu.cluster1.cpugov.timer_slack);
 	}
 
 	file_write(POWER_MALI_GPU_DVFS, data.gpu.dvfs.enabled);
@@ -384,12 +390,12 @@ static int is_file(const char *path) {
 		(fstat.st_mode & S_IFREG) == S_IFREG;
 }
 
-static int is_cluster0_nexus() {
-	return is_dir(POWER_CLUSTER0_NEXUS);
+static int is_cluster0_interactive() {
+	return is_file(POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE);
 }
 
-static int is_cluster1_nexus() {
-	return is_dir(POWER_CLUSTER1_NEXUS);
+static int is_cluster1_interactive() {
+	return is_file(POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE);
 }
 
 static struct hw_module_methods_t power_module_methods = {
