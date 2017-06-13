@@ -189,8 +189,8 @@ static void power_apply_profile(struct power_profile data) {
 	// apply cpugov-settings
 	if (data.cpu.cluster0.cpugov.governor == "interactive") {
 		// static settings
-		pfwritegov("boost", "0");
-		pfwritegov("boostpulse_duration", "50000");
+		pfwritegov("boost", false);
+		pfwritegov("boostpulse_duration", 50000);
 
 		// dynamic settings
 		pfwritegov("above_hispeed_delay", data.cpu.cluster0.cpugov.interactive.above_hispeed_delay);
@@ -205,8 +205,8 @@ static void power_apply_profile(struct power_profile data) {
 		pfwritegov("timer_slack", data.cpu.cluster0.cpugov.interactive.timer_slack);
 	} else if (data.cpu.cluster0.cpugov.governor == "nexus") {
 		// static settings
-		pfwritegov("boost", "0");
-		pfwritegov("boostpulse", "0");
+		pfwritegov("boost", false);
+		pfwritegov("boostpulse", 0);
 
 		// dynamic settings
 		pfwritegov("down_load", data.cpu.cluster0.cpugov.nexus.down_load);
@@ -239,8 +239,8 @@ static void power_apply_profile(struct power_profile data) {
 	// apply cpugov-settings
 	if (data.cpu.cluster1.cpugov.governor == "interactive") {
 		// static settings
-		pfwritegov("boost", "0");
-		pfwritegov("boostpulse_duration", "50000");
+		pfwritegov("boost", false);
+		pfwritegov("boostpulse_duration", 50000);
 
 		// dynamic settings
 		pfwritegov("above_hispeed_delay", data.cpu.cluster1.cpugov.interactive.above_hispeed_delay);
@@ -255,8 +255,8 @@ static void power_apply_profile(struct power_profile data) {
 		pfwritegov("timer_slack", data.cpu.cluster1.cpugov.interactive.timer_slack);
 	} else if (data.cpu.cluster1.cpugov.governor == "nexus") {
 		// static settings
-		pfwritegov("boost", "0");
-		pfwritegov("boostpulse", "0");
+		pfwritegov("boost", false);
+		pfwritegov("boostpulse", 0);
 
 		// dynamic settings
 		pfwritegov("down_load", data.cpu.cluster1.cpugov.nexus.down_load);
@@ -369,10 +369,11 @@ static bool pfwrite(string path, string str) {
 
 	file.open(path);
 	if (!file.is_open()) {
-		ALOGE("%s: failed to open %s for writing", __func__, path.c_str());
+		ALOGE("%s: failed to open %s", __func__, path.c_str());
 		return false;
 	}
 	
+	ALOGI("%s: store \"%s\" to %s", __func__, str.c_str(), path.c_str());
 	file << str;
 	file.close();
 
@@ -421,7 +422,7 @@ static bool pfread(string path, int *v) {
 	string line;
 	
 	if (!file.is_open()) {		
-		ALOGE("%s: failed to open %s for reading", __func__, path.c_str());
+		ALOGE("%s: failed to open %s", __func__, path.c_str());
 		return false;
 	}
 	
