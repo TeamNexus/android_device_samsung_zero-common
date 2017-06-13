@@ -18,11 +18,20 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := power.c
-LOCAL_SHARED_LIBRARIES := libhardware liblog libcutils
-LOCAL_MODULE := power.$(TARGET_BOARD_PLATFORM)
+LOCAL_C_INCLUDES := \
+	$(LOCAL_PATH)
+
+LOCAL_SRC_FILES := \
+	power.cpp
+
+LOCAL_MODULE               := power.$(TARGET_BOARD_PLATFORM)
 LOCAL_MODULE_RELATIVE_PATH := hw
-LOCAL_MODULE_TAGS := optional
-LOCAL_C_INCLUDES := $(LOCAL_PATH)
+LOCAL_MODULE_TAGS          := optional
+LOCAL_CFLAGS              := -Wall -Werror -Wno-unused-parameter
+
+LOCAL_SHARED_LIBRARIES := \
+	libhardware \
+	liblog \
+	libcutils
 
 include $(BUILD_SHARED_LIBRARY)
