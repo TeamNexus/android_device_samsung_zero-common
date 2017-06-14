@@ -99,8 +99,8 @@ struct power_profile {
 				.cores = {
 					.core0online = true,
 					.core1online = true,
-					.core2online = false,
-					.core3online = false,
+					.core2online = true,
+					.core3online = true,
 				},
 				.cpugov = {
 					.governor = "interactive",
@@ -131,9 +131,9 @@ struct power_profile {
 			.cluster1 = {
 				.cores = {
 					.core0online = true,
-					.core1online = false,
-					.core2online = false,
-					.core3online = false,
+					.core1online = true,
+					.core2online = true,
+					.core3online = true,
 				},
 				.cpugov = {
 					.governor = "interactive",

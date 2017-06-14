@@ -36,38 +36,39 @@ using namespace std;
 #define INPUT_STATE_DISABLE    0
 #define INPUT_STATE_ENABLE     1
 
-#define POWER_CONFIG_ALWAYS_ON_FP "/data/power/always_on_fp"
-#define POWER_CONFIG_DT2W         "/data/power/dt2w"
-#define POWER_CONFIG_PROFILES     "/data/power/profiles"
+#define POWER_CONFIG_ALWAYS_ON_FP    "/data/power/always_on_fp"
+#define POWER_CONFIG_DT2W            "/data/power/dt2w"
+#define POWER_CONFIG_PROFILES        "/data/power/profiles"
 
-#define POWER_TOUCHSCREEN_ENABLED "/sys/class/input/input1/enabled"
-#define POWER_TOUCHKEYS_ENABLED   "/sys/class/input/input0/enabled"
-#define POWER_FINGERPRINT_ENABLED "/sys/class/fingerprint/fingerprint/enabled"
-#define POWER_MALI_GPU_DVFS       "/sys/devices/14ac0000.mali/dvfs"
-#define POWER_DT2W_ENABLED        "/sys/android_touch/doubletap2wake"
+#define POWER_TOUCHSCREEN_ENABLED     "/sys/class/input/input1/enabled"
+#define POWER_TOUCHKEYS_ENABLED       "/sys/class/input/input0/enabled"
+#define POWER_TOUCHKEYS_BRIGTHNESS    "/sys/class/sec/sec_touchkey/brightness"
+#define POWER_FINGERPRINT_ENABLED     "/sys/class/fingerprint/fingerprint/enabled"
+#define POWER_MALI_GPU_DVFS           "/sys/devices/14ac0000.mali/dvfs"
+#define POWER_DT2W_ENABLED            "/sys/android_touch/doubletap2wake"
 
 /***********************************
  * CPU-settings
  */
-#define POWER_CPU_HOTPLUG      "/sys/power/enable_dm_hotplug"
-#define POWER_IPA_CONTROL_TEMP "/sys/power/ipa/control_temp"
+#define POWER_CPU_HOTPLUG         "/sys/power/enable_dm_hotplug"
+#define POWER_IPA_CONTROL_TEMP    "/sys/power/ipa/control_temp"
 
 /***********************************
  * Interactive cpugov-settings
  */
 // cluster0
-#define POWER_CLUSTER0_ONLINE_CORE0                              "/sys/devices/system/cpu/cpu0/online"
-#define POWER_CLUSTER0_ONLINE_CORE1                              "/sys/devices/system/cpu/cpu1/online"
-#define POWER_CLUSTER0_ONLINE_CORE2                              "/sys/devices/system/cpu/cpu2/online"
-#define POWER_CLUSTER0_ONLINE_CORE3                              "/sys/devices/system/cpu/cpu3/online"
-#define POWER_CLUSTER0_SCALING_GOVERNOR                          "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+#define POWER_CLUSTER0_ONLINE_CORE0        "/sys/devices/system/cpu/cpu0/online"
+#define POWER_CLUSTER0_ONLINE_CORE1        "/sys/devices/system/cpu/cpu1/online"
+#define POWER_CLUSTER0_ONLINE_CORE2        "/sys/devices/system/cpu/cpu2/online"
+#define POWER_CLUSTER0_ONLINE_CORE3        "/sys/devices/system/cpu/cpu3/online"
+#define POWER_CLUSTER0_SCALING_GOVERNOR    "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
 
 // cluster1
-#define POWER_CLUSTER1_ONLINE_CORE0                              "/sys/devices/system/cpu/cpu4/online"
-#define POWER_CLUSTER1_ONLINE_CORE1                              "/sys/devices/system/cpu/cpu5/online"
-#define POWER_CLUSTER1_ONLINE_CORE2                              "/sys/devices/system/cpu/cpu6/online"
-#define POWER_CLUSTER1_ONLINE_CORE3                              "/sys/devices/system/cpu/cpu7/online"
-#define POWER_CLUSTER1_SCALING_GOVERNOR                          "/sys/devices/system/cpu/cpu4/cpufreq/scaling_governor"
+#define POWER_CLUSTER1_ONLINE_CORE0        "/sys/devices/system/cpu/cpu4/online"
+#define POWER_CLUSTER1_ONLINE_CORE1        "/sys/devices/system/cpu/cpu5/online"
+#define POWER_CLUSTER1_ONLINE_CORE2        "/sys/devices/system/cpu/cpu6/online"
+#define POWER_CLUSTER1_ONLINE_CORE3        "/sys/devices/system/cpu/cpu7/online"
+#define POWER_CLUSTER1_SCALING_GOVERNOR    "/sys/devices/system/cpu/cpu4/cpufreq/scaling_governor"
 
 /***********************************
  * Initializing

@@ -98,13 +98,13 @@ static void power_init(struct power_module __unused * module) {
 		mkdir("/data/power", 0771);
 
 	if (!is_file("/data/power/always_on_fp"))
-		pfwrite("/data/power/always_on_fp", "0");
+		pfwrite("/data/power/always_on_fp", false);
 
 	if (!is_file("/data/power/dt2w"))
-		pfwrite("/data/power/dt2w", "0");
+		pfwrite("/data/power/dt2w", false);
 
 	if (!is_file("/data/power/profiles"))
-		pfwrite("/data/power/profiles", "1");
+		pfwrite("/data/power/profiles", true);
 }
 
 /***********************************
@@ -287,31 +287,32 @@ static void power_input_device_state(int state) {
 	switch (state) {
 		case INPUT_STATE_DISABLE:
 
-			pfwrite(POWER_TOUCHSCREEN_ENABLED, "0");
-			pfwrite(POWER_TOUCHKEYS_ENABLED, "0");
+			pfwrite(POWER_TOUCHSCREEN_ENABLED, false);
+			pfwrite(POWER_TOUCHKEYS_ENABLED, false);
+			pfwrite(POWER_TOUCHKEYS_BRIGTHNESS, 0);
 
 			if (always_on_fp) {
-				pfwrite(POWER_FINGERPRINT_ENABLED, "1");
+				pfwrite(POWER_FINGERPRINT_ENABLED, true);
 			} else {
-				pfwrite(POWER_FINGERPRINT_ENABLED, "0");
+				pfwrite(POWER_FINGERPRINT_ENABLED, false);
 			}
 
 			if (dt2w && !dt2w_sysfs) {
-				pfwrite(POWER_DT2W_ENABLED, "1");
+				pfwrite(POWER_DT2W_ENABLED, true);
 			} else {
-				pfwrite(POWER_DT2W_ENABLED, "0");
+				pfwrite(POWER_DT2W_ENABLED, false);
 			}
 
 			break;
 
 		case INPUT_STATE_ENABLE:
 
-			pfwrite(POWER_TOUCHSCREEN_ENABLED, "1");
-			pfwrite(POWER_TOUCHKEYS_ENABLED, "1");
-			pfwrite(POWER_FINGERPRINT_ENABLED, "1");
+			pfwrite(POWER_TOUCHSCREEN_ENABLED, true);
+			pfwrite(POWER_TOUCHKEYS_ENABLED, true);
+			pfwrite(POWER_FINGERPRINT_ENABLED, true);
 
 			if (!dt2w) {
-				pfwrite(POWER_DT2W_ENABLED, "0");
+				pfwrite(POWER_DT2W_ENABLED, false);
 			}
 
 			break;
