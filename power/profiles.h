@@ -383,7 +383,7 @@ struct power_profile {
 					.core3online = true,
 				},
 				.cpugov = {
-					.governor = "interactive",
+					.governor = "nexus",
 					.interactive = {
 						.above_hispeed_delay = "49000 1300000:19000",
 						.go_hispeed_load = 70,
@@ -397,13 +397,13 @@ struct power_profile {
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 60,
+						.down_load = 35,
 						.down_step = 1,
 						.freq_max = 1500000,
 						.freq_min = 800000,
 						.io_is_busy = true,
 						.sampling_rate = 25000,
-						.up_load = 70,
+						.up_load = 55,
 						.up_step = 2,
 					},
 				},
@@ -416,7 +416,7 @@ struct power_profile {
 					.core3online = true,
 				},
 				.cpugov = {
-					.governor = "interactive",
+					.governor = "nexus",
 					.interactive = {
 						.above_hispeed_delay = "49000 1900000:19000",
 						.go_hispeed_load = 75,
@@ -430,7 +430,7 @@ struct power_profile {
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 65,
+						.down_load = 55,
 						.down_step = 1,
 						.freq_max = 2100000,
 						.freq_min = 800000,
