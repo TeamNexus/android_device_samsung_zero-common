@@ -82,14 +82,7 @@ struct power_profile {
 		struct {
 
 			bool enabled;
-
-			enum {
-				DEFAULT = 0,
-				INTERACTIVE = 1,
-				STATIC = 2,
-				BOOSTER = 3
-			} governor;
-
+			unsigned int governor;
 			int max_lock;
 			int min_lock;
 
@@ -97,7 +90,7 @@ struct power_profile {
 
 		struct {
 
-			unsigned int clock;
+			int clock;
 			unsigned int load;
 
 		} highspeed;
@@ -185,7 +178,7 @@ struct power_profile {
 		.gpu = {
 			.dvfs = {
 				.enabled = false,
-				.governor = STATIC,
+				.governor = 2,
 				.max_lock = -1,
 				.min_lock = -1
 			},
@@ -275,7 +268,7 @@ struct power_profile {
 		.gpu = {
 			.dvfs = {
 				.enabled = false,
-				.governor = STATIC,
+				.governor = 2,
 				.max_lock = 420,
 				.min_lock = 266
 			},
@@ -365,7 +358,7 @@ struct power_profile {
 		.gpu = {
 			.dvfs = {
 				.enabled = true,
-				.governor = INTERACTIVE,
+				.governor = 1,
 				.max_lock = 700,
 				.min_lock = 350
 			},
@@ -455,7 +448,7 @@ struct power_profile {
 		.gpu = {
 			.dvfs = {
 				.enabled = true,
-				.governor = INTERACTIVE,
+				.governor = 1,
 				.max_lock = 772,
 				.min_lock = 600
 			},

@@ -388,12 +388,16 @@ static bool pfwrite(string path, string str) {
 	return true;
 }
 
+static bool pfwrite(string path, bool flag) {
+	return pfwrite(path, flag ? 1 : 0);
+}
+
 static bool pfwrite(string path, int value) {
 	return pfwrite(path, to_string(value));
 }
 
-static bool pfwrite(string path, bool flag) {
-	return pfwrite(path, flag ? 1 : 0);
+static bool pfwrite(string path, unsigned int value) {
+	return pfwrite(path, to_string(value));
 }
 
 static bool pfwritegov(string file, string value) {
