@@ -40,13 +40,18 @@ using namespace std;
 #define POWER_CONFIG_DT2W            "/data/power/dt2w"
 #define POWER_CONFIG_PROFILES        "/data/power/profiles"
 
-#define POWER_TOUCHSCREEN_ENABLED     "/sys/class/input/input1/enabled"
-#define POWER_TOUCHKEYS_ENABLED       "/sys/class/input/input0/enabled"
-#define POWER_TOUCHKEYS_BRIGTHNESS    "/sys/class/sec/sec_touchkey/brightness"
-#define POWER_FINGERPRINT_ENABLED     "/sys/class/fingerprint/fingerprint/enabled"
-#define POWER_MALI_GPU_DVFS           "/sys/devices/14ac0000.mali/dvfs"
-#define POWER_DT2W_ENABLED            "/sys/android_touch/doubletap2wake"
-
+#define POWER_DT2W_ENABLED                "/sys/android_touch/doubletap2wake"
+#define POWER_FINGERPRINT_ENABLED         "/sys/class/fingerprint/fingerprint/enabled"
+#define POWER_TOUCHKEYS_ENABLED           "/sys/class/input/input0/enabled"
+#define POWER_TOUCHSCREEN_ENABLED         "/sys/class/input/input1/enabled"
+#define POWER_TOUCHKEYS_BRIGTHNESS        "/sys/class/sec/sec_touchkey/brightness"
+#define POWER_MALI_GPU                    "/sys/devices/14ac0000.mali/"
+#define POWER_MALI_GPU_DVFS               POWER_MALI_GPU "dvfs"
+#define POWER_MALI_GPU_DVFS_GOVERNOR      POWER_MALI_GPU "dvfs_governor"
+#define POWER_MALI_GPU_DVFS_MAX_LOCK      POWER_MALI_GPU "dvfs_max_lock"
+#define POWER_MALI_GPU_DVFS_MIN_LOCK      POWER_MALI_GPU "dvfs_min_lock"
+#define POWER_MALI_GPU_HIGHSPEED_CLOCK    POWER_MALI_GPU "highspeed_clock"
+#define POWER_MALI_GPU_HIGHSPEED_LOAD     POWER_MALI_GPU "highspeed_load"
 /***********************************
  * CPU-settings
  */

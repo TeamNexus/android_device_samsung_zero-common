@@ -270,9 +270,16 @@ static void power_apply_profile(struct power_profile data) {
 	}
 
 	/*****************************************************************
+	 *************                                       *************
+	 *************                  GPU                  *************
+	 *************                                       *************
 	 *****************************************************************/
-
 	pfwrite(POWER_MALI_GPU_DVFS, data.gpu.dvfs.enabled);
+	pfwrite(POWER_MALI_GPU_DVFS_GOVERNOR, data.gpu.dvfs.governor);
+	pfwrite(POWER_MALI_GPU_DVFS_MAX_LOCK, data.gpu.dvfs.max_lock);
+	pfwrite(POWER_MALI_GPU_DVFS_MIN_LOCK, data.gpu.dvfs.min_lock);
+	pfwrite(POWER_MALI_GPU_HIGHSPEED_CLOCK, data.gpu.highspeed.clock);
+	pfwrite(POWER_MALI_GPU_HIGHSPEED_LOAD, data.gpu.highspeed.load);
 }
 
 /***********************************

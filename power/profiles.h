@@ -83,7 +83,24 @@ struct power_profile {
 
 			bool enabled;
 
+			enum {
+				DEFAULT = 0,
+				INTERACTIVE = 1,
+				STATIC = 2,
+				BOOSTER = 3
+			} governor;
+
+			int max_lock;
+			int min_lock;
+
 		} dvfs;
+
+		struct {
+
+			unsigned int clock;
+			unsigned int load;
+
+		} highspeed;
 
 	} gpu;
 
@@ -114,16 +131,16 @@ struct power_profile {
 						.min_sample_time = 25000,
 						.target_loads = 99,
 						.timer_rate = 25000,
-						.timer_slack = 50,
+						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 50,
+						.down_load = 89,
 						.down_step = 3,
 						.freq_max = 400000,
 						.freq_min = 200000,
 						.io_is_busy = true,
 						.sampling_rate = 25000,
-						.up_load = 80,
+						.up_load = 99,
 						.up_step = 1,
 					},
 				},
@@ -147,28 +164,35 @@ struct power_profile {
 						.min_sample_time = 25000,
 						.target_loads = 99,
 						.timer_rate = 25000,
-						.timer_slack = 50,
+						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 50,
+						.down_load = 89,
 						.down_step = 3,
 						.freq_max = 400000,
 						.freq_min = 200000,
 						.io_is_busy = true,
 						.sampling_rate = 25000,
-						.up_load = 85,
+						.up_load = 99,
 						.up_step = 1,
 					},
 				},
 			},
 		},
 		.ipa = {
-			.control_temp = 45,
+			.control_temp = 35,
 		},
 		.gpu = {
 			.dvfs = {
 				.enabled = false,
+				.governor = STATIC,
+				.max_lock = -1,
+				.min_lock = -1
 			},
+			.highspeed = {
+				.clock = -1,
+				.load = 99
+			}
 		},
 	},
 
@@ -197,16 +221,16 @@ struct power_profile {
 						.min_sample_time = 25000,
 						.target_loads = 99,
 						.timer_rate = 25000,
-						.timer_slack = 50,
+						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 45,
+						.down_load = 89,
 						.down_step = 2,
 						.freq_max = 800000,
 						.freq_min = 200000,
 						.io_is_busy = true,
 						.sampling_rate = 25000,
-						.up_load = 70,
+						.up_load = 99,
 						.up_step = 1,
 					},
 				},
@@ -230,16 +254,16 @@ struct power_profile {
 						.min_sample_time = 25000,
 						.target_loads = 99,
 						.timer_rate = 25000,
-						.timer_slack = 50,
+						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 45,
+						.down_load = 89,
 						.down_step = 2,
 						.freq_max = 1000000,
 						.freq_min = 200000,
 						.io_is_busy = true,
 						.sampling_rate = 25000,
-						.up_load = 70,
+						.up_load = 99,
 						.up_step = 1,
 					},
 				},
@@ -251,7 +275,14 @@ struct power_profile {
 		.gpu = {
 			.dvfs = {
 				.enabled = false,
+				.governor = STATIC,
+				.max_lock = 420,
+				.min_lock = 266
 			},
+			.highspeed = {
+				.clock = 350,
+				.load = 75
+			}
 		},
 	},
 
@@ -280,16 +311,16 @@ struct power_profile {
 						.min_sample_time = 25000,
 						.target_loads = 80,
 						.timer_rate = 25000,
-						.timer_slack = 50,
+						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 35,
+						.down_load = 70,
 						.down_step = 1,
 						.freq_max = 1200000,
 						.freq_min = 400000,
 						.io_is_busy = true,
 						.sampling_rate = 25000,
-						.up_load = 60,
+						.up_load = 80,
 						.up_step = 1,
 					},
 				},
@@ -313,16 +344,16 @@ struct power_profile {
 						.min_sample_time = 25000,
 						.target_loads = 85,
 						.timer_rate = 25000,
-						.timer_slack = 50,
+						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 35,
+						.down_load = 75,
 						.down_step = 1,
 						.freq_max = 1704000,
 						.freq_min = 600000,
 						.io_is_busy = true,
 						.sampling_rate = 25000,
-						.up_load = 60,
+						.up_load = 85,
 						.up_step = 1,
 					},
 				},
@@ -334,7 +365,14 @@ struct power_profile {
 		.gpu = {
 			.dvfs = {
 				.enabled = true,
+				.governor = INTERACTIVE,
+				.max_lock = 700,
+				.min_lock = 350
 			},
+			.highspeed = {
+				.clock = 554,
+				.load = 55
+			}
 		},
 	},
 
@@ -352,28 +390,28 @@ struct power_profile {
 					.core3online = true,
 				},
 				.cpugov = {
-					.governor = "nexus",
+					.governor = "interactive",
 					.interactive = {
 						.above_hispeed_delay = "49000 1300000:19000",
 						.go_hispeed_load = 70,
 						.hispeed_freq = 1500000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 1500000,
-						.freq_min = 600000,
+						.freq_min = 800000,
 						.min_sample_time = 25000,
 						.target_loads = 70,
 						.timer_rate = 25000,
-						.timer_slack = 50,
+						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 45,
-						.down_step = 2,
+						.down_load = 60,
+						.down_step = 1,
 						.freq_max = 1500000,
-						.freq_min = 600000,
+						.freq_min = 800000,
 						.io_is_busy = true,
 						.sampling_rate = 25000,
-						.up_load = 50,
-						.up_step = 4,
+						.up_load = 70,
+						.up_step = 2,
 					},
 				},
 			},
@@ -385,7 +423,7 @@ struct power_profile {
 					.core3online = true,
 				},
 				.cpugov = {
-					.governor = "nexus",
+					.governor = "interactive",
 					.interactive = {
 						.above_hispeed_delay = "49000 1900000:19000",
 						.go_hispeed_load = 75,
@@ -396,16 +434,16 @@ struct power_profile {
 						.min_sample_time = 25000,
 						.target_loads = 75,
 						.timer_rate = 25000,
-						.timer_slack = 50,
+						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 35,
+						.down_load = 65,
 						.down_step = 1,
 						.freq_max = 2100000,
 						.freq_min = 800000,
 						.io_is_busy = true,
 						.sampling_rate = 25000,
-						.up_load = 50,
+						.up_load = 75,
 						.up_step = 2,
 					},
 				},
@@ -417,7 +455,14 @@ struct power_profile {
 		.gpu = {
 			.dvfs = {
 				.enabled = true,
+				.governor = INTERACTIVE,
+				.max_lock = 772,
+				.min_lock = 600
 			},
+			.highspeed = {
+				.clock = 772,
+				.load = 45
+			}
 		},
 	},
 
