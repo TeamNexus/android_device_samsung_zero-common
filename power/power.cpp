@@ -47,7 +47,7 @@ struct sec_power_module {
 	((struct_name *)((char *)(addr) - offsetof(struct_name, field_name)))
 
 static int current_power_profile = PROFILE_NORMAL;
-static int last_power_profile = PROFILE_NORMAL;
+static int requested_power_profile = PROFILE_NORMAL;
 static int pfwritegov_cluster;
 static string pfwritegov_governor;
 
@@ -97,14 +97,17 @@ static void power_init(struct power_module __unused * module) {
 	if (!is_dir("/data/power"))
 		mkdir("/data/power", 0771);
 
-	if (!is_file("/data/power/always_on_fp"))
-		pfwrite("/data/power/always_on_fp", false);
+	if (!is_file(POWER_CONFIG_ALWAYS_ON_FP))
+		pfwrite(POWER_CONFIG_ALWAYS_ON_FP, false);
 
-	if (!is_file("/data/power/dt2w"))
-		pfwrite("/data/power/dt2w", false);
+	if (!is_file(POWER_CONFIG_BOOST))
+		pfwrite(POWER_CONFIG_BOOST, false);
 
-	if (!is_file("/data/power/profiles"))
-		pfwrite("/data/power/profiles", true);
+	if (!is_file(POWER_CONFIG_DT2W))
+		pfwrite(POWER_CONFIG_DT2W, false);
+
+	if (!is_file(POWER_CONFIG_PROFILES))
+		pfwrite(POWER_CONFIG_PROFILES, true);
 }
 
 /***********************************
@@ -112,27 +115,49 @@ static void power_init(struct power_module __unused * module) {
  */
 static void power_hint(struct power_module *module, power_hint_t hint, void *data) {
 	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
+	int value = (data ? *((intptr_t *)data) : 0);
 
 	pthread_mutex_lock(&sec->lock);
 
 	switch (hint) {
 
 		/***********************************
+		 * Boost
+		 */
+		case POWER_HINT_CPU_BOOST:
+			ALOGW("%s: hint(POWER_HINT_CPU_BOOST)", __func__);
+			power_cpu_boost(value ? 50000 : value);
+			break;
+
+		/***********************************
 		 * Profiles
 		 */
 		case POWER_HINT_LOW_POWER:
-			power_set_profile(data ? PROFILE_POWER_SAVE : current_power_profile);
+			ALOGW("%s: hint(POWER_HINT_LOW_POWER)", __func__);
+			power_set_profile(value ? PROFILE_POWER_SAVE : requested_power_profile);
 			break;
 
 		case POWER_HINT_SET_PROFILE:
-			power_set_profile(data);
+			ALOGW("%s: hint(POWER_HINT_SET_PROFILE)", __func__);
+			requested_power_profile = value;
+			power_set_profile(value);
+			break;
+
+		case POWER_HINT_SUSTAINED_PERFORMANCE:
+		case POWER_HINT_VR_MODE:
+			if (hint == POWER_HINT_SUSTAINED_PERFORMANCE)
+				ALOGW("%s: hint(POWER_HINT_SUSTAINED_PERFORMANCE)", __func__);
+			else // if (hint == POWER_HINT_VR_MODE)
+				ALOGW("%s: hint(POWER_HINT_VR_MODE)", __func__);
+			power_set_profile(value ? PROFILE_HIGH_PERFORMANCE : requested_power_profile);
 			break;
 
 		/***********************************
 		 * Inputs
 		 */
 		case POWER_HINT_DISABLE_TOUCH:
-			power_input_device_state(data ? 0 : 1);
+			ALOGW("%s: hint(POWER_HINT_DISABLE_TOUCH)", __func__);
+			power_input_device_state(value ? 0 : 1);
 			break;
 
 		default: break;
@@ -141,14 +166,63 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	pthread_mutex_unlock(&sec->lock);
 }
 
+static void power_launch_hint(struct power_module *module, launch_hint_t hint, const char *packageName, int data) {
+	if (!packageName) {
+		ALOGE("%s: packageName is NULL", __func__);
+		return;
+	}
+	
+	string packageNameStr = packageName;
+	ALOGI("%s: hint(%x): processing launch-hint for %s(%d)", __func__, (int)hint, packageName, data);
+	
+	// performance-sucking applications (CPU, GPU, ...)
+	if (requested_power_profile != PROFILE_POWER_SAVE &&
+		packageNameStr == "com.google.android.youtube") {
+		switch (hint) {
+			case LAUNCH_HINT_ACTIVITY:
+				power_set_profile(PROFILE_HIGH_PERFORMANCE);
+				break;
+
+			case LAUNCH_HINT_PROCESS:
+				// write to cpusets for example, current not called somewhere, no usage
+				break;
+		}
+	}
+	// unhandled, go back to default profile
+	else {
+		power_set_profile(requested_power_profile);
+	}
+}
+
+/***********************************
+ * Boost
+ */
+static void power_cpu_boost(int duration) {
+	int boost = 1;
+	if(pfread(POWER_CONFIG_BOOST, &boost) && !boost) {
+		return;
+	}
+
+	// cluster0
+	if (is_file(POWER_CLUSTER0_NEXUS_BOOSTPULSE)) {
+		pfwrite(POWER_CLUSTER0_NEXUS_BOOSTPULSE, duration);
+	} else if (is_file(POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE)) {
+		pfwrite(POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE_DURATION, duration);
+		pfwrite(POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE, true);
+	}
+
+	// cluster1
+	if (is_file(POWER_CLUSTER1_NEXUS_BOOSTPULSE)) {
+		pfwrite(POWER_CLUSTER1_NEXUS_BOOSTPULSE, duration);
+	} else if (is_file(POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE)) {
+		pfwrite(POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE_DURATION, duration);
+		pfwrite(POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE, true);
+	}
+}
+
 /***********************************
  * Profiles
  */
-static void power_set_profile(void *data) {
-	int profile = *((intptr_t *)data);
-	power_set_profile(profile);
-}
-
 static void power_set_profile(int profile) {
 	int profiles = 1;
 	if(pfread(POWER_CONFIG_PROFILES, &profiles) && !profiles) {
@@ -330,10 +404,9 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 	int screen_is_on = (on != 0);
 
 	if (!screen_is_on) {
-		last_power_profile = current_power_profile;
 		power_set_profile(PROFILE_SCREEN_OFF);
 	} else {
-		power_set_profile(last_power_profile);
+		power_set_profile(requested_power_profile);
 	}
 
 	power_input_device_state(screen_is_on);
@@ -381,7 +454,7 @@ static bool pfwrite(string path, string str) {
 		return false;
 	}
 	
-	ALOGI("%s: store \"%s\" to %s", __func__, str.c_str(), path.c_str());
+	// ALOGI("%s: store \"%s\" to %s", __func__, str.c_str(), path.c_str());
 	file << str;
 	file.close();
 
@@ -449,7 +522,7 @@ static bool pfread(string path, int *v) {
 	return true;
 }
 
-static int is_dir(string path) {
+static bool is_dir(string path) {
 	struct stat fstat;
 	const char *cpath = path.c_str();
 	
@@ -457,7 +530,7 @@ static int is_dir(string path) {
 		(fstat.st_mode & S_IFDIR) == S_IFDIR;
 }
 
-static int is_file(string path) {
+static bool is_file(string path) {
 	struct stat fstat;
 	const char *cpath = path.c_str();
 
@@ -483,6 +556,7 @@ struct sec_power_module HAL_MODULE_INFO_SYM = {
 
 		.init = power_init,
 		.powerHint = power_hint,
+		.launchHint = power_launch_hint,
 		.getFeature = power_get_feature,
 		.setFeature = power_set_feature,
 		.setInteractive = power_set_interactive,

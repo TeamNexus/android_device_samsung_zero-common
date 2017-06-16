@@ -37,6 +37,7 @@ using namespace std;
 #define INPUT_STATE_ENABLE     1
 
 #define POWER_CONFIG_ALWAYS_ON_FP    "/data/power/always_on_fp"
+#define POWER_CONFIG_BOOST           "/data/power/boost"
 #define POWER_CONFIG_DT2W            "/data/power/dt2w"
 #define POWER_CONFIG_PROFILES        "/data/power/profiles"
 
@@ -52,6 +53,7 @@ using namespace std;
 #define POWER_MALI_GPU_DVFS_MIN_LOCK      POWER_MALI_GPU "dvfs_min_lock"
 #define POWER_MALI_GPU_HIGHSPEED_CLOCK    POWER_MALI_GPU "highspeed_clock"
 #define POWER_MALI_GPU_HIGHSPEED_LOAD     POWER_MALI_GPU "highspeed_load"
+
 /***********************************
  * CPU-settings
  */
@@ -62,18 +64,24 @@ using namespace std;
  * Interactive cpugov-settings
  */
 // cluster0
-#define POWER_CLUSTER0_ONLINE_CORE0        "/sys/devices/system/cpu/cpu0/online"
-#define POWER_CLUSTER0_ONLINE_CORE1        "/sys/devices/system/cpu/cpu1/online"
-#define POWER_CLUSTER0_ONLINE_CORE2        "/sys/devices/system/cpu/cpu2/online"
-#define POWER_CLUSTER0_ONLINE_CORE3        "/sys/devices/system/cpu/cpu3/online"
-#define POWER_CLUSTER0_SCALING_GOVERNOR    "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+#define POWER_CLUSTER0_ONLINE_CORE0                       "/sys/devices/system/cpu/cpu0/online"
+#define POWER_CLUSTER0_ONLINE_CORE1                       "/sys/devices/system/cpu/cpu1/online"
+#define POWER_CLUSTER0_ONLINE_CORE2                       "/sys/devices/system/cpu/cpu2/online"
+#define POWER_CLUSTER0_ONLINE_CORE3                       "/sys/devices/system/cpu/cpu3/online"
+#define POWER_CLUSTER0_SCALING_GOVERNOR                   "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+#define POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE             "/sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse"
+#define POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE_DURATION    "/sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse_duration"
+#define POWER_CLUSTER0_NEXUS_BOOSTPULSE                   "/sys/devices/system/cpu/cpu0/cpufreq/nexus/boostpulse"
 
 // cluster1
-#define POWER_CLUSTER1_ONLINE_CORE0        "/sys/devices/system/cpu/cpu4/online"
-#define POWER_CLUSTER1_ONLINE_CORE1        "/sys/devices/system/cpu/cpu5/online"
-#define POWER_CLUSTER1_ONLINE_CORE2        "/sys/devices/system/cpu/cpu6/online"
-#define POWER_CLUSTER1_ONLINE_CORE3        "/sys/devices/system/cpu/cpu7/online"
-#define POWER_CLUSTER1_SCALING_GOVERNOR    "/sys/devices/system/cpu/cpu4/cpufreq/scaling_governor"
+#define POWER_CLUSTER1_ONLINE_CORE0                       "/sys/devices/system/cpu/cpu4/online"
+#define POWER_CLUSTER1_ONLINE_CORE1                       "/sys/devices/system/cpu/cpu5/online"
+#define POWER_CLUSTER1_ONLINE_CORE2                       "/sys/devices/system/cpu/cpu6/online"
+#define POWER_CLUSTER1_ONLINE_CORE3                       "/sys/devices/system/cpu/cpu7/online"
+#define POWER_CLUSTER1_SCALING_GOVERNOR                   "/sys/devices/system/cpu/cpu4/cpufreq/scaling_governor"
+#define POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE             "/sys/devices/system/cpu/cpu4/cpufreq/interactive/boostpulse"
+#define POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE_DURATION    "/sys/devices/system/cpu/cpu4/cpufreq/interactive/boostpulse_duration"
+#define POWER_CLUSTER1_NEXUS_BOOSTPULSE                   "/sys/devices/system/cpu/cpu4/cpufreq/nexus/boostpulse"
 
 /***********************************
  * Initializing
@@ -85,11 +93,16 @@ static void power_init(struct power_module __unused * module);
  * Hinting
  */
 static void power_hint(struct power_module *module, power_hint_t hint, void *data);
+static void power_launch_hint(struct power_module *module, launch_hint_t hint, const char *packageName, int data);
+
+/***********************************
+ * Boost
+ */
+static void power_cpu_boost(int duration);
 
 /***********************************
  * Profiles
  */
-static void power_set_profile(void *data);
 static void power_set_profile(int profile);
 static void power_apply_profile(struct power_profile data);
 
@@ -117,7 +130,7 @@ static bool pfwritegov(string path, bool flag);
 static bool pfwritegov(string path, int value);
 static bool pfwritegov(string file, unsigned int value);
 static bool pfread(string path, int *v);
-static int is_dir(string path);
-static int is_file(string path);
+static bool is_dir(string path);
+static bool is_file(string path);
 
 #endif // EXYNOS5_POWER_HAL_H_INCLUDED
