@@ -93,7 +93,9 @@ static void power_init(struct power_module __unused * module);
  * Hinting
  */
 static void power_hint(struct power_module *module, power_hint_t hint, void *data);
+#ifdef HAS_LAUNCH_HINT_SUPPORT
 static void power_launch_hint(struct power_module *module, launch_hint_t hint, const char *packageName, int data);
+#endif
 
 /***********************************
  * Boost

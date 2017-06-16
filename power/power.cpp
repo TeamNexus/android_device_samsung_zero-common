@@ -165,7 +165,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 
 	pthread_mutex_unlock(&sec->lock);
 }
-
+#ifdef HAS_LAUNCH_HINT_SUPPORT
 static void power_launch_hint(struct power_module *module, launch_hint_t hint, const char *packageName, int data) {
 	if (!packageName) {
 		ALOGE("%s: packageName is NULL", __func__);
@@ -193,6 +193,7 @@ static void power_launch_hint(struct power_module *module, launch_hint_t hint, c
 		power_set_profile(requested_power_profile);
 	}
 }
+#endif
 
 /***********************************
  * Boost
@@ -546,7 +547,11 @@ struct sec_power_module HAL_MODULE_INFO_SYM = {
 	.base = {
 		.common = {
 			.tag = HARDWARE_MODULE_TAG,
+#ifdef HAS_LAUNCH_HINT_SUPPORT
+			.module_api_version = POWER_MODULE_API_VERSION_0_6,
+#else
 			.module_api_version = POWER_MODULE_API_VERSION_0_5,
+#endif
 			.hal_api_version = HARDWARE_HAL_API_VERSION,
 			.id = POWER_HARDWARE_MODULE_ID,
 			.name = "Power HAL for Exynos 7420 SoCs",
@@ -556,7 +561,9 @@ struct sec_power_module HAL_MODULE_INFO_SYM = {
 
 		.init = power_init,
 		.powerHint = power_hint,
+#ifdef HAS_LAUNCH_HINT_SUPPORT
 		.launchHint = power_launch_hint,
+#endif
 		.getFeature = power_get_feature,
 		.setFeature = power_set_feature,
 		.setInteractive = power_set_interactive,
