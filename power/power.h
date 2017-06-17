@@ -38,6 +38,7 @@ using namespace std;
 
 #define POWER_CONFIG_ALWAYS_ON_FP    "/data/power/always_on_fp"
 #define POWER_CONFIG_BOOST           "/data/power/boost"
+#define POWER_CONFIG_APP_BOOST       "/data/power/app_boost"
 #define POWER_CONFIG_DT2W            "/data/power/dt2w"
 #define POWER_CONFIG_PROFILES        "/data/power/profiles"
 

@@ -103,6 +103,11 @@ static void power_init(struct power_module __unused * module) {
 	if (!is_file(POWER_CONFIG_BOOST))
 		pfwrite(POWER_CONFIG_BOOST, false);
 
+#ifdef HAS_LAUNCH_HINT_SUPPORT
+	if (!is_file(POWER_CONFIG_APP_BOOST))
+		pfwrite(POWER_CONFIG_APP_BOOST, false);
+#endif
+
 	if (!is_file(POWER_CONFIG_DT2W))
 		pfwrite(POWER_CONFIG_DT2W, false);
 
@@ -167,17 +172,24 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 }
 #ifdef HAS_LAUNCH_HINT_SUPPORT
 static void power_launch_hint(struct power_module *module, launch_hint_t hint, const char *packageName, int data) {
+	int app_boost = 1;
+	if(pfread(POWER_CONFIG_APP_BOOST, &app_boost) && !app_boost) {
+		return;
+	}
+
 	if (!packageName) {
 		ALOGE("%s: packageName is NULL", __func__);
 		return;
 	}
 	
 	string packageNameStr = packageName;
-	ALOGI("%s: hint(%x): processing launch-hint for %s(%d)", __func__, (int)hint, packageName, data);
 	
 	// performance-sucking applications (CPU, GPU, ...)
-	if (requested_power_profile != PROFILE_POWER_SAVE &&
-		packageNameStr == "com.google.android.youtube") {
+	if (requested_power_profile != PROFILE_POWER_SAVE && (
+			packageNameStr == "com.google.android.youtube" ||
+			packageNameStr == "com.cyanogenmod.snap" ||
+		)) {
+		ALOGI("%s: hint(%x): processing specific launch-hint for %s(%d)", __func__, (int)hint, packageName, data);
 		switch (hint) {
 			case LAUNCH_HINT_ACTIVITY:
 				power_set_profile(PROFILE_HIGH_PERFORMANCE);
