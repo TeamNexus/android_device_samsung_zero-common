@@ -135,5 +135,9 @@ static bool pfwritegov(string file, unsigned int value);
 static bool pfread(string path, int *v);
 static bool is_dir(string path);
 static bool is_file(string path);
+static bool is_cluster0_interactive();
+static bool is_cluster0_nexus();
+static bool is_cluster1_interactive();
+static bool is_cluster1_nexus();
 
 #endif // EXYNOS5_POWER_HAL_H_INCLUDED

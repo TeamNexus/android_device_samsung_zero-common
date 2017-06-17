@@ -270,11 +270,8 @@ static void power_apply_profile(struct power_profile data) {
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE2, data.cpu.cluster0.cores.core2online);
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE3, data.cpu.cluster0.cores.core3online);
 
-	// apply cpugov
-	pfwrite(POWER_CLUSTER0_SCALING_GOVERNOR, data.cpu.cluster0.cpugov.governor);
-
 	// apply cpugov-settings
-	if (data.cpu.cluster0.cpugov.governor == "interactive") {
+	if (is_cluster0_interactive()) {
 		// static settings
 		pfwritegov("boost", false);
 		pfwritegov("boostpulse_duration", 50000);
@@ -290,7 +287,7 @@ static void power_apply_profile(struct power_profile data) {
 		pfwritegov("target_loads", data.cpu.cluster0.cpugov.interactive.target_loads);
 		pfwritegov("timer_rate", data.cpu.cluster0.cpugov.interactive.timer_rate);
 		pfwritegov("timer_slack", data.cpu.cluster0.cpugov.interactive.timer_slack);
-	} else if (data.cpu.cluster0.cpugov.governor == "nexus") {
+	} else if (is_cluster0_nexus()) {
 		// static settings
 		pfwritegov("boost", false);
 		pfwritegov("boostpulse", 0);
@@ -320,11 +317,8 @@ static void power_apply_profile(struct power_profile data) {
 	pfwrite(POWER_CLUSTER1_ONLINE_CORE2, data.cpu.cluster1.cores.core2online);
 	pfwrite(POWER_CLUSTER1_ONLINE_CORE3, data.cpu.cluster1.cores.core3online);
 
-	// apply cpugov
-	pfwrite(POWER_CLUSTER1_SCALING_GOVERNOR, data.cpu.cluster1.cpugov.governor);
-
 	// apply cpugov-settings
-	if (data.cpu.cluster1.cpugov.governor == "interactive") {
+	if (is_cluster1_interactive()) {
 		// static settings
 		pfwritegov("boost", false);
 		pfwritegov("boostpulse_duration", 50000);
@@ -340,7 +334,7 @@ static void power_apply_profile(struct power_profile data) {
 		pfwritegov("target_loads", data.cpu.cluster1.cpugov.interactive.target_loads);
 		pfwritegov("timer_rate", data.cpu.cluster1.cpugov.interactive.timer_rate);
 		pfwritegov("timer_slack", data.cpu.cluster1.cpugov.interactive.timer_slack);
-	} else if (data.cpu.cluster1.cpugov.governor == "nexus") {
+	} else if (is_cluster1_nexus()) {
 		// static settings
 		pfwritegov("boost", false);
 		pfwritegov("boostpulse", 0);
@@ -549,6 +543,22 @@ static bool is_file(string path) {
 
 	return !stat(cpath, &fstat) &&
 		(fstat.st_mode & S_IFREG) == S_IFREG;
+}
+
+static bool is_cluster0_interactive() {
+	return is_dir("/sys/devices/system/cpu/cpu0/interactive");
+}
+
+static bool is_cluster0_nexus() {
+	return is_dir("/sys/devices/system/cpu/cpu0/nexus");
+}
+
+static bool is_cluster1_interactive() {
+	return is_dir("/sys/devices/system/cpu/cpu4/interactive");
+}
+
+static bool is_cluster1_nexus() {
+	return is_dir("/sys/devices/system/cpu/cpu4/nexus");
 }
 
 static struct hw_module_methods_t power_module_methods = {
