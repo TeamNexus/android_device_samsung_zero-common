@@ -187,7 +187,7 @@ static void power_launch_hint(struct power_module *module, launch_hint_t hint, c
 	// performance-sucking applications (CPU, GPU, ...)
 	if (requested_power_profile != PROFILE_POWER_SAVE && (
 			packageNameStr == "com.google.android.youtube" ||
-			packageNameStr == "com.cyanogenmod.snap" ||
+			packageNameStr == "com.cyanogenmod.snap"
 		)) {
 		ALOGI("%s: hint(%x): processing specific launch-hint for %s(%d)", __func__, (int)hint, packageName, data);
 		switch (hint) {
@@ -262,7 +262,6 @@ static void power_apply_profile(struct power_profile data) {
 	 *************                                       *************
 	 *****************************************************************/
 	pfwritegov_cluster = 0;
-	pfwritegov_governor = data.cpu.cluster0.cpugov.governor;
 
 	// apply cpu-settings
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE0, data.cpu.cluster0.cores.core0online);
@@ -309,7 +308,6 @@ static void power_apply_profile(struct power_profile data) {
 	 *************                                       *************
 	 *****************************************************************/
 	pfwritegov_cluster = 1;
-	pfwritegov_governor = data.cpu.cluster1.cpugov.governor;
 
 	// apply cpu-settings
 	pfwrite(POWER_CLUSTER1_ONLINE_CORE0, data.cpu.cluster1.cores.core0online);
@@ -482,18 +480,29 @@ static bool pfwrite(string path, unsigned int value) {
 
 static bool pfwritegov(string file, string value) {
 	int cpu = -1;
+	string gov;
 	stringstream pathbuilder;
 	
 	if (pfwritegov_cluster == 0)
 		cpu = 0;
+
+		if (is_cluster0_interactive())
+			gov = "interactive";
+		else if (is_cluster0_nexus())
+			gov = "nexus";
 	else if (pfwritegov_cluster == 1)
 		cpu = 4;
+
+		if (is_cluster1_interactive())
+			gov = "interactive";
+		else if (is_cluster1_nexus())
+			gov = "nexus";
 	else {
 		ALOGE("%s: invalid cluster: %d", __func__, pfwritegov_cluster);
 		return false;
 	}
 	
-	pathbuilder << "/sys/devices/system/cpu/cpu" << cpu << "/cpufreq/" << pfwritegov_governor << "/" << file;
+	pathbuilder << "/sys/devices/system/cpu/cpu" << cpu << "/cpufreq/" << gov << "/" << file;
 	return pfwrite(pathbuilder.str(), value);
 }
 
