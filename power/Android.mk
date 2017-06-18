@@ -27,9 +27,9 @@ LOCAL_SRC_FILES := \
 LOCAL_MODULE               := power.$(TARGET_BOARD_PLATFORM)
 LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_MODULE_TAGS          := optional
-LOCAL_CFLAGS               := -Wall -Werror -Wno-unused-parameter -DHAS_LAUNCH_HINT_SUPPORT
+LOCAL_CFLAGS               := -Wall -Werror -Wno-unused-parameter
 ifneq ($(NEXUS_VERSION),)
-LOCAL_CFLAGS               := -DHAS_LAUNCH_HINT_SUPPORT=1
+LOCAL_CFLAGS               += -DHAS_LAUNCH_HINT_SUPPORT=1
 endif
 
 LOCAL_SHARED_LIBRARIES := \
