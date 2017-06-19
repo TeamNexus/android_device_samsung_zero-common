@@ -18,8 +18,6 @@
 #include <hardware/hardware.h>
 #include <hardware/power.h>
 
-#include "profiles.h"
-
 using namespace std;
 
 #ifndef EXYNOS5_POWER_HAL_H_INCLUDED
@@ -32,6 +30,9 @@ using namespace std;
 #define PROFILE_POWER_SAVE          0
 #define PROFILE_NORMAL              1
 #define PROFILE_HIGH_PERFORMANCE    2
+#define PROFILE_BIAS_POWER_SAVE     3
+#define PROFILE_BIAS_PERFORMANCE    4
+#define PROFILE_MAX_USABLE          5
 
 #define INPUT_STATE_DISABLE    0
 #define INPUT_STATE_ENABLE     1

@@ -268,7 +268,7 @@ static void power_apply_profile(struct power_profile data) {
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE1, data.cpu.cluster0.cores.core1online);
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE2, data.cpu.cluster0.cores.core2online);
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE3, data.cpu.cluster0.cores.core3online);
-
+	
 	// apply cpugov-settings
 	if (is_cluster0_interactive()) {
 		// static settings
@@ -423,7 +423,7 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 static int power_get_feature(struct power_module *module __unused, feature_t feature) {
 	switch (feature) {
 		case POWER_FEATURE_SUPPORTED_PROFILES:
-			return 3;
+			return PROFILE_MAX_USABLE;
 		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE:
 			return is_file(POWER_DT2W_ENABLED);
 		default:
@@ -483,25 +483,26 @@ static bool pfwritegov(string file, string value) {
 	string gov;
 	stringstream pathbuilder;
 	
-	if (pfwritegov_cluster == 0)
+	if (pfwritegov_cluster == 0) {
 		cpu = 0;
 
 		if (is_cluster0_interactive())
 			gov = "interactive";
 		else if (is_cluster0_nexus())
 			gov = "nexus";
-	else if (pfwritegov_cluster == 1)
+	} else if (pfwritegov_cluster == 1) {
 		cpu = 4;
 
 		if (is_cluster1_interactive())
 			gov = "interactive";
 		else if (is_cluster1_nexus())
 			gov = "nexus";
+	}
 	else {
 		ALOGE("%s: invalid cluster: %d", __func__, pfwritegov_cluster);
 		return false;
 	}
-	
+
 	pathbuilder << "/sys/devices/system/cpu/cpu" << cpu << "/cpufreq/" << gov << "/" << file;
 	return pfwrite(pathbuilder.str(), value);
 }
@@ -555,19 +556,19 @@ static bool is_file(string path) {
 }
 
 static bool is_cluster0_interactive() {
-	return is_dir("/sys/devices/system/cpu/cpu0/interactive");
+	return is_dir("/sys/devices/system/cpu/cpu0/cpufreq/interactive");
 }
 
 static bool is_cluster0_nexus() {
-	return is_dir("/sys/devices/system/cpu/cpu0/nexus");
+	return is_dir("/sys/devices/system/cpu/cpu0/cpufreq/nexus");
 }
 
 static bool is_cluster1_interactive() {
-	return is_dir("/sys/devices/system/cpu/cpu4/interactive");
+	return is_dir("/sys/devices/system/cpu/cpu4/cpufreq/interactive");
 }
 
 static bool is_cluster1_nexus() {
-	return is_dir("/sys/devices/system/cpu/cpu4/nexus");
+	return is_dir("/sys/devices/system/cpu/cpu4/cpufreq/nexus");
 }
 
 static struct hw_module_methods_t power_module_methods = {

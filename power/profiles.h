@@ -95,7 +95,7 @@ struct power_profile {
 
 	} gpu;
 
-} power_profiles[4] = {
+} power_profiles[PROFILE_MAX_USABLE + 1] = {
 
 	/***********
 	 * PROFILE_SCREEN_OFF
@@ -204,7 +204,7 @@ struct power_profile {
 						.go_hispeed_load = 99,
 						.hispeed_freq = 600000,
 						.enforce_hispeed_freq_limit = false,
-						.freq_max = 1000000,
+						.freq_max = 800000,
 						.freq_min = 200000,
 						.min_sample_time = 25000,
 						.target_loads = 99,
@@ -363,6 +363,182 @@ struct power_profile {
 
 	/***********
 	 * PROFILE_HIGH_PERFORMANCE
+	 */
+	{
+		.cpu = {
+			.hotplugging = false,
+			.cluster0 = {
+				.cores = {
+					.core0online = true,
+					.core1online = true,
+					.core2online = true,
+					.core3online = true,
+				},
+				.cpugov = {
+					.interactive = {
+						.above_hispeed_delay = "49000 1300000:19000",
+						.go_hispeed_load = 50,
+						.hispeed_freq = 1500000,
+						.enforce_hispeed_freq_limit = false,
+						.freq_max = 1500000,
+						.freq_min = 1000000,
+						.min_sample_time = 25000,
+						.target_loads = 50,
+						.timer_rate = 25000,
+						.timer_slack = 50000,
+					},
+					.nexus = {
+						.down_load = 35,
+						.down_step = 1,
+						.freq_max = 1500000,
+						.freq_min = 1000000,
+						.io_is_busy = true,
+						.sampling_rate = 25000,
+						.up_load = 55,
+						.up_step = 3,
+					},
+				},
+			},
+			.cluster1 = {
+				.cores = {
+					.core0online = true,
+					.core1online = true,
+					.core2online = true,
+					.core3online = true,
+				},
+				.cpugov = {
+					.interactive = {
+						.above_hispeed_delay = "49000 1900000:19000",
+						.go_hispeed_load = 55,
+						.hispeed_freq = 2100000,
+						.enforce_hispeed_freq_limit = false,
+						.freq_max = 2100000,
+						.freq_min = 1000000,
+						.min_sample_time = 25000,
+						.target_loads = 75,
+						.timer_rate = 25000,
+						.timer_slack = 50000,
+					},
+					.nexus = {
+						.down_load = 55,
+						.down_step = 1,
+						.freq_max = 2100000,
+						.freq_min = 1000000,
+						.io_is_busy = true,
+						.sampling_rate = 25000,
+						.up_load = 55,
+						.up_step = 3,
+					},
+				},
+			},
+		},
+		.ipa = {
+			.control_temp = 75,
+		},
+		.gpu = {
+			.dvfs = {
+				.enabled = true,
+				.governor = 1,
+				.max_lock = 772,
+				.min_lock = 772
+			},
+			.highspeed = {
+				.clock = 772,
+				.load = 99
+			}
+		},
+	},
+
+	/***********
+	 * PROFILE_BIAS_POWER_SAVE
+	 */
+	{
+		.cpu = {
+			.hotplugging = false,
+			.cluster0 = {
+				.cores = {
+					.core0online = true,
+					.core1online = true,
+					.core2online = true,
+					.core3online = true,
+				},
+				.cpugov = {
+					.interactive = {
+						.above_hispeed_delay = "79000 1100000:49000",
+						.go_hispeed_load = 80,
+						.hispeed_freq = 800000,
+						.enforce_hispeed_freq_limit = false,
+						.freq_max = 800000,
+						.freq_min = 400000,
+						.min_sample_time = 25000,
+						.target_loads = 80,
+						.timer_rate = 25000,
+						.timer_slack = 50000,
+					},
+					.nexus = {
+						.down_load = 70,
+						.down_step = 1,
+						.freq_max = 800000,
+						.freq_min = 400000,
+						.io_is_busy = true,
+						.sampling_rate = 25000,
+						.up_load = 80,
+						.up_step = 1,
+					},
+				},
+			},
+			.cluster1 = {
+				.cores = {
+					.core0online = true,
+					.core1online = true,
+					.core2online = true,
+					.core3online = true,
+				},
+				.cpugov = {
+					.interactive = {
+						.above_hispeed_delay = "79000 1700000:49000",
+						.go_hispeed_load = 85,
+						.hispeed_freq = 1100000,
+						.enforce_hispeed_freq_limit = false,
+						.freq_max = 800000,
+						.freq_min = 400000,
+						.min_sample_time = 25000,
+						.target_loads = 85,
+						.timer_rate = 25000,
+						.timer_slack = 50000,
+					},
+					.nexus = {
+						.down_load = 75,
+						.down_step = 1,
+						.freq_max = 800000,
+						.freq_min = 400000,
+						.io_is_busy = true,
+						.sampling_rate = 25000,
+						.up_load = 85,
+						.up_step = 1,
+					},
+				},
+			},
+		},
+		.ipa = {
+			.control_temp = 55,
+		},
+		.gpu = {
+			.dvfs = {
+				.enabled = true,
+				.governor = 1,
+				.max_lock = 700,
+				.min_lock = 350
+			},
+			.highspeed = {
+				.clock = 350,
+				.load = 65
+			}
+		},
+	},
+
+	/***********
+	 * PROFILE_BIAS_PERFORMANCE
 	 */
 	{
 		.cpu = {
