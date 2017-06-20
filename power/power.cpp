@@ -181,9 +181,9 @@ static void power_launch_hint(struct power_module *module, launch_hint_t hint, c
 		ALOGE("%s: packageName is NULL", __func__);
 		return;
 	}
-	
+
 	string packageNameStr = packageName;
-	
+
 	// performance-sucking applications (CPU, GPU, ...)
 	if (requested_power_profile != PROFILE_POWER_SAVE && (
 			packageNameStr == "com.google.android.youtube" ||
@@ -192,7 +192,7 @@ static void power_launch_hint(struct power_module *module, launch_hint_t hint, c
 		ALOGI("%s: hint(%x): processing specific launch-hint for %s(%d)", __func__, (int)hint, packageName, data);
 		switch (hint) {
 			case LAUNCH_HINT_ACTIVITY:
-				power_set_profile(PROFILE_HIGH_PERFORMANCE);
+				power_set_profile(PROFILE_BIAS_PERFORMANCE);
 				break;
 
 			case LAUNCH_HINT_PROCESS:
@@ -251,7 +251,7 @@ static void power_set_profile(int profile) {
 	current_power_profile = profile;
 }
 
-static void power_apply_profile(struct power_profile data) {	
+static void power_apply_profile(struct power_profile data) {
 	// apply cpu-settings
 	pfwrite(POWER_CPU_HOTPLUG, data.cpu.hotplugging);
 	pfwrite(POWER_IPA_CONTROL_TEMP, data.ipa.control_temp);
@@ -268,7 +268,7 @@ static void power_apply_profile(struct power_profile data) {
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE1, data.cpu.cluster0.cores.core1online);
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE2, data.cpu.cluster0.cores.core2online);
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE3, data.cpu.cluster0.cores.core3online);
-	
+
 	// apply cpugov-settings
 	if (is_cluster0_interactive()) {
 		// static settings
@@ -458,7 +458,7 @@ static bool pfwrite(string path, string str) {
 		ALOGE("%s: failed to open %s", __func__, path.c_str());
 		return false;
 	}
-	
+
 	// ALOGI("%s: store \"%s\" to %s", __func__, str.c_str(), path.c_str());
 	file << str;
 	file.close();
@@ -482,7 +482,7 @@ static bool pfwritegov(string file, string value) {
 	int cpu = -1;
 	string gov;
 	stringstream pathbuilder;
-	
+
 	if (pfwritegov_cluster == 0) {
 		cpu = 0;
 
@@ -522,17 +522,17 @@ static bool pfwritegov(string file, unsigned int value) {
 static bool pfread(string path, int *v) {
 	ifstream file(path);
 	string line;
-	
-	if (!file.is_open()) {		
+
+	if (!file.is_open()) {
 		ALOGE("%s: failed to open %s", __func__, path.c_str());
 		return false;
 	}
-	
-	if (!getline(file, line)) {		
+
+	if (!getline(file, line)) {
 		ALOGE("%s: failed to read from %s", __func__, path.c_str());
 		return false;
 	}
-	
+
 	file.close();
 	*v = stoi(line);
 
@@ -542,7 +542,7 @@ static bool pfread(string path, int *v) {
 static bool is_dir(string path) {
 	struct stat fstat;
 	const char *cpath = path.c_str();
-	
+
 	return !stat(cpath, &fstat) &&
 		(fstat.st_mode & S_IFDIR) == S_IFDIR;
 }
