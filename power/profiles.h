@@ -324,7 +324,7 @@ struct power_profile {
 						.go_hispeed_load = 85,
 						.hispeed_freq = 1100000,
 						.enforce_hispeed_freq_limit = false,
-						.freq_max = 1704000,
+						.freq_max = 1500000,
 						.freq_min = 600000,
 						.min_sample_time = 25000,
 						.target_loads = 85,
@@ -334,7 +334,7 @@ struct power_profile {
 					.nexus = {
 						.down_load = 75,
 						.down_step = 1,
-						.freq_max = 1704000,
+						.freq_max = 1500000,
 						.freq_min = 600000,
 						.io_is_busy = true,
 						.sampling_rate = 25000,
@@ -356,7 +356,7 @@ struct power_profile {
 			},
 			.highspeed = {
 				.clock = 554,
-				.load = 55
+				.load = 65
 			}
 		},
 	},
