@@ -269,6 +269,9 @@ static void power_apply_profile(struct power_profile data) {
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE2, data.cpu.cluster0.cores.core2online);
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE3, data.cpu.cluster0.cores.core3online);
 
+	// apply cpugov
+	pfwrite(POWER_CLUSTER0_SCALING_GOVERNOR, data.cpu.cluster0.cpugov.governor);
+
 	// apply cpugov-settings
 	if (is_cluster0_interactive()) {
 		// static settings
@@ -314,6 +317,9 @@ static void power_apply_profile(struct power_profile data) {
 	pfwrite(POWER_CLUSTER1_ONLINE_CORE1, data.cpu.cluster1.cores.core1online);
 	pfwrite(POWER_CLUSTER1_ONLINE_CORE2, data.cpu.cluster1.cores.core2online);
 	pfwrite(POWER_CLUSTER1_ONLINE_CORE3, data.cpu.cluster1.cores.core3online);
+
+	// apply cpugov
+	pfwrite(POWER_CLUSTER1_SCALING_GOVERNOR, data.cpu.cluster1.cpugov.governor);
 
 	// apply cpugov-settings
 	if (is_cluster1_interactive()) {
