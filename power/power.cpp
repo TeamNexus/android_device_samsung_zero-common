@@ -371,7 +371,7 @@ static void power_apply_profile(struct power_profile data) {
  * Inputs
  */
 static void power_input_device_state(int state) {
-	int dt2w = 1, dt2w_sysfs = 1, always_on_fp = 1;
+	int dt2w = 0, dt2w_sysfs = 0, always_on_fp = 0;
 	pfread(POWER_CONFIG_DT2W, &dt2w);
 	pfread(POWER_DT2W_ENABLED, &dt2w_sysfs);
 	pfread(POWER_CONFIG_ALWAYS_ON_FP, &always_on_fp);
@@ -406,6 +406,9 @@ static void power_input_device_state(int state) {
 			if (!dt2w) {
 				pfwrite(POWER_DT2W_ENABLED, false);
 			}
+			
+			// give hw some milliseconds to boot
+			usleep(100);
 
 			break;
 	}
