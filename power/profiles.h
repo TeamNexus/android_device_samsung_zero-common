@@ -297,7 +297,7 @@ struct power_profile {
 					.interactive = {
 						.above_hispeed_delay = "79000 1100000:49000",
 						.go_hispeed_load = 80,
-						.hispeed_freq = 1000000,
+						.hispeed_freq = 900000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 1500000,
 						.freq_min = 400000,
@@ -330,7 +330,7 @@ struct power_profile {
 					.interactive = {
 						.above_hispeed_delay = "79000 1700000:49000",
 						.go_hispeed_load = 85,
-						.hispeed_freq = 900000,
+						.hispeed_freq = 800000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 1500000,
 						.freq_min = 600000,
@@ -343,7 +343,7 @@ struct power_profile {
 						.down_load = 75,
 						.down_step = 1,
 						.freq_max = 1500000,
-						.freq_min = 800000,
+						.freq_min = 600000,
 						.io_is_busy = true,
 						.sampling_rate = 25000,
 						.up_load = 85,
