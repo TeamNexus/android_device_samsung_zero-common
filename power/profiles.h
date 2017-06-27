@@ -293,7 +293,7 @@ struct power_profile {
 					.core3online = true,
 				},
 				.cpugov = {
-					.governor = "nexus",
+					.governor = "interactive",
 					.interactive = {
 						.above_hispeed_delay = "79000 1100000:49000",
 						.go_hispeed_load = 80,
@@ -333,7 +333,7 @@ struct power_profile {
 						.hispeed_freq = 900000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 1500000,
-						.freq_min = 800000,
+						.freq_min = 600000,
 						.min_sample_time = 25000,
 						.target_loads = 85,
 						.timer_rate = 25000,
