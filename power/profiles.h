@@ -360,11 +360,11 @@ struct power_profile {
 				.enabled = true,
 				.governor = 1,
 				.max_lock = 772,
-				.min_lock = 420
+				.min_lock = 350
 			},
 			.highspeed = {
 				.clock = 700,
-				.load = 65
+				.load = 85
 			}
 		},
 	},
