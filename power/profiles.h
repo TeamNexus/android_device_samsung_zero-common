@@ -40,6 +40,7 @@ struct power_profile_cpu_cluster {
 			unsigned int freq_max;
 			unsigned int freq_min;
 			unsigned int min_sample_time;
+			bool powersave_bias;
 			unsigned int target_loads;
 			unsigned int timer_rate;
 			unsigned int timer_slack;
@@ -122,6 +123,7 @@ struct power_profile {
 						.freq_max = 400000,
 						.freq_min = 200000,
 						.min_sample_time = 25000,
+						.powersave_bias = true,
 						.target_loads = 99,
 						.timer_rate = 25000,
 						.timer_slack = 50000,
@@ -155,6 +157,7 @@ struct power_profile {
 						.freq_max = 400000,
 						.freq_min = 200000,
 						.min_sample_time = 25000,
+						.powersave_bias = true,
 						.target_loads = 99,
 						.timer_rate = 25000,
 						.timer_slack = 50000,
@@ -212,6 +215,7 @@ struct power_profile {
 						.freq_max = 800000,
 						.freq_min = 200000,
 						.min_sample_time = 25000,
+						.powersave_bias = true,
 						.target_loads = 99,
 						.timer_rate = 25000,
 						.timer_slack = 50000,
@@ -245,6 +249,7 @@ struct power_profile {
 						.freq_max = 1000000,
 						.freq_min = 200000,
 						.min_sample_time = 25000,
+						.powersave_bias = true,
 						.target_loads = 99,
 						.timer_rate = 25000,
 						.timer_slack = 50000,
@@ -302,6 +307,7 @@ struct power_profile {
 						.freq_max = 1500000,
 						.freq_min = 400000,
 						.min_sample_time = 25000,
+						.powersave_bias = false,
 						.target_loads = 80,
 						.timer_rate = 25000,
 						.timer_slack = 50000,
@@ -335,6 +341,7 @@ struct power_profile {
 						.freq_max = 1500000,
 						.freq_min = 600000,
 						.min_sample_time = 25000,
+						.powersave_bias = true,
 						.target_loads = 85,
 						.timer_rate = 25000,
 						.timer_slack = 50000,
@@ -392,6 +399,7 @@ struct power_profile {
 						.freq_max = 1704000,
 						.freq_min = 1000000,
 						.min_sample_time = 25000,
+						.powersave_bias = false,
 						.target_loads = 50,
 						.timer_rate = 25000,
 						.timer_slack = 50000,
@@ -425,6 +433,7 @@ struct power_profile {
 						.freq_max = 2304000,
 						.freq_min = 1000000,
 						.min_sample_time = 25000,
+						.powersave_bias = false,
 						.target_loads = 75,
 						.timer_rate = 25000,
 						.timer_slack = 50000,
@@ -482,6 +491,7 @@ struct power_profile {
 						.freq_max = 800000,
 						.freq_min = 300000,
 						.min_sample_time = 25000,
+						.powersave_bias = false,
 						.target_loads = 99,
 						.timer_rate = 25000,
 						.timer_slack = 50000,
@@ -515,6 +525,7 @@ struct power_profile {
 						.freq_max = 1000000,
 						.freq_min = 300000,
 						.min_sample_time = 25000,
+						.powersave_bias = true,
 						.target_loads = 99,
 						.timer_rate = 25000,
 						.timer_slack = 50000,
@@ -572,6 +583,7 @@ struct power_profile {
 						.freq_max = 1704000,
 						.freq_min = 800000,
 						.min_sample_time = 25000,
+						.powersave_bias = false,
 						.target_loads = 70,
 						.timer_rate = 25000,
 						.timer_slack = 50000,
@@ -605,6 +617,7 @@ struct power_profile {
 						.freq_max = 2304000,
 						.freq_min = 800000,
 						.min_sample_time = 25000,
+						.powersave_bias = false,
 						.target_loads = 75,
 						.timer_rate = 25000,
 						.timer_slack = 50000,

@@ -286,6 +286,7 @@ static void power_apply_profile(struct power_profile data) {
 		pfwritegov("freq_max", data.cpu.cluster0.cpugov.interactive.freq_max);
 		pfwritegov("freq_min", data.cpu.cluster0.cpugov.interactive.freq_min);
 		pfwritegov("min_sample_time", data.cpu.cluster0.cpugov.interactive.min_sample_time);
+		pfwritegov("powersave_bias", data.cpu.cluster0.cpugov.interactive.powersave_bias);
 		pfwritegov("target_loads", data.cpu.cluster0.cpugov.interactive.target_loads);
 		pfwritegov("timer_rate", data.cpu.cluster0.cpugov.interactive.timer_rate);
 		pfwritegov("timer_slack", data.cpu.cluster0.cpugov.interactive.timer_slack);
@@ -335,6 +336,7 @@ static void power_apply_profile(struct power_profile data) {
 		pfwritegov("freq_max", data.cpu.cluster1.cpugov.interactive.freq_max);
 		pfwritegov("freq_min", data.cpu.cluster1.cpugov.interactive.freq_min);
 		pfwritegov("min_sample_time", data.cpu.cluster1.cpugov.interactive.min_sample_time);
+		pfwritegov("powersave_bias", data.cpu.cluster1.cpugov.interactive.powersave_bias);
 		pfwritegov("target_loads", data.cpu.cluster1.cpugov.interactive.target_loads);
 		pfwritegov("timer_rate", data.cpu.cluster1.cpugov.interactive.timer_rate);
 		pfwritegov("timer_slack", data.cpu.cluster1.cpugov.interactive.timer_slack);
