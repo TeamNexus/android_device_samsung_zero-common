@@ -48,19 +48,25 @@ using namespace std;
 #define POWER_TOUCHKEYS_ENABLED           "/sys/class/input/input0/enabled"
 #define POWER_TOUCHSCREEN_ENABLED         "/sys/class/input/input1/enabled"
 #define POWER_TOUCHKEYS_BRIGTHNESS        "/sys/class/sec/sec_touchkey/brightness"
-#define POWER_MALI_GPU                    "/sys/devices/14ac0000.mali/"
-#define POWER_MALI_GPU_DVFS               POWER_MALI_GPU "dvfs"
-#define POWER_MALI_GPU_DVFS_GOVERNOR      POWER_MALI_GPU "dvfs_governor"
-#define POWER_MALI_GPU_DVFS_MAX_LOCK      POWER_MALI_GPU "dvfs_max_lock"
-#define POWER_MALI_GPU_DVFS_MIN_LOCK      POWER_MALI_GPU "dvfs_min_lock"
-#define POWER_MALI_GPU_HIGHSPEED_CLOCK    POWER_MALI_GPU "highspeed_clock"
-#define POWER_MALI_GPU_HIGHSPEED_LOAD     POWER_MALI_GPU "highspeed_load"
 
-/***********************************
- * CPU-settings
- */
-#define POWER_CPU_HOTPLUG         "/sys/power/enable_dm_hotplug"
-#define POWER_IPA_CONTROL_TEMP    "/sys/power/ipa/control_temp"
+// GPU
+#define GPU                    "/sys/devices/14ac0000.mali/"
+#define GPU_DVFS               POWER_MALI_GPU "dvfs"
+#define GPU_DVFS_GOVERNOR      POWER_MALI_GPU "dvfs_governor"
+#define GPU_DVFS_MAX_LOCK      POWER_MALI_GPU "dvfs_max_lock"
+#define GPU_DVFS_MIN_LOCK      POWER_MALI_GPU "dvfs_min_lock"
+#define GPU_HIGHSPEED_CLOCK    POWER_MALI_GPU "highspeed_clock"
+#define GPU_HIGHSPEED_LOAD     POWER_MALI_GPU "highspeed_load"
+
+// Kernel
+#define KERNEL_HMP_ENABLE_PACKING  "/sys/kernel/hmp/packing_enable"
+
+// Module
+#define MODULE_WORKQUEUE_POWER_EFFICIENT  "/sys/module/workqueue/parameters/power_efficient"
+
+// Power
+#define POWER_ENABLE_DM_HOTPLUG    "/sys/power/enable_dm_hotplug"
+#define POWER_IPA_CONTROL_TEMP     "/sys/power/ipa/control_temp"
 
 /***********************************
  * Interactive cpugov-settings

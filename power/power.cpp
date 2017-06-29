@@ -16,9 +16,10 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "Exynos5PowerHAL"
+#define LOG_TAG "power.exynos5"
 #define LOG_NDEBUG 0
 
+#include <cutils/properties.h>
 #include <fcntl.h>
 #include <fstream>
 #include <hardware/hardware.h>
@@ -252,15 +253,9 @@ static void power_set_profile(int profile) {
 }
 
 static void power_apply_profile(struct power_profile data) {
-	// apply cpu-settings
-	pfwrite(POWER_CPU_HOTPLUG, data.cpu.hotplugging);
-	pfwrite(POWER_IPA_CONTROL_TEMP, data.ipa.control_temp);
-
-	/*****************************************************************
-	 *************                                       *************
-	 *************               CLUSTER 0               *************
-	 *************                                       *************
-	 *****************************************************************/
+	/***********************************
+	 * Cluster 0
+	 */
 	pfwritegov_cluster = 0;
 
 	// apply cpu-settings
@@ -306,11 +301,9 @@ static void power_apply_profile(struct power_profile data) {
 		pfwritegov("up_step", data.cpu.cluster0.cpugov.nexus.up_step);
 	}
 
-	/*****************************************************************
-	 *************                                       *************
-	 *************               CLUSTER 1               *************
-	 *************                                       *************
-	 *****************************************************************/
+	/***********************************
+	 * Cluster 1
+	 */
 	pfwritegov_cluster = 1;
 
 	// apply cpu-settings
@@ -356,17 +349,31 @@ static void power_apply_profile(struct power_profile data) {
 		pfwritegov("up_step", data.cpu.cluster1.cpugov.nexus.up_step);
 	}
 
-	/*****************************************************************
-	 *************                                       *************
-	 *************                  GPU                  *************
-	 *************                                       *************
-	 *****************************************************************/
-	pfwrite(POWER_MALI_GPU_DVFS, data.gpu.dvfs.enabled);
-	pfwrite(POWER_MALI_GPU_DVFS_GOVERNOR, data.gpu.dvfs.governor);
-	pfwrite(POWER_MALI_GPU_DVFS_MAX_LOCK, data.gpu.dvfs.max_lock);
-	pfwrite(POWER_MALI_GPU_DVFS_MIN_LOCK, data.gpu.dvfs.min_lock);
-	pfwrite(POWER_MALI_GPU_HIGHSPEED_CLOCK, data.gpu.highspeed.clock);
-	pfwrite(POWER_MALI_GPU_HIGHSPEED_LOAD, data.gpu.highspeed.load);
+	/***********************************
+	 * GPU
+	 */
+	pfwrite(GPU_DVFS, data.gpu.dvfs.enabled);
+	pfwrite(GPU_DVFS_GOVERNOR, data.gpu.dvfs.governor);
+	pfwrite(GPU_DVFS_MAX_LOCK, data.gpu.dvfs.max_lock);
+	pfwrite(GPU_DVFS_MIN_LOCK, data.gpu.dvfs.min_lock);
+	pfwrite(GPU_HIGHSPEED_CLOCK, data.gpu.highspeed.clock);
+	pfwrite(GPU_HIGHSPEED_LOAD, data.gpu.highspeed.load);
+
+	/***********************************
+	 * Kernel
+	 */
+	pfwrite(KERNEL_HMP_ENABLE_PACKING, data.kernel.hmp.packing_enable);
+
+	/***********************************
+	 * Module
+	 */
+	pfwrite(MODULE_WORKQUEUE_POWER_EFFICIENT, data.module.workqueue.power_efficient);
+
+	/***********************************
+	 * Power
+	 */
+	pfwrite(POWER_ENABLE_DM_HOTPLUG, data.power.enable_dm_hotplug);
+	pfwrite(POWER_IPA_CONTROL_TEMP, data.power.ipa.control_temp);
 }
 
 /***********************************
@@ -408,7 +415,7 @@ static void power_input_device_state(int state) {
 			if (!dt2w) {
 				pfwrite(POWER_DT2W_ENABLED, false);
 			}
-			
+
 			// give hw some milliseconds to boot
 			usleep(100);
 

@@ -29,16 +29,17 @@ struct power_profile_cpu_cluster {
 	} cores;
 
 	struct {
-		
+
 		string governor;
 
 		struct {
-			string above_hispeed_delay;
+			unsigned int above_hispeed_delay;
 			unsigned int go_hispeed_load;
 			unsigned int hispeed_freq;
 			bool enforce_hispeed_freq_limit;
 			unsigned int freq_max;
 			unsigned int freq_min;
+			bool io_is_busy;
 			unsigned int min_sample_time;
 			bool powersave_bias;
 			unsigned int target_loads;
@@ -65,18 +66,10 @@ struct power_profile {
 
 	struct {
 
-		bool hotplugging;
-
 		struct power_profile_cpu_cluster cluster0;
 		struct power_profile_cpu_cluster cluster1;
 
 	} cpu;
-
-	struct {
-
-		int control_temp;
-
-	} ipa;
 
 	struct {
 
@@ -98,6 +91,38 @@ struct power_profile {
 
 	} gpu;
 
+	struct {
+
+		struct {
+
+			bool power_efficient;
+
+		} workqueue;
+
+	} module;
+
+	struct {
+
+		struct {
+
+			bool packing_enabled;
+
+		} hmp;
+
+	} kernel;
+
+	struct {
+
+		bool enable_dm_hotplug;
+
+		struct {
+
+			int control_temp;
+
+		} ipa;
+
+	} power;
+
 } power_profiles[PROFILE_MAX_USABLE + 1] = {
 
 	/***********
@@ -105,7 +130,6 @@ struct power_profile {
 	 */
 	{
 		.cpu = {
-			.hotplugging = false,
 			.cluster0 = {
 				.cores = {
 					.core0online = true,
@@ -116,25 +140,26 @@ struct power_profile {
 				.cpugov = {
 					.governor = "interactive",
 					.interactive = {
-						.above_hispeed_delay = "139000",
+						.above_hispeed_delay = 100000,
 						.go_hispeed_load = 99,
 						.hispeed_freq = 400000,
 						.enforce_hispeed_freq_limit = true,
 						.freq_max = 400000,
 						.freq_min = 200000,
-						.min_sample_time = 25000,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
 						.powersave_bias = true,
 						.target_loads = 99,
-						.timer_rate = 25000,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 89,
+						.down_load = 79,
 						.down_step = 3,
 						.freq_max = 400000,
 						.freq_min = 200000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
+						.sampling_rate = 20000,
 						.up_load = 99,
 						.up_step = 1,
 					},
@@ -150,45 +175,59 @@ struct power_profile {
 				.cpugov = {
 					.governor = "interactive",
 					.interactive = {
-						.above_hispeed_delay = "139000",
+						.above_hispeed_delay = 100000,
 						.go_hispeed_load = 99,
 						.hispeed_freq = 400000,
 						.enforce_hispeed_freq_limit = true,
 						.freq_max = 400000,
 						.freq_min = 200000,
-						.min_sample_time = 25000,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
 						.powersave_bias = true,
 						.target_loads = 99,
-						.timer_rate = 25000,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 89,
+						.down_load = 79,
 						.down_step = 3,
 						.freq_max = 400000,
 						.freq_min = 200000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
+						.sampling_rate = 20000,
 						.up_load = 99,
 						.up_step = 1,
 					},
 				},
 			},
 		},
-		.ipa = {
-			.control_temp = 35,
-		},
 		.gpu = {
 			.dvfs = {
-				.enabled = false,
+				.enabled = true,
 				.governor = 2,
-				.max_lock = -1,
-				.min_lock = -1
+				.max_lock = 266,
+				.min_lock = 266,
 			},
 			.highspeed = {
-				.clock = -1,
-				.load = 99
-			}
+				.clock = 266,
+				.load = 99,
+			},
+		},
+		.kernel = {
+			.hmp = {
+				.packing_enabled = false,
+			},
+		},
+		.module = {
+			.workqueue = {
+				.power_efficient = true,
+			},
+		},
+		.power = {
+			.enable_dm_hotplug = false,
+			.ipa = {
+				.control_temp = 35,
+			},
 		},
 	},
 
@@ -197,7 +236,6 @@ struct power_profile {
 	 */
 	{
 		.cpu = {
-			.hotplugging = false,
 			.cluster0 = {
 				.cores = {
 					.core0online = true,
@@ -208,25 +246,26 @@ struct power_profile {
 				.cpugov = {
 					.governor = "interactive",
 					.interactive = {
-						.above_hispeed_delay = "99000 600000:79000",
+						.above_hispeed_delay = 85000,
 						.go_hispeed_load = 99,
 						.hispeed_freq = 600000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 800000,
 						.freq_min = 200000,
-						.min_sample_time = 25000,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
 						.powersave_bias = true,
 						.target_loads = 99,
-						.timer_rate = 25000,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 89,
+						.down_load = 79,
 						.down_step = 2,
 						.freq_max = 800000,
 						.freq_min = 200000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
+						.sampling_rate = 20000,
 						.up_load = 99,
 						.up_step = 1,
 					},
@@ -242,45 +281,59 @@ struct power_profile {
 				.cpugov = {
 					.governor = "interactive",
 					.interactive = {
-						.above_hispeed_delay = "99000 1000000:79000",
+						.above_hispeed_delay = 85000,
 						.go_hispeed_load = 99,
 						.hispeed_freq = 600000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 1000000,
 						.freq_min = 200000,
-						.min_sample_time = 25000,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
 						.powersave_bias = true,
 						.target_loads = 99,
-						.timer_rate = 25000,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 89,
+						.down_load = 79,
 						.down_step = 2,
 						.freq_max = 1000000,
 						.freq_min = 200000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
+						.sampling_rate = 20000,
 						.up_load = 99,
 						.up_step = 1,
 					},
 				},
 			},
 		},
-		.ipa = {
-			.control_temp = 45,
-		},
 		.gpu = {
 			.dvfs = {
-				.enabled = false,
+				.enabled = true,
 				.governor = 2,
 				.max_lock = 420,
-				.min_lock = 266
+				.min_lock = 266,
 			},
 			.highspeed = {
 				.clock = 350,
-				.load = 75
-			}
+				.load = 75,
+			},
+		},
+		.kernel = {
+			.hmp = {
+				.packing_enabled = false,
+			},
+		},
+		.module = {
+			.workqueue = {
+				.power_efficient = true,
+			},
+		},
+		.power = {
+			.enable_dm_hotplug = false,
+			.ipa = {
+				.control_temp = 45,
+			},
 		},
 	},
 
@@ -289,7 +342,6 @@ struct power_profile {
 	 */
 	{
 		.cpu = {
-			.hotplugging = false,
 			.cluster0 = {
 				.cores = {
 					.core0online = true,
@@ -300,26 +352,27 @@ struct power_profile {
 				.cpugov = {
 					.governor = "interactive",
 					.interactive = {
-						.above_hispeed_delay = "79000 1100000:49000",
-						.go_hispeed_load = 80,
-						.hispeed_freq = 900000,
+						.above_hispeed_delay = 55000,
+						.go_hispeed_load = 99,
+						.hispeed_freq = 700000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 1500000,
 						.freq_min = 400000,
-						.min_sample_time = 25000,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
 						.powersave_bias = false,
-						.target_loads = 80,
-						.timer_rate = 25000,
+						.target_loads = 99,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 70,
+						.down_load = 79,
 						.down_step = 1,
 						.freq_max = 1500000,
 						.freq_min = 400000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
-						.up_load = 80,
+						.sampling_rate = 20000,
+						.up_load = 99,
 						.up_step = 1,
 					},
 				},
@@ -334,45 +387,59 @@ struct power_profile {
 				.cpugov = {
 					.governor = "interactive",
 					.interactive = {
-						.above_hispeed_delay = "79000 1700000:49000",
-						.go_hispeed_load = 85,
-						.hispeed_freq = 800000,
+						.above_hispeed_delay = 55000,
+						.go_hispeed_load = 99,
+						.hispeed_freq = 700000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 1500000,
-						.freq_min = 600000,
-						.min_sample_time = 25000,
+						.freq_min = 400000,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
 						.powersave_bias = true,
-						.target_loads = 85,
-						.timer_rate = 25000,
+						.target_loads = 99,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 75,
+						.down_load = 79,
 						.down_step = 1,
 						.freq_max = 1500000,
-						.freq_min = 600000,
+						.freq_min = 400000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
-						.up_load = 85,
+						.sampling_rate = 20000,
+						.up_load = 99,
 						.up_step = 1,
 					},
 				},
 			},
-		},
-		.ipa = {
-			.control_temp = 65,
 		},
 		.gpu = {
 			.dvfs = {
 				.enabled = true,
 				.governor = 1,
 				.max_lock = 772,
-				.min_lock = 350
+				.min_lock = 350,
 			},
 			.highspeed = {
 				.clock = 700,
-				.load = 85
-			}
+				.load = 85,
+			},
+		},
+		.kernel = {
+			.hmp = {
+				.packing_enabled = false,
+			},
+		},
+		.module = {
+			.workqueue = {
+				.power_efficient = true,
+			},
+		},
+		.power = {
+			.enable_dm_hotplug = false,
+			.ipa = {
+				.control_temp = 65,
+			},
 		},
 	},
 
@@ -381,7 +448,6 @@ struct power_profile {
 	 */
 	{
 		.cpu = {
-			.hotplugging = false,
 			.cluster0 = {
 				.cores = {
 					.core0online = true,
@@ -392,26 +458,27 @@ struct power_profile {
 				.cpugov = {
 					.governor = "nexus",
 					.interactive = {
-						.above_hispeed_delay = "49000 1300000:19000",
-						.go_hispeed_load = 50,
+						.above_hispeed_delay = 15000,
+						.go_hispeed_load = 99,
 						.hispeed_freq = 1704000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 1704000,
 						.freq_min = 1000000,
-						.min_sample_time = 25000,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
 						.powersave_bias = false,
-						.target_loads = 50,
-						.timer_rate = 25000,
+						.target_loads = 99,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 35,
+						.down_load = 59,
 						.down_step = 1,
 						.freq_max = 1704000,
 						.freq_min = 1000000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
-						.up_load = 55,
+						.sampling_rate = 20000,
+						.up_load = 79,
 						.up_step = 3,
 					},
 				},
@@ -426,45 +493,59 @@ struct power_profile {
 				.cpugov = {
 					.governor = "nexus",
 					.interactive = {
-						.above_hispeed_delay = "49000 1900000:19000",
-						.go_hispeed_load = 55,
+						.above_hispeed_delay = 15000,
+						.go_hispeed_load = 99,
 						.hispeed_freq = 2304000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 2304000,
 						.freq_min = 1000000,
-						.min_sample_time = 25000,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
 						.powersave_bias = false,
-						.target_loads = 75,
-						.timer_rate = 25000,
+						.target_loads = 99,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 55,
+						.down_load = 59,
 						.down_step = 1,
 						.freq_max = 2304000,
 						.freq_min = 1000000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
-						.up_load = 55,
-						.up_step = 3,
+						.sampling_rate = 20000,
+						.up_load = 79,
+						.up_step = 2,
 					},
 				},
 			},
-		},
-		.ipa = {
-			.control_temp = 75,
 		},
 		.gpu = {
 			.dvfs = {
 				.enabled = true,
 				.governor = 1,
 				.max_lock = 772,
-				.min_lock = 772
+				.min_lock = 772,
 			},
 			.highspeed = {
 				.clock = 772,
-				.load = 99
-			}
+				.load = 99,
+			},
+		},
+		.kernel = {
+			.hmp = {
+				.packing_enabled = true,
+			},
+		},
+		.module = {
+			.workqueue = {
+				.power_efficient = false,
+			},
+		},
+		.power = {
+			.enable_dm_hotplug = false,
+			.ipa = {
+				.control_temp = 75,
+			},
 		},
 	},
 
@@ -473,7 +554,6 @@ struct power_profile {
 	 */
 	{
 		.cpu = {
-			.hotplugging = false,
 			.cluster0 = {
 				.cores = {
 					.core0online = true,
@@ -484,25 +564,26 @@ struct power_profile {
 				.cpugov = {
 					.governor = "interactive",
 					.interactive = {
-						.above_hispeed_delay = "99000 600000:79000",
+						.above_hispeed_delay = 70000,
 						.go_hispeed_load = 99,
 						.hispeed_freq = 600000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 800000,
 						.freq_min = 300000,
-						.min_sample_time = 25000,
-						.powersave_bias = false,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
+						.powersave_bias = true,
 						.target_loads = 99,
-						.timer_rate = 25000,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 89,
+						.down_load = 79,
 						.down_step = 2,
 						.freq_max = 800000,
 						.freq_min = 300000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
+						.sampling_rate = 20000,
 						.up_load = 99,
 						.up_step = 1,
 					},
@@ -518,45 +599,59 @@ struct power_profile {
 				.cpugov = {
 					.governor = "interactive",
 					.interactive = {
-						.above_hispeed_delay = "99000 1000000:79000",
+						.above_hispeed_delay = 70000,
 						.go_hispeed_load = 99,
 						.hispeed_freq = 600000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 1000000,
-						.freq_min = 300000,
-						.min_sample_time = 25000,
+						.freq_min = 200000,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
 						.powersave_bias = true,
 						.target_loads = 99,
-						.timer_rate = 25000,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 89,
+						.down_load = 79,
 						.down_step = 2,
 						.freq_max = 1000000,
-						.freq_min = 300000,
+						.freq_min = 200000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
+						.sampling_rate = 20000,
 						.up_load = 99,
 						.up_step = 1,
 					},
 				},
 			},
 		},
-		.ipa = {
-			.control_temp = 45,
-		},
 		.gpu = {
 			.dvfs = {
 				.enabled = true,
 				.governor = 1,
 				.max_lock = 700,
-				.min_lock = 350
+				.min_lock = 350,
 			},
 			.highspeed = {
 				.clock = 350,
-				.load = 65
-			}
+				.load = 65,
+			},
+		},
+		.kernel = {
+			.hmp = {
+				.packing_enabled = false,
+			},
+		},
+		.module = {
+			.workqueue = {
+				.power_efficient = true,
+			},
+		},
+		.power = {
+			.enable_dm_hotplug = false,
+			.ipa = {
+				.control_temp = 45,
+			},
 		},
 	},
 
@@ -565,7 +660,6 @@ struct power_profile {
 	 */
 	{
 		.cpu = {
-			.hotplugging = false,
 			.cluster0 = {
 				.cores = {
 					.core0online = true,
@@ -576,26 +670,27 @@ struct power_profile {
 				.cpugov = {
 					.governor = "nexus",
 					.interactive = {
-						.above_hispeed_delay = "49000 1300000:19000",
-						.go_hispeed_load = 70,
+						.above_hispeed_delay = 30000,
+						.go_hispeed_load = 99,
 						.hispeed_freq = 1500000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 1704000,
-						.freq_min = 800000,
-						.min_sample_time = 25000,
+						.freq_min = 600000,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
 						.powersave_bias = false,
-						.target_loads = 70,
-						.timer_rate = 25000,
+						.target_loads = 99,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 35,
+						.down_load = 69,
 						.down_step = 1,
 						.freq_max = 1704000,
-						.freq_min = 800000,
+						.freq_min = 600000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
-						.up_load = 55,
+						.sampling_rate = 20000,
+						.up_load = 89,
 						.up_step = 2,
 					},
 				},
@@ -610,45 +705,59 @@ struct power_profile {
 				.cpugov = {
 					.governor = "interactive",
 					.interactive = {
-						.above_hispeed_delay = "49000 1900000:19000",
-						.go_hispeed_load = 75,
+						.above_hispeed_delay = 30000,
+						.go_hispeed_load = 99,
 						.hispeed_freq = 2100000,
 						.enforce_hispeed_freq_limit = false,
 						.freq_max = 2304000,
-						.freq_min = 800000,
-						.min_sample_time = 25000,
+						.freq_min = 500000,
+						.io_is_busy = true,
+						.min_sample_time = 20000,
 						.powersave_bias = false,
-						.target_loads = 75,
-						.timer_rate = 25000,
+						.target_loads = 99,
+						.timer_rate = 20000,
 						.timer_slack = 50000,
 					},
 					.nexus = {
-						.down_load = 55,
+						.down_load = 69,
 						.down_step = 1,
 						.freq_max = 2304000,
-						.freq_min = 800000,
+						.freq_min = 500000,
 						.io_is_busy = true,
-						.sampling_rate = 25000,
-						.up_load = 75,
+						.sampling_rate = 20000,
+						.up_load = 89,
 						.up_step = 2,
 					},
 				},
 			},
-		},
-		.ipa = {
-			.control_temp = 65,
 		},
 		.gpu = {
 			.dvfs = {
 				.enabled = true,
 				.governor = 1,
 				.max_lock = 772,
-				.min_lock = 600
+				.min_lock = 600,
 			},
 			.highspeed = {
 				.clock = 772,
-				.load = 45
-			}
+				.load = 45,
+			},
+		},
+		.kernel = {
+			.hmp = {
+				.packing_enabled = true,
+			},
+		},
+		.module = {
+			.workqueue = {
+				.power_efficient = false,
+			},
+		},
+		.power = {
+			.enable_dm_hotplug = false,
+			.ipa = {
+				.control_temp = 65,
+			},
 		},
 	},
 
