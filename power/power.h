@@ -50,13 +50,12 @@ using namespace std;
 #define POWER_TOUCHKEYS_BRIGTHNESS        "/sys/class/sec/sec_touchkey/brightness"
 
 // GPU
-#define GPU                    "/sys/devices/14ac0000.mali/"
-#define GPU_DVFS               POWER_MALI_GPU "dvfs"
-#define GPU_DVFS_GOVERNOR      POWER_MALI_GPU "dvfs_governor"
-#define GPU_DVFS_MAX_LOCK      POWER_MALI_GPU "dvfs_max_lock"
-#define GPU_DVFS_MIN_LOCK      POWER_MALI_GPU "dvfs_min_lock"
-#define GPU_HIGHSPEED_CLOCK    POWER_MALI_GPU "highspeed_clock"
-#define GPU_HIGHSPEED_LOAD     POWER_MALI_GPU "highspeed_load"
+#define GPU_DVFS               "/sys/devices/14ac0000.mali/dvfs"
+#define GPU_DVFS_GOVERNOR      "/sys/devices/14ac0000.mali/dvfs_governor"
+#define GPU_DVFS_MAX_LOCK      "/sys/devices/14ac0000.mali/dvfs_max_lock"
+#define GPU_DVFS_MIN_LOCK      "/sys/devices/14ac0000.mali/dvfs_min_lock"
+#define GPU_HIGHSPEED_CLOCK    "/sys/devices/14ac0000.mali/highspeed_clock"
+#define GPU_HIGHSPEED_LOAD     "/sys/devices/14ac0000.mali/highspeed_load"
 
 // Kernel
 #define KERNEL_HMP_ENABLE_PACKING  "/sys/kernel/hmp/packing_enable"

@@ -362,7 +362,7 @@ static void power_apply_profile(struct power_profile data) {
 	/***********************************
 	 * Kernel
 	 */
-	pfwrite(KERNEL_HMP_ENABLE_PACKING, data.kernel.hmp.packing_enable);
+	pfwrite(KERNEL_HMP_ENABLE_PACKING, data.kernel.hmp.packing_enabled);
 
 	/***********************************
 	 * Module
