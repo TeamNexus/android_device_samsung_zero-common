@@ -57,11 +57,16 @@ using namespace std;
 #define GPU_HIGHSPEED_CLOCK    "/sys/devices/14ac0000.mali/highspeed_clock"
 #define GPU_HIGHSPEED_LOAD     "/sys/devices/14ac0000.mali/highspeed_load"
 
+// Input-Booster
+#define INPUT_BOOSTER_LEVEL    "/sys/class/input_booster/level"
+#define INPUT_BOOSTER_HEAD     "/sys/class/input_booster/head"
+#define INPUT_BOOSTER_TAIL     "/sys/class/input_booster/tail"
+
 // Kernel
-#define KERNEL_HMP_ENABLE_PACKING  "/sys/kernel/hmp/packing_enable"
+#define KERNEL_HMP_ENABLE_PACKING    "/sys/kernel/hmp/packing_enable"
 
 // Module
-#define MODULE_WORKQUEUE_POWER_EFFICIENT  "/sys/module/workqueue/parameters/power_efficient"
+#define MODULE_WORKQUEUE_POWER_EFFICIENT    "/sys/module/workqueue/parameters/power_efficient"
 
 // Power
 #define POWER_ENABLE_DM_HOTPLUG    "/sys/power/enable_dm_hotplug"
@@ -138,6 +143,7 @@ static bool pfwritegov(string path, string str);
 static bool pfwritegov(string path, bool flag);
 static bool pfwritegov(string path, int value);
 static bool pfwritegov(string file, unsigned int value);
+static bool pfwrite_input_booster(string file, struct power_profile_input_booster data);
 static bool pfread(string path, int *v);
 static bool is_dir(string path);
 static bool is_file(string path);

@@ -360,6 +360,13 @@ static void power_apply_profile(struct power_profile data) {
 	pfwrite(GPU_HIGHSPEED_LOAD, data.gpu.highspeed.load);
 
 	/***********************************
+	 * Input-Booster
+	 */
+	pfwrite(INPUT_BOOSTER_LEVEL, data.input_booster.level);
+	pfwrite_input_booster(INPUT_BOOSTER_HEAD, data.input_booster.head);
+	pfwrite_input_booster(INPUT_BOOSTER_TAIL, data.input_booster.tail);
+	
+	/***********************************
 	 * Kernel
 	 */
 	pfwrite(KERNEL_HMP_ENABLE_PACKING, data.kernel.hmp.packing_enabled);
@@ -535,6 +542,22 @@ static bool pfwritegov(string file, int value) {
 
 static bool pfwritegov(string file, unsigned int value) {
 	return pfwritegov(file, to_string(value));
+}
+
+static bool pfwrite_input_booster(string file, struct power_profile_input_booster data) {
+	stringstream valuebuilder;
+	
+	// build value-string
+	valuebuilder << data.time << " ";
+	valuebuilder << data.cluster1_freq << " ";
+	valuebuilder << data.cluster0_freq << " ";
+	valuebuilder << data.mif_freq << " ";
+	valuebuilder << data.int_freq << " ";
+	valuebuilder << data.hmp_boost << " ";
+	
+	ALOGE("%s: \"%s\"\n", __func__, valuebuilder.str().c_str());
+	
+	return pfwrite(file, valuebuilder.str());
 }
 
 static bool pfread(string path, int *v) {

@@ -62,6 +62,17 @@ struct power_profile_cpu_cluster {
 
 };
 
+struct power_profile_input_booster {
+	
+	unsigned int time;
+	unsigned int cluster0_freq;
+	unsigned int cluster1_freq;
+	unsigned int mif_freq;
+	unsigned int int_freq;
+	bool hmp_boost;
+	
+};
+
 struct power_profile {
 
 	struct {
@@ -90,6 +101,15 @@ struct power_profile {
 		} highspeed;
 
 	} gpu;
+	
+	struct {
+		
+		unsigned int level;
+		
+		struct power_profile_input_booster head;
+		struct power_profile_input_booster tail;
+		
+	} input_booster;
 
 	struct {
 
@@ -213,6 +233,25 @@ struct power_profile {
 				.load = 99,
 			},
 		},
+		.input_booster = {
+			.level = 0,
+			.head = {
+				.time = 0,
+				.cluster0_freq = 0,
+				.cluster1_freq = 0,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
+			},
+			.tail = {
+				.time = 0,
+				.cluster0_freq = 0,
+				.cluster1_freq = 0,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
+			},
+		},
 		.kernel = {
 			.hmp = {
 				.packing_enabled = false,
@@ -305,6 +344,25 @@ struct power_profile {
 						.up_step = 1,
 					},
 				},
+			},
+		},
+		.input_booster = {
+			.level = 0,
+			.head = {
+				.time = 0,
+				.cluster0_freq = 0,
+				.cluster1_freq = 0,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
+			},
+			.tail = {
+				.time = 0,
+				.cluster0_freq = 0,
+				.cluster1_freq = 0,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
 			},
 		},
 		.gpu = {
@@ -411,6 +469,25 @@ struct power_profile {
 						.up_step = 1,
 					},
 				},
+			},
+		},
+		.input_booster = {
+			.level = 2,
+			.head = {
+				.time = 0,
+				.cluster0_freq = 0,
+				.cluster1_freq = 0,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
+			},
+			.tail = {
+				.time = 150,
+				.cluster0_freq = 900000,
+				.cluster1_freq = 0,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
 			},
 		},
 		.gpu = {
@@ -531,6 +608,25 @@ struct power_profile {
 				.load = 99,
 			},
 		},
+		.input_booster = {
+			.level = 2,
+			.head = {
+				.time = 0,
+				.cluster0_freq = 0,
+				.cluster1_freq = 0,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
+			},
+			.tail = {
+				.time = 300,
+				.cluster0_freq = 1296000,
+				.cluster1_freq = 9000000,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
+			},
+		},
 		.kernel = {
 			.hmp = {
 				.packing_enabled = true,
@@ -637,6 +733,25 @@ struct power_profile {
 				.load = 65,
 			},
 		},
+		.input_booster = {
+			.level = 2,
+			.head = {
+				.time = 0,
+				.cluster0_freq = 0,
+				.cluster1_freq = 0,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
+			},
+			.tail = {
+				.time = 200,
+				.cluster0_freq = 900000,
+				.cluster1_freq = 600000,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
+			},
+		},
 		.kernel = {
 			.hmp = {
 				.packing_enabled = false,
@@ -741,6 +856,25 @@ struct power_profile {
 			.highspeed = {
 				.clock = 772,
 				.load = 45,
+			},
+		},
+		.input_booster = {
+			.level = 2,
+			.head = {
+				.time = 0,
+				.cluster0_freq = 0,
+				.cluster1_freq = 0,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
+			},
+			.tail = {
+				.time = 300,
+				.cluster0_freq = 1100000,
+				.cluster1_freq = 1100000,
+				.mif_freq = 0,
+				.int_freq = 0,
+				.hmp_boost = false,
 			},
 		},
 		.kernel = {
