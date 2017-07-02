@@ -495,7 +495,7 @@ struct power_profile {
 				.enabled = true,
 				.governor = 1,
 				.max_lock = 772,
-				.min_lock = 350,
+				.min_lock = 420,
 			},
 			.highspeed = {
 				.clock = 700,
@@ -851,7 +851,7 @@ struct power_profile {
 				.enabled = true,
 				.governor = 1,
 				.max_lock = 772,
-				.min_lock = 600,
+				.min_lock = 554,
 			},
 			.highspeed = {
 				.clock = 772,
