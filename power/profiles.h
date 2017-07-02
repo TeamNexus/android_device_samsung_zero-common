@@ -483,7 +483,7 @@ struct power_profile {
 			},
 			.tail = {
 				.time = 150,
-				.cluster0_freq = 900000,
+				.cluster0_freq = 1000000,
 				.cluster1_freq = 0,
 				.mif_freq = 0,
 				.int_freq = 0,
@@ -621,7 +621,7 @@ struct power_profile {
 			.tail = {
 				.time = 300,
 				.cluster0_freq = 1296000,
-				.cluster1_freq = 9000000,
+				.cluster1_freq = 900000,
 				.mif_freq = 0,
 				.int_freq = 0,
 				.hmp_boost = false,
@@ -871,7 +871,7 @@ struct power_profile {
 			.tail = {
 				.time = 300,
 				.cluster0_freq = 1100000,
-				.cluster1_freq = 1100000,
+				.cluster1_freq = 600000,
 				.mif_freq = 0,
 				.int_freq = 0,
 				.hmp_boost = false,
