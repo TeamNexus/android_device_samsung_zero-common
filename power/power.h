@@ -28,7 +28,7 @@ using namespace std;
  */
 #define PROFILE_SCREEN_OFF          -1
 #define PROFILE_POWER_SAVE          0
-#define PROFILE_NORMAL              1
+#define PROFILE_BALANCED            1
 #define PROFILE_HIGH_PERFORMANCE    2
 #define PROFILE_BIAS_POWER_SAVE     3
 #define PROFILE_BIAS_PERFORMANCE    4
@@ -37,11 +37,11 @@ using namespace std;
 #define INPUT_STATE_DISABLE    0
 #define INPUT_STATE_ENABLE     1
 
-#define POWER_CONFIG_ALWAYS_ON_FP    "/data/power/always_on_fp"
-#define POWER_CONFIG_BOOST           "/data/power/boost"
-#define POWER_CONFIG_APP_BOOST       "/data/power/app_boost"
-#define POWER_CONFIG_DT2W            "/data/power/dt2w"
-#define POWER_CONFIG_PROFILES        "/data/power/profiles"
+#define POWER_CONFIG_ALWAYS_ON_FP      "/data/power/always_on_fp"
+#define POWER_CONFIG_BOOST             "/data/power/boost"
+#define POWER_CONFIG_DT2W              "/data/power/dt2w"
+#define POWER_CONFIG_PROFILES          "/data/power/profiles"
+#define POWER_CONFIG_BOOST_PROFILES    "/data/power/boost_profiles"
 
 #define POWER_DT2W_ENABLED                "/sys/android_touch/doubletap2wake"
 #define POWER_FINGERPRINT_ENABLED         "/sys/class/fingerprint/fingerprint/enabled"
@@ -105,9 +105,7 @@ static void power_init(struct power_module __unused * module);
  * Hinting
  */
 static void power_hint(struct power_module *module, power_hint_t hint, void *data);
-#ifdef HAS_LAUNCH_HINT_SUPPORT
-static void power_launch_hint(struct power_module *module, launch_hint_t hint, const char *packageName, int data);
-#endif
+static void power_hint_interaction_reset(int duration);
 
 /***********************************
  * Boost
@@ -118,7 +116,8 @@ static void power_cpu_boost(int duration);
  * Profiles
  */
 static void power_set_profile(int profile);
-static void power_apply_profile(struct power_profile data);
+static void power_apply_profile();
+static void power_apply_boost_profile(bool boosted);
 
 /***********************************
  * Inputs

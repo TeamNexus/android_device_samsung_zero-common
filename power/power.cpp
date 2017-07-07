@@ -19,13 +19,16 @@
 #define LOG_TAG "power.exynos5"
 #define LOG_NDEBUG 0
 
+#include <atomic>
 #include <cutils/properties.h>
 #include <fcntl.h>
 #include <fstream>
+#include <future>
 #include <hardware/hardware.h>
 #include <hardware/power.h>
 #include <iostream>
 #include <linux/stat.h>
+#include <math.h>
 #include <pwd.h>
 #include <sstream>
 #include <stdlib.h>
@@ -47,10 +50,13 @@ struct sec_power_module {
 #define container_of(addr, struct_name, field_name) \
 	((struct_name *)((char *)(addr) - offsetof(struct_name, field_name)))
 
-static int current_power_profile = PROFILE_NORMAL;
-static int requested_power_profile = PROFILE_NORMAL;
+static int current_power_profile = PROFILE_BALANCED;
+static int requested_power_profile = PROFILE_BALANCED;
 static int pfwritegov_cluster;
-static string pfwritegov_governor;
+
+// interaction-hint
+static std::future<void> interaction_reset_ftr;
+static std::atomic<bool> interaction_reset_ftr_ended(false);
 
 /***********************************
  * Initializing
@@ -89,7 +95,7 @@ static int power_open(const hw_module_t __unused * module, const char *name, hw_
 
 static void power_init(struct power_module __unused * module) {
 	// set to normal power profile
-	power_set_profile(PROFILE_NORMAL);
+	power_set_profile(PROFILE_BALANCED);
 
 	// initialize all input-devices
 	power_input_device_state(1);
@@ -104,16 +110,14 @@ static void power_init(struct power_module __unused * module) {
 	if (!is_file(POWER_CONFIG_BOOST))
 		pfwrite(POWER_CONFIG_BOOST, false);
 
-#ifdef HAS_LAUNCH_HINT_SUPPORT
-	if (!is_file(POWER_CONFIG_APP_BOOST))
-		pfwrite(POWER_CONFIG_APP_BOOST, false);
-#endif
-
 	if (!is_file(POWER_CONFIG_DT2W))
 		pfwrite(POWER_CONFIG_DT2W, false);
 
 	if (!is_file(POWER_CONFIG_PROFILES))
 		pfwrite(POWER_CONFIG_PROFILES, true);
+
+	if (!is_file(POWER_CONFIG_BOOST_PROFILES))
+		pfwrite(POWER_CONFIG_BOOST_PROFILES, true);
 }
 
 /***********************************
@@ -131,38 +135,52 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 		 * Boost
 		 */
 		case POWER_HINT_CPU_BOOST:
-			ALOGW("%s: hint(POWER_HINT_CPU_BOOST)", __func__);
-			power_cpu_boost(value ? 50000 : value);
+			ALOGW("%s: hint(POWER_HINT_CPU_BOOST, %d, %llu)", __func__, value, (unsigned long long)data);
+			power_cpu_boost(value ? value : 50000);
 			break;
 
 		/***********************************
 		 * Profiles
 		 */
 		case POWER_HINT_LOW_POWER:
-			ALOGW("%s: hint(POWER_HINT_LOW_POWER)", __func__);
+			ALOGW("%s: hint(POWER_HINT_LOW_POWER, %d, %llu)", __func__, value, (unsigned long long)data);
 			power_set_profile(value ? PROFILE_POWER_SAVE : requested_power_profile);
 			break;
 
 		case POWER_HINT_SET_PROFILE:
-			ALOGW("%s: hint(POWER_HINT_SET_PROFILE)", __func__);
+			ALOGW("%s: hint(POWER_HINT_SET_PROFILE, %d, %llu)", __func__, value, (unsigned long long)data);
 			requested_power_profile = value;
 			power_set_profile(value);
+			break;
+
+		case POWER_HINT_INTERACTION:
+			ALOGW("%s: hint(POWER_HINT_INTERACTION, %d, %llu)", __func__, value, (unsigned long long)data);
+			if (!std::atomic_exchange_explicit(&interaction_reset_ftr_ended, true, std::memory_order_acquire)) {
+				power_apply_boost_profile(true);
+				interaction_reset_ftr = std::async(power_hint_interaction_reset, value);
+			}			
+			break;
+
+		case POWER_HINT_VSYNC:
+			ALOGW("%s: hint(POWER_HINT_VSYNC, %d, %llu)", __func__, value, (unsigned long long)data);
+			power_apply_boost_profile(value != 0);
 			break;
 
 		case POWER_HINT_SUSTAINED_PERFORMANCE:
 		case POWER_HINT_VR_MODE:
 			if (hint == POWER_HINT_SUSTAINED_PERFORMANCE)
-				ALOGW("%s: hint(POWER_HINT_SUSTAINED_PERFORMANCE)", __func__);
-			else // if (hint == POWER_HINT_VR_MODE)
-				ALOGW("%s: hint(POWER_HINT_VR_MODE)", __func__);
-			power_set_profile(value ? PROFILE_HIGH_PERFORMANCE : requested_power_profile);
+				ALOGW("%s: hint(POWER_HINT_SUSTAINED_PERFORMANCE, %d, %llu)", __func__, value, (unsigned long long)data);
+			else if (hint == POWER_HINT_VR_MODE)
+				ALOGW("%s: hint(POWER_HINT_VR_MODE, %d, %llu)", __func__, value, (unsigned long long)data);
+				
+			power_set_profile(value ? PROFILE_HIGH_PERFORMANCE  - 1 : requested_power_profile);
 			break;
 
 		/***********************************
 		 * Inputs
 		 */
 		case POWER_HINT_DISABLE_TOUCH:
-			ALOGW("%s: hint(POWER_HINT_DISABLE_TOUCH)", __func__);
+			ALOGW("%s: hint(POWER_HINT_DISABLE_TOUCH, %d, %llu)", __func__, value, (unsigned long long)data);
 			power_input_device_state(value ? 0 : 1);
 			break;
 
@@ -171,42 +189,28 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 
 	pthread_mutex_unlock(&sec->lock);
 }
-#ifdef HAS_LAUNCH_HINT_SUPPORT
-static void power_launch_hint(struct power_module *module, launch_hint_t hint, const char *packageName, int data) {
-	int app_boost = 1;
-	if(pfread(POWER_CONFIG_APP_BOOST, &app_boost) && !app_boost) {
+
+static void power_hint_interaction_reset(int duration) {
+	// dont use it if the screen is off
+	if (current_power_profile == PROFILE_SCREEN_OFF) {
 		return;
 	}
-
-	if (!packageName) {
-		ALOGE("%s: packageName is NULL", __func__);
-		return;
+	
+	// as far a I know POWER_HINT_INTERACTION is sent every frame or
+	// longer, so wait at least one frame to reset profile
+	if (duration == 0) {
+		duration = ceil(1000 / 59.95);
 	}
-
-	string packageNameStr = packageName;
-
-	// performance-sucking applications (CPU, GPU, ...)
-	if (requested_power_profile != PROFILE_POWER_SAVE && (
-			packageNameStr == "com.google.android.youtube" ||
-			packageNameStr == "com.cyanogenmod.snap"
-		)) {
-		ALOGI("%s: hint(%x): processing specific launch-hint for %s(%d)", __func__, (int)hint, packageName, data);
-		switch (hint) {
-			case LAUNCH_HINT_ACTIVITY:
-				power_set_profile(PROFILE_BIAS_PERFORMANCE);
-				break;
-
-			case LAUNCH_HINT_PROCESS:
-				// write to cpusets for example, current not called somewhere, no usage
-				break;
-		}
-	}
-	// unhandled, go back to default profile
-	else {
-		power_set_profile(requested_power_profile);
-	}
+	
+	// convert to µsecs and wait
+	usleep(duration * 1000);
+	
+	// disable boost-profile
+	power_apply_boost_profile(false);
+	
+	// unlock future
+	std::atomic_store_explicit(&interaction_reset_ftr_ended, false, std::memory_order_release);
 }
-#endif
 
 /***********************************
  * Boost
@@ -245,14 +249,16 @@ static void power_set_profile(int profile) {
 
  	ALOGD("%s: apply profile %d", __func__, profile);
 
-	// apply settings
-	power_apply_profile(power_profiles[profile + 1]);
-
 	// store it
 	current_power_profile = profile;
+
+	// apply settings
+	power_apply_profile();
 }
 
-static void power_apply_profile(struct power_profile data) {
+static void power_apply_profile() {
+	struct power_profile data = power_profiles[current_power_profile + 1];
+	
 	/***********************************
 	 * Cluster 0
 	 */
@@ -264,8 +270,9 @@ static void power_apply_profile(struct power_profile data) {
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE2, data.cpu.cluster0.cores.core2online);
 	pfwrite(POWER_CLUSTER0_ONLINE_CORE3, data.cpu.cluster0.cores.core3online);
 
-	// apply cpugov
-	pfwrite(POWER_CLUSTER0_SCALING_GOVERNOR, data.cpu.cluster0.cpugov.governor);
+	// apply common cpugov-settings
+	pfwritegov("freq_max", data.cpu.cluster0.cpugov.freq_max);
+	pfwritegov("freq_min", data.cpu.cluster0.cpugov.freq_min);
 
 	// apply cpugov-settings
 	if (is_cluster0_interactive()) {
@@ -278,8 +285,6 @@ static void power_apply_profile(struct power_profile data) {
 		pfwritegov("go_hispeed_load", data.cpu.cluster0.cpugov.interactive.go_hispeed_load);
 		pfwritegov("hispeed_freq", data.cpu.cluster0.cpugov.interactive.hispeed_freq);
 		pfwritegov("enforce_hispeed_freq_limit", data.cpu.cluster0.cpugov.interactive.enforce_hispeed_freq_limit);
-		pfwritegov("freq_max", data.cpu.cluster0.cpugov.interactive.freq_max);
-		pfwritegov("freq_min", data.cpu.cluster0.cpugov.interactive.freq_min);
 		pfwritegov("min_sample_time", data.cpu.cluster0.cpugov.interactive.min_sample_time);
 		pfwritegov("powersave_bias", data.cpu.cluster0.cpugov.interactive.powersave_bias);
 		pfwritegov("target_loads", data.cpu.cluster0.cpugov.interactive.target_loads);
@@ -293,8 +298,6 @@ static void power_apply_profile(struct power_profile data) {
 		// dynamic settings
 		pfwritegov("down_load", data.cpu.cluster0.cpugov.nexus.down_load);
 		pfwritegov("down_step", data.cpu.cluster0.cpugov.nexus.down_step);
-		pfwritegov("freq_max", data.cpu.cluster0.cpugov.nexus.freq_max);
-		pfwritegov("freq_min", data.cpu.cluster0.cpugov.nexus.freq_min);
 		pfwritegov("io_is_busy", data.cpu.cluster0.cpugov.nexus.io_is_busy);
 		pfwritegov("sampling_rate", data.cpu.cluster0.cpugov.nexus.sampling_rate);
 		pfwritegov("up_load", data.cpu.cluster0.cpugov.nexus.up_load);
@@ -312,8 +315,9 @@ static void power_apply_profile(struct power_profile data) {
 	pfwrite(POWER_CLUSTER1_ONLINE_CORE2, data.cpu.cluster1.cores.core2online);
 	pfwrite(POWER_CLUSTER1_ONLINE_CORE3, data.cpu.cluster1.cores.core3online);
 
-	// apply cpugov
-	pfwrite(POWER_CLUSTER1_SCALING_GOVERNOR, data.cpu.cluster1.cpugov.governor);
+	// apply common cpugov-settings
+	pfwritegov("freq_max", data.cpu.cluster1.cpugov.freq_max);
+	pfwritegov("freq_min", data.cpu.cluster1.cpugov.freq_min);
 
 	// apply cpugov-settings
 	if (is_cluster1_interactive()) {
@@ -326,8 +330,6 @@ static void power_apply_profile(struct power_profile data) {
 		pfwritegov("go_hispeed_load", data.cpu.cluster1.cpugov.interactive.go_hispeed_load);
 		pfwritegov("hispeed_freq", data.cpu.cluster1.cpugov.interactive.hispeed_freq);
 		pfwritegov("enforce_hispeed_freq_limit", data.cpu.cluster1.cpugov.interactive.enforce_hispeed_freq_limit);
-		pfwritegov("freq_max", data.cpu.cluster1.cpugov.interactive.freq_max);
-		pfwritegov("freq_min", data.cpu.cluster1.cpugov.interactive.freq_min);
 		pfwritegov("min_sample_time", data.cpu.cluster1.cpugov.interactive.min_sample_time);
 		pfwritegov("powersave_bias", data.cpu.cluster1.cpugov.interactive.powersave_bias);
 		pfwritegov("target_loads", data.cpu.cluster1.cpugov.interactive.target_loads);
@@ -341,8 +343,6 @@ static void power_apply_profile(struct power_profile data) {
 		// dynamic settings
 		pfwritegov("down_load", data.cpu.cluster1.cpugov.nexus.down_load);
 		pfwritegov("down_step", data.cpu.cluster1.cpugov.nexus.down_step);
-		pfwritegov("freq_max", data.cpu.cluster1.cpugov.nexus.freq_max);
-		pfwritegov("freq_min", data.cpu.cluster1.cpugov.nexus.freq_min);
 		pfwritegov("io_is_busy", data.cpu.cluster1.cpugov.nexus.io_is_busy);
 		pfwritegov("sampling_rate", data.cpu.cluster1.cpugov.nexus.sampling_rate);
 		pfwritegov("up_load", data.cpu.cluster1.cpugov.nexus.up_load);
@@ -365,7 +365,7 @@ static void power_apply_profile(struct power_profile data) {
 	pfwrite(INPUT_BOOSTER_LEVEL, data.input_booster.level);
 	pfwrite_input_booster(INPUT_BOOSTER_HEAD, data.input_booster.head);
 	pfwrite_input_booster(INPUT_BOOSTER_TAIL, data.input_booster.tail);
-	
+
 	/***********************************
 	 * Kernel
 	 */
@@ -381,6 +381,48 @@ static void power_apply_profile(struct power_profile data) {
 	 */
 	pfwrite(POWER_ENABLE_DM_HOTPLUG, data.power.enable_dm_hotplug);
 	pfwrite(POWER_IPA_CONTROL_TEMP, data.power.ipa.control_temp);
+}
+
+static void power_apply_boost_profile(bool boosted) {
+	struct power_profile data = power_profiles[current_power_profile + 1];
+
+	int profiles = 1;
+	if(pfread(POWER_CONFIG_BOOST_PROFILES, &profiles) && !profiles) {
+		return;
+	}
+
+	/***********************************
+	 * Cluster 0
+	 */
+	pfwritegov_cluster = 0;
+
+	// apply common cpugov-settings
+	if (boosted) {
+		pfwritegov("freq_min", data.cpu.cluster0.cpugov.freq_min_boost);
+	} else {
+		pfwritegov("freq_min", data.cpu.cluster0.cpugov.freq_min);
+	}
+
+	/***********************************
+	 * Cluster 1
+	 */
+	pfwritegov_cluster = 1;
+
+	// apply common cpugov-settings
+	if (boosted) {
+		pfwritegov("freq_min", data.cpu.cluster1.cpugov.freq_min_boost);
+	} else {
+		pfwritegov("freq_min", data.cpu.cluster1.cpugov.freq_min);
+	}
+
+	/***********************************
+	 * GPU
+	 */
+	if (boosted) {
+		pfwrite(GPU_DVFS_MIN_LOCK, data.gpu.dvfs.min_lock_boost);
+	} else {
+		pfwrite(GPU_DVFS_MIN_LOCK, data.gpu.dvfs.min_lock);
+	}
 }
 
 /***********************************
@@ -510,14 +552,12 @@ static bool pfwritegov(string file, string value) {
 
 	if (pfwritegov_cluster == 0) {
 		cpu = 0;
-
 		if (is_cluster0_interactive())
 			gov = "interactive";
 		else if (is_cluster0_nexus())
 			gov = "nexus";
 	} else if (pfwritegov_cluster == 1) {
 		cpu = 4;
-
 		if (is_cluster1_interactive())
 			gov = "interactive";
 		else if (is_cluster1_nexus())
@@ -546,7 +586,7 @@ static bool pfwritegov(string file, unsigned int value) {
 
 static bool pfwrite_input_booster(string file, struct power_profile_input_booster data) {
 	stringstream valuebuilder;
-	
+
 	// build value-string
 	valuebuilder << data.time << " ";
 	valuebuilder << data.cluster1_freq << " ";
@@ -554,9 +594,9 @@ static bool pfwrite_input_booster(string file, struct power_profile_input_booste
 	valuebuilder << data.mif_freq << " ";
 	valuebuilder << data.int_freq << " ";
 	valuebuilder << data.hmp_boost << " ";
-	
+
 	ALOGE("%s: \"%s\"\n", __func__, valuebuilder.str().c_str());
-	
+
 	return pfwrite(file, valuebuilder.str());
 }
 
@@ -634,13 +674,10 @@ struct sec_power_module HAL_MODULE_INFO_SYM = {
 
 		.init = power_init,
 		.powerHint = power_hint,
-#ifdef HAS_LAUNCH_HINT_SUPPORT
-		.launchHint = power_launch_hint,
-#endif
 		.getFeature = power_get_feature,
 		.setFeature = power_set_feature,
 		.setInteractive = power_set_interactive,
 	},
 
-	.lock = PTHREAD_MUTEX_INITIALIZER,
+	.lock = PTHREAD_MUTEX_INITIALIZER
 };
