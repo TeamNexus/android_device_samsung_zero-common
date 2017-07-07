@@ -55,8 +55,8 @@ static int requested_power_profile = PROFILE_BALANCED;
 static int pfwritegov_cluster;
 
 // interaction-hint
-static std::future<void> interaction_reset_ftr;
-static std::atomic<bool> interaction_reset_ftr_ended(false);
+/* static std::future<void> interaction_reset_ftr;
+static std::atomic<bool> interaction_reset_ftr_ended(false); */
 
 /***********************************
  * Initializing
@@ -153,13 +153,13 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 			power_set_profile(value);
 			break;
 
-		case POWER_HINT_INTERACTION:
+		/* case POWER_HINT_INTERACTION:
 			ALOGW("%s: hint(POWER_HINT_INTERACTION, %d, %llu)", __func__, value, (unsigned long long)data);
 			if (!std::atomic_exchange_explicit(&interaction_reset_ftr_ended, true, std::memory_order_acquire)) {
 				power_apply_boost_profile(true);
 				interaction_reset_ftr = std::async(power_hint_interaction_reset, value);
 			}			
-			break;
+			break; */
 
 		case POWER_HINT_VSYNC:
 			ALOGW("%s: hint(POWER_HINT_VSYNC, %d, %llu)", __func__, value, (unsigned long long)data);
@@ -190,7 +190,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	pthread_mutex_unlock(&sec->lock);
 }
 
-static void power_hint_interaction_reset(int duration) {
+/* static void power_hint_interaction_reset(int duration) {
 	// dont use it if the screen is off
 	if (current_power_profile == PROFILE_SCREEN_OFF) {
 		return;
@@ -210,7 +210,7 @@ static void power_hint_interaction_reset(int duration) {
 	
 	// unlock future
 	std::atomic_store_explicit(&interaction_reset_ftr_ended, false, std::memory_order_release);
-}
+} */
 
 /***********************************
  * Boost

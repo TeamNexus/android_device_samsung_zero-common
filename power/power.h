@@ -105,7 +105,7 @@ static void power_init(struct power_module __unused * module);
  * Hinting
  */
 static void power_hint(struct power_module *module, power_hint_t hint, void *data);
-static void power_hint_interaction_reset(int duration);
+// static void power_hint_interaction_reset(int duration);
 
 /***********************************
  * Boost
