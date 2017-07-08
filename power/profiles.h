@@ -163,14 +163,14 @@ struct power_profile {
 					.core3online = true,
 				},
 				.cpugov = {
-					.freq_max = 400000,
+					.freq_max = 300000,
 					.freq_min = 200000,
-					.freq_min_boost = 400000,
+					.freq_min_boost = 300000,
 
 					.interactive = {
 						.above_hispeed_delay = 100000,
 						.go_hispeed_load = 99,
-						.hispeed_freq = 400000,
+						.hispeed_freq = 200000,
 						.enforce_hispeed_freq_limit = true,
 						.io_is_busy = true,
 						.min_sample_time = 20000,
@@ -191,15 +191,15 @@ struct power_profile {
 			},
 			.cluster1 = {
 				.cores = {
-					.core0online = false,
-					.core1online = false,
-					.core2online = false,
-					.core3online = false,
+					.core0online = true,
+					.core1online = true,
+					.core2online = true,
+					.core3online = true,
 				},
 				.cpugov = {
-					.freq_max = 200000,
+					.freq_max = 300000,
 					.freq_min = 200000,
-					.freq_min_boost = 200000,
+					.freq_min_boost = 300000,
 
 					.interactive = {
 						.above_hispeed_delay = 100000,
@@ -227,10 +227,10 @@ struct power_profile {
 		.gpu = {
 			.dvfs = {
 				.enabled = true,
-				.governor = 1,
-				.max_lock = -1,
-				.min_lock = -1,
-				.min_lock_boost = -1,
+				.governor = 0,
+				.max_lock = 266,
+				.min_lock = 266,
+				.min_lock_boost = 266,
 			},
 			.highspeed = {
 				.clock = 266,
@@ -537,7 +537,7 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 1704000,
 					.freq_min = 1000000,
-					.freq_min_boost = 1500000,
+					.freq_min_boost = 1296000,
 
 					.interactive = {
 						.above_hispeed_delay = 15000,
@@ -570,13 +570,13 @@ struct power_profile {
 				},
 				.cpugov = {
 					.freq_max = 2304000,
-					.freq_min = 1000000,
-					.freq_min_boost = 1296000,
+					.freq_min = 800000,
+					.freq_min_boost = 1000000,
 
 					.interactive = {
 						.above_hispeed_delay = 15000,
 						.go_hispeed_load = 99,
-						.hispeed_freq = 1296000,
+						.hispeed_freq = 1500000,
 						.enforce_hispeed_freq_limit = false,
 						.io_is_busy = true,
 						.min_sample_time = 20000,
