@@ -465,11 +465,11 @@ static void power_input_device_state(int state) {
 				pfwrite(POWER_DT2W_ENABLED, false);
 			}
 
-			// give hw some milliseconds to boot
-			usleep(100);
-
 			break;
 	}
+
+	// give hw some milliseconds to properly boot up
+	usleep(100 * 1000); // 100ms
 }
 
 static void power_set_interactive(struct power_module __unused * module, int on) {
