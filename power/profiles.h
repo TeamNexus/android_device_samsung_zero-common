@@ -817,7 +817,7 @@ struct power_profile {
 					.core3online = true,
 				},
 				.cpugov = {
-					.freq_max = 1296000,
+					.freq_max = 1300000,
 					.freq_min = 600000,
 					.freq_min_boost = 800000,
 
