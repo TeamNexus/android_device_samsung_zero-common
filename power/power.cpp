@@ -392,30 +392,6 @@ static void power_apply_boost_profile(bool boosted) {
 	}
 
 	/***********************************
-	 * Cluster 0
-	 */
-	pfwritegov_cluster = 0;
-
-	// apply common cpugov-settings
-	if (boosted) {
-		pfwritegov("freq_min", data.cpu.cluster0.cpugov.freq_min_boost);
-	} else {
-		pfwritegov("freq_min", data.cpu.cluster0.cpugov.freq_min);
-	}
-
-	/***********************************
-	 * Cluster 1
-	 */
-	pfwritegov_cluster = 1;
-
-	// apply common cpugov-settings
-	if (boosted) {
-		pfwritegov("freq_min", data.cpu.cluster1.cpugov.freq_min_boost);
-	} else {
-		pfwritegov("freq_min", data.cpu.cluster1.cpugov.freq_min);
-	}
-
-	/***********************************
 	 * GPU
 	 */
 	if (boosted) {

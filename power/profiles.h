@@ -33,9 +33,6 @@ struct power_profile_cpu_cluster {
 		unsigned int freq_max;
 		unsigned int freq_min;
 
-		// boost
-		unsigned int freq_min_boost;
-
 		struct {
 			unsigned int above_hispeed_delay;
 			unsigned int go_hispeed_load;
@@ -165,7 +162,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 300000,
 					.freq_min = 200000,
-					.freq_min_boost = 300000,
 
 					.interactive = {
 						.above_hispeed_delay = 100000,
@@ -199,7 +195,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 300000,
 					.freq_min = 200000,
-					.freq_min_boost = 300000,
 
 					.interactive = {
 						.above_hispeed_delay = 100000,
@@ -289,7 +284,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 800000,
 					.freq_min = 300000,
-					.freq_min_boost = 600000,
 
 					.interactive = {
 						.above_hispeed_delay = 85000,
@@ -323,7 +317,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 600000,
 					.freq_min = 200000,
-					.freq_min_boost = 400000,
 
 					.interactive = {
 						.above_hispeed_delay = 85000,
@@ -413,7 +406,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 1100000,
 					.freq_min = 500000,
-					.freq_min_boost = 800000,
 
 					.interactive = {
 						.above_hispeed_delay = 55000,
@@ -447,7 +439,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 800000,
 					.freq_min = 400000,
-					.freq_min_boost = 500000,
 
 					.interactive = {
 						.above_hispeed_delay = 55000,
@@ -537,7 +528,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 1704000,
 					.freq_min = 1000000,
-					.freq_min_boost = 1296000,
 
 					.interactive = {
 						.above_hispeed_delay = 15000,
@@ -571,7 +561,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 2304000,
 					.freq_min = 800000,
-					.freq_min_boost = 1000000,
 
 					.interactive = {
 						.above_hispeed_delay = 15000,
@@ -661,7 +650,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 900000,
 					.freq_min = 300000,
-					.freq_min_boost = 400000,
 
 					.interactive = {
 						.above_hispeed_delay = 70000,
@@ -695,7 +683,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 600000,
 					.freq_min = 200000,
-					.freq_min_boost = 300000,
 
 					.interactive = {
 						.above_hispeed_delay = 70000,
@@ -785,7 +772,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 1500000,
 					.freq_min = 600000,
-					.freq_min_boost = 400000,
 
 					.interactive = {
 						.above_hispeed_delay = 30000,
@@ -819,7 +805,6 @@ struct power_profile {
 				.cpugov = {
 					.freq_max = 1300000,
 					.freq_min = 600000,
-					.freq_min_boost = 800000,
 
 					.interactive = {
 						.above_hispeed_delay = 30000,
