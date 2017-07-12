@@ -52,11 +52,6 @@ struct sec_power_module {
 
 static int current_power_profile = PROFILE_BALANCED;
 static int requested_power_profile = PROFILE_BALANCED;
-static int pfwritegov_cluster;
-
-// interaction-hint
-/* static std::future<void> interaction_reset_ftr;
-static std::atomic<bool> interaction_reset_ftr_ended(false); */
 
 /***********************************
  * Initializing
@@ -107,17 +102,11 @@ static void power_init(struct power_module __unused * module) {
 	if (!is_file(POWER_CONFIG_ALWAYS_ON_FP))
 		pfwrite(POWER_CONFIG_ALWAYS_ON_FP, false);
 
-	if (!is_file(POWER_CONFIG_BOOST))
-		pfwrite(POWER_CONFIG_BOOST, false);
-
 	if (!is_file(POWER_CONFIG_DT2W))
 		pfwrite(POWER_CONFIG_DT2W, false);
 
 	if (!is_file(POWER_CONFIG_PROFILES))
 		pfwrite(POWER_CONFIG_PROFILES, true);
-
-	if (!is_file(POWER_CONFIG_BOOST_PROFILES))
-		pfwrite(POWER_CONFIG_BOOST_PROFILES, true);
 }
 
 /***********************************
@@ -130,14 +119,6 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	pthread_mutex_lock(&sec->lock);
 
 	switch (hint) {
-
-		/***********************************
-		 * Boost
-		 */
-		case POWER_HINT_CPU_BOOST:
-			ALOGW("%s: hint(POWER_HINT_CPU_BOOST, %d, %llu)", __func__, value, (unsigned long long)data);
-			power_cpu_boost(value ? value : 50000);
-			break;
 
 		/***********************************
 		 * Profiles
@@ -153,26 +134,13 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 			power_set_profile(value);
 			break;
 
-		/* case POWER_HINT_INTERACTION:
-			ALOGW("%s: hint(POWER_HINT_INTERACTION, %d, %llu)", __func__, value, (unsigned long long)data);
-			if (!std::atomic_exchange_explicit(&interaction_reset_ftr_ended, true, std::memory_order_acquire)) {
-				power_apply_boost_profile(true);
-				interaction_reset_ftr = std::async(power_hint_interaction_reset, value);
-			}			
-			break; */
-
-		case POWER_HINT_VSYNC:
-			ALOGW("%s: hint(POWER_HINT_VSYNC, %d, %llu)", __func__, value, (unsigned long long)data);
-			power_apply_boost_profile(value != 0);
-			break;
-
 		case POWER_HINT_SUSTAINED_PERFORMANCE:
 		case POWER_HINT_VR_MODE:
 			if (hint == POWER_HINT_SUSTAINED_PERFORMANCE)
 				ALOGW("%s: hint(POWER_HINT_SUSTAINED_PERFORMANCE, %d, %llu)", __func__, value, (unsigned long long)data);
 			else if (hint == POWER_HINT_VR_MODE)
 				ALOGW("%s: hint(POWER_HINT_VR_MODE, %d, %llu)", __func__, value, (unsigned long long)data);
-				
+
 			power_set_profile(value ? PROFILE_HIGH_PERFORMANCE  - 1 : requested_power_profile);
 			break;
 
@@ -190,54 +158,6 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	pthread_mutex_unlock(&sec->lock);
 }
 
-/* static void power_hint_interaction_reset(int duration) {
-	// dont use it if the screen is off
-	if (current_power_profile == PROFILE_SCREEN_OFF) {
-		return;
-	}
-	
-	// as far a I know POWER_HINT_INTERACTION is sent every frame or
-	// longer, so wait at least one frame to reset profile
-	if (duration == 0) {
-		duration = ceil(1000 / 59.95);
-	}
-	
-	// convert to µsecs and wait
-	usleep(duration * 1000);
-	
-	// disable boost-profile
-	power_apply_boost_profile(false);
-	
-	// unlock future
-	std::atomic_store_explicit(&interaction_reset_ftr_ended, false, std::memory_order_release);
-} */
-
-/***********************************
- * Boost
- */
-static void power_cpu_boost(int duration) {
-	int boost = 1;
-	if(pfread(POWER_CONFIG_BOOST, &boost) && !boost) {
-		return;
-	}
-
-	// cluster0
-	if (is_file(POWER_CLUSTER0_NEXUS_BOOSTPULSE)) {
-		pfwrite(POWER_CLUSTER0_NEXUS_BOOSTPULSE, duration);
-	} else if (is_file(POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE)) {
-		pfwrite(POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE_DURATION, duration);
-		pfwrite(POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE, true);
-	}
-
-	// cluster1
-	if (is_file(POWER_CLUSTER1_NEXUS_BOOSTPULSE)) {
-		pfwrite(POWER_CLUSTER1_NEXUS_BOOSTPULSE, duration);
-	} else if (is_file(POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE)) {
-		pfwrite(POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE_DURATION, duration);
-		pfwrite(POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE, true);
-	}
-}
-
 /***********************************
  * Profiles
  */
@@ -253,152 +173,66 @@ static void power_set_profile(int profile) {
 	current_power_profile = profile;
 
 	// apply settings
-	power_apply_profile();
-}
-
-static void power_apply_profile() {
 	struct power_profile data = power_profiles[current_power_profile + 1];
-	
-	/***********************************
-	 * Cluster 0
+
+	/*********************
+	 * CPU Cluster0
 	 */
-	pfwritegov_cluster = 0;
-
-	// apply cpu-settings
-	pfwrite(POWER_CLUSTER0_ONLINE_CORE0, data.cpu.cluster0.cores.core0online);
-	pfwrite(POWER_CLUSTER0_ONLINE_CORE1, data.cpu.cluster0.cores.core1online);
-	pfwrite(POWER_CLUSTER0_ONLINE_CORE2, data.cpu.cluster0.cores.core2online);
-	pfwrite(POWER_CLUSTER0_ONLINE_CORE3, data.cpu.cluster0.cores.core3online);
-
-	// apply common cpugov-settings
-	pfwritegov("freq_max", data.cpu.cluster0.cpugov.freq_max);
-	pfwritegov("freq_min", data.cpu.cluster0.cpugov.freq_min);
-
-	// apply cpugov-settings
 	if (is_cluster0_interactive()) {
-		// static settings
-		pfwritegov("boost", false);
-		pfwritegov("boostpulse_duration", 50000);
+		// common
+		pfwrite(POWER_CPU_CLUSTER0_INTERACTIVE_FREQ_MAX, data.cpu.cl0.freq_max);
+		pfwrite(POWER_CPU_CLUSTER0_INTERACTIVE_FREQ_MIN, data.cpu.cl0.freq_min);
 
-		// dynamic settings
-		pfwritegov("above_hispeed_delay", data.cpu.cluster0.cpugov.interactive.above_hispeed_delay);
-		pfwritegov("go_hispeed_load", data.cpu.cluster0.cpugov.interactive.go_hispeed_load);
-		pfwritegov("hispeed_freq", data.cpu.cluster0.cpugov.interactive.hispeed_freq);
-		pfwritegov("enforce_hispeed_freq_limit", data.cpu.cluster0.cpugov.interactive.enforce_hispeed_freq_limit);
-		pfwritegov("min_sample_time", data.cpu.cluster0.cpugov.interactive.min_sample_time);
-		pfwritegov("powersave_bias", data.cpu.cluster0.cpugov.interactive.powersave_bias);
-		pfwritegov("target_loads", data.cpu.cluster0.cpugov.interactive.target_loads);
-		pfwritegov("timer_rate", data.cpu.cluster0.cpugov.interactive.timer_rate);
-		pfwritegov("timer_slack", data.cpu.cluster0.cpugov.interactive.timer_slack);
+		// interactive
+		pfwrite(POWER_CPU_CLUSTER0_INTERACTIVE_HISPEED_FREQ, data.cpu.cl0.interactive.hispeed_freq);
 	} else if (is_cluster0_nexus()) {
-		// static settings
-		pfwritegov("boost", false);
-		pfwritegov("boostpulse", 0);
+		// common
+		pfwrite(POWER_CPU_CLUSTER0_NEXUS_FREQ_MAX, data.cpu.cl0.freq_max);
+		pfwrite(POWER_CPU_CLUSTER0_NEXUS_FREQ_MIN, data.cpu.cl0.freq_min);
 
-		// dynamic settings
-		pfwritegov("down_load", data.cpu.cluster0.cpugov.nexus.down_load);
-		pfwritegov("down_step", data.cpu.cluster0.cpugov.nexus.down_step);
-		pfwritegov("io_is_busy", data.cpu.cluster0.cpugov.nexus.io_is_busy);
-		pfwritegov("sampling_rate", data.cpu.cluster0.cpugov.nexus.sampling_rate);
-		pfwritegov("up_load", data.cpu.cluster0.cpugov.nexus.up_load);
-		pfwritegov("up_step", data.cpu.cluster0.cpugov.nexus.up_step);
+		// nexus
+		pfwrite(POWER_CPU_CLUSTER0_NEXUS_DOWN_LOAD, data.cpu.cl0.nexus.down_load);
+		pfwrite(POWER_CPU_CLUSTER0_NEXUS_DOWN_STEP, data.cpu.cl0.nexus.down_step);
+		pfwrite(POWER_CPU_CLUSTER0_NEXUS_UP_LOAD, data.cpu.cl0.nexus.up_load);
+		pfwrite(POWER_CPU_CLUSTER0_NEXUS_UP_STEP, data.cpu.cl0.nexus.up_step);
 	}
 
-	/***********************************
-	 * Cluster 1
+	/*********************
+	 * CPU Cluster1
 	 */
-	pfwritegov_cluster = 1;
-
-	// apply cpu-settings
-	pfwrite(POWER_CLUSTER1_ONLINE_CORE0, data.cpu.cluster1.cores.core0online);
-	pfwrite(POWER_CLUSTER1_ONLINE_CORE1, data.cpu.cluster1.cores.core1online);
-	pfwrite(POWER_CLUSTER1_ONLINE_CORE2, data.cpu.cluster1.cores.core2online);
-	pfwrite(POWER_CLUSTER1_ONLINE_CORE3, data.cpu.cluster1.cores.core3online);
-
-	// apply common cpugov-settings
-	pfwritegov("freq_max", data.cpu.cluster1.cpugov.freq_max);
-	pfwritegov("freq_min", data.cpu.cluster1.cpugov.freq_min);
-
-	// apply cpugov-settings
 	if (is_cluster1_interactive()) {
-		// static settings
-		pfwritegov("boost", false);
-		pfwritegov("boostpulse_duration", 50000);
+		// common
+		pfwrite(POWER_CPU_CLUSTER1_INTERACTIVE_FREQ_MAX, data.cpu.cl1.freq_max);
+		pfwrite(POWER_CPU_CLUSTER1_INTERACTIVE_FREQ_MIN, data.cpu.cl1.freq_min);
 
-		// dynamic settings
-		pfwritegov("above_hispeed_delay", data.cpu.cluster1.cpugov.interactive.above_hispeed_delay);
-		pfwritegov("go_hispeed_load", data.cpu.cluster1.cpugov.interactive.go_hispeed_load);
-		pfwritegov("hispeed_freq", data.cpu.cluster1.cpugov.interactive.hispeed_freq);
-		pfwritegov("enforce_hispeed_freq_limit", data.cpu.cluster1.cpugov.interactive.enforce_hispeed_freq_limit);
-		pfwritegov("min_sample_time", data.cpu.cluster1.cpugov.interactive.min_sample_time);
-		pfwritegov("powersave_bias", data.cpu.cluster1.cpugov.interactive.powersave_bias);
-		pfwritegov("target_loads", data.cpu.cluster1.cpugov.interactive.target_loads);
-		pfwritegov("timer_rate", data.cpu.cluster1.cpugov.interactive.timer_rate);
-		pfwritegov("timer_slack", data.cpu.cluster1.cpugov.interactive.timer_slack);
+		// interactive
+		pfwrite(POWER_CPU_CLUSTER1_INTERACTIVE_HISPEED_FREQ, data.cpu.cl1.interactive.hispeed_freq);
 	} else if (is_cluster1_nexus()) {
-		// static settings
-		pfwritegov("boost", false);
-		pfwritegov("boostpulse", 0);
+		// common
+		pfwrite(POWER_CPU_CLUSTER1_NEXUS_FREQ_MAX, data.cpu.cl1.freq_max);
+		pfwrite(POWER_CPU_CLUSTER1_NEXUS_FREQ_MIN, data.cpu.cl1.freq_min);
 
-		// dynamic settings
-		pfwritegov("down_load", data.cpu.cluster1.cpugov.nexus.down_load);
-		pfwritegov("down_step", data.cpu.cluster1.cpugov.nexus.down_step);
-		pfwritegov("io_is_busy", data.cpu.cluster1.cpugov.nexus.io_is_busy);
-		pfwritegov("sampling_rate", data.cpu.cluster1.cpugov.nexus.sampling_rate);
-		pfwritegov("up_load", data.cpu.cluster1.cpugov.nexus.up_load);
-		pfwritegov("up_step", data.cpu.cluster1.cpugov.nexus.up_step);
+		// nexus
+		pfwrite(POWER_CPU_CLUSTER1_NEXUS_DOWN_LOAD, data.cpu.cl1.nexus.down_load);
+		pfwrite(POWER_CPU_CLUSTER1_NEXUS_DOWN_STEP, data.cpu.cl1.nexus.down_step);
+		pfwrite(POWER_CPU_CLUSTER1_NEXUS_UP_LOAD, data.cpu.cl1.nexus.up_load);
+		pfwrite(POWER_CPU_CLUSTER1_NEXUS_UP_STEP, data.cpu.cl1.nexus.up_step);
 	}
 
-	/***********************************
+	/*********************
 	 * GPU
 	 */
-	pfwrite(GPU_DVFS, data.gpu.dvfs.enabled);
-	pfwrite(GPU_DVFS_GOVERNOR, data.gpu.dvfs.governor);
-	pfwrite(GPU_DVFS_MAX_LOCK, data.gpu.dvfs.max_lock);
-	pfwrite(GPU_DVFS_MIN_LOCK, data.gpu.dvfs.min_lock);
-	pfwrite(GPU_HIGHSPEED_CLOCK, data.gpu.highspeed.clock);
-	pfwrite(GPU_HIGHSPEED_LOAD, data.gpu.highspeed.load);
+	pfwrite(POWER_CPU_CLUSTER1_NEXUS_UP_LOAD, data.gpu.max_lock);
+	pfwrite(POWER_CPU_CLUSTER1_NEXUS_UP_STEP, data.gpu.min_lock);
 
-	/***********************************
-	 * Input-Booster
+	/*********************
+	 * Generic Settings
 	 */
-	pfwrite(INPUT_BOOSTER_LEVEL, data.input_booster.level);
-	pfwrite_input_booster(INPUT_BOOSTER_HEAD, data.input_booster.head);
-	pfwrite_input_booster(INPUT_BOOSTER_TAIL, data.input_booster.tail);
-
-	/***********************************
-	 * Kernel
-	 */
-	pfwrite(KERNEL_HMP_ENABLE_PACKING, data.kernel.hmp.packing_enabled);
-
-	/***********************************
-	 * Module
-	 */
-	pfwrite(MODULE_WORKQUEUE_POWER_EFFICIENT, data.module.workqueue.power_efficient);
-
-	/***********************************
-	 * Power
-	 */
-	pfwrite(POWER_ENABLE_DM_HOTPLUG, data.power.enable_dm_hotplug);
-	pfwrite(POWER_IPA_CONTROL_TEMP, data.power.ipa.control_temp);
-}
-
-static void power_apply_boost_profile(bool boosted) {
-	struct power_profile data = power_profiles[current_power_profile + 1];
-
-	int profiles = 1;
-	if(pfread(POWER_CONFIG_BOOST_PROFILES, &profiles) && !profiles) {
-		return;
-	}
-
-	/***********************************
-	 * GPU
-	 */
-	if (boosted) {
-		pfwrite(GPU_DVFS_MIN_LOCK, data.gpu.dvfs.min_lock_boost);
-	} else {
-		pfwrite(GPU_DVFS_MIN_LOCK, data.gpu.dvfs.min_lock);
-	}
+	pfwrite(POWER_ENABLE_DM_HOTPLUG, data.enable_dm_hotplug);
+	pfwrite(POWER_HMP_PACKING_ENABLE, data.hmp_packing_enable);
+	pfwrite(POWER_INPUT_BOOSTER_LEVEL, (data.input_booster ? 2 : 0));
+	pfwrite(POWER_IPA_CONTROL_TEMP, data.ipa_control_temp);
+	pfwrite(POWER_ENABLE_DM_HOTPLUG, data.power_efficient_workqueue);
 }
 
 /***********************************
@@ -521,61 +355,6 @@ static bool pfwrite(string path, unsigned int value) {
 	return pfwrite(path, to_string(value));
 }
 
-static bool pfwritegov(string file, string value) {
-	int cpu = -1;
-	string gov;
-	stringstream pathbuilder;
-
-	if (pfwritegov_cluster == 0) {
-		cpu = 0;
-		if (is_cluster0_interactive())
-			gov = "interactive";
-		else if (is_cluster0_nexus())
-			gov = "nexus";
-	} else if (pfwritegov_cluster == 1) {
-		cpu = 4;
-		if (is_cluster1_interactive())
-			gov = "interactive";
-		else if (is_cluster1_nexus())
-			gov = "nexus";
-	}
-	else {
-		ALOGE("%s: invalid cluster: %d", __func__, pfwritegov_cluster);
-		return false;
-	}
-
-	pathbuilder << "/sys/devices/system/cpu/cpu" << cpu << "/cpufreq/" << gov << "/" << file;
-	return pfwrite(pathbuilder.str(), value);
-}
-
-static bool pfwritegov(string file, bool value) {
-	return pfwritegov(file, value ? 1 : 0);
-}
-
-static bool pfwritegov(string file, int value) {
-	return pfwritegov(file, to_string(value));
-}
-
-static bool pfwritegov(string file, unsigned int value) {
-	return pfwritegov(file, to_string(value));
-}
-
-static bool pfwrite_input_booster(string file, struct power_profile_input_booster data) {
-	stringstream valuebuilder;
-
-	// build value-string
-	valuebuilder << data.time << " ";
-	valuebuilder << data.cluster1_freq << " ";
-	valuebuilder << data.cluster0_freq << " ";
-	valuebuilder << data.mif_freq << " ";
-	valuebuilder << data.int_freq << " ";
-	valuebuilder << data.hmp_boost << " ";
-
-	ALOGE("%s: \"%s\"\n", __func__, valuebuilder.str().c_str());
-
-	return pfwrite(file, valuebuilder.str());
-}
-
 static bool pfread(string path, int *v) {
 	ifstream file(path);
 	string line;
@@ -613,19 +392,19 @@ static bool is_file(string path) {
 }
 
 static bool is_cluster0_interactive() {
-	return is_dir("/sys/devices/system/cpu/cpu0/cpufreq/interactive");
+	return is_dir(POWER_CPU_CLUSTER0_INTERACTIVE);
 }
 
 static bool is_cluster0_nexus() {
-	return is_dir("/sys/devices/system/cpu/cpu0/cpufreq/nexus");
+	return is_dir(POWER_CPU_CLUSTER0_NEXUS);
 }
 
 static bool is_cluster1_interactive() {
-	return is_dir("/sys/devices/system/cpu/cpu4/cpufreq/interactive");
+	return is_dir(POWER_CPU_CLUSTER1_INTERACTIVE);
 }
 
 static bool is_cluster1_nexus() {
-	return is_dir("/sys/devices/system/cpu/cpu4/cpufreq/nexus");
+	return is_dir(POWER_CPU_CLUSTER1_NEXUS);
 }
 
 static struct hw_module_methods_t power_module_methods = {

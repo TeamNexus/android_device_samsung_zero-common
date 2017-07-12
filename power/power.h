@@ -43,57 +43,53 @@ using namespace std;
 #define POWER_CONFIG_PROFILES          "/data/power/profiles"
 #define POWER_CONFIG_BOOST_PROFILES    "/data/power/boost_profiles"
 
-#define POWER_DT2W_ENABLED                "/sys/android_touch/doubletap2wake"
-#define POWER_FINGERPRINT_ENABLED         "/sys/class/fingerprint/fingerprint/enabled"
-#define POWER_TOUCHKEYS_ENABLED           "/sys/class/input/input0/enabled"
-#define POWER_TOUCHSCREEN_ENABLED         "/sys/class/input/input1/enabled"
-#define POWER_TOUCHKEYS_BRIGTHNESS        "/sys/class/sec/sec_touchkey/brightness"
-
-// GPU
-#define GPU_DVFS               "/sys/devices/14ac0000.mali/dvfs"
-#define GPU_DVFS_GOVERNOR      "/sys/devices/14ac0000.mali/dvfs_governor"
-#define GPU_DVFS_MAX_LOCK      "/sys/devices/14ac0000.mali/dvfs_max_lock"
-#define GPU_DVFS_MIN_LOCK      "/sys/devices/14ac0000.mali/dvfs_min_lock"
-#define GPU_HIGHSPEED_CLOCK    "/sys/devices/14ac0000.mali/highspeed_clock"
-#define GPU_HIGHSPEED_LOAD     "/sys/devices/14ac0000.mali/highspeed_load"
-
-// Input-Booster
-#define INPUT_BOOSTER_LEVEL    "/sys/class/input_booster/level"
-#define INPUT_BOOSTER_HEAD     "/sys/class/input_booster/head"
-#define INPUT_BOOSTER_TAIL     "/sys/class/input_booster/tail"
-
-// Kernel
-#define KERNEL_HMP_ENABLE_PACKING    "/sys/kernel/hmp/packing_enable"
-
-// Module
-#define MODULE_WORKQUEUE_POWER_EFFICIENT    "/sys/module/workqueue/parameters/power_efficient"
-
-// Power
-#define POWER_ENABLE_DM_HOTPLUG    "/sys/power/enable_dm_hotplug"
-#define POWER_IPA_CONTROL_TEMP     "/sys/power/ipa/control_temp"
+#define POWER_DT2W_ENABLED            "/sys/android_touch/doubletap2wake"
+#define POWER_FINGERPRINT_ENABLED     "/sys/class/fingerprint/fingerprint/enabled"
+#define POWER_TOUCHKEYS_ENABLED       "/sys/class/input/input0/enabled"
+#define POWER_TOUCHSCREEN_ENABLED     "/sys/class/input/input1/enabled"
+#define POWER_TOUCHKEYS_BRIGTHNESS    "/sys/class/sec/sec_touchkey/brightness"
 
 /***********************************
  * Interactive cpugov-settings
  */
-// cluster0
-#define POWER_CLUSTER0_ONLINE_CORE0                       "/sys/devices/system/cpu/cpu0/online"
-#define POWER_CLUSTER0_ONLINE_CORE1                       "/sys/devices/system/cpu/cpu1/online"
-#define POWER_CLUSTER0_ONLINE_CORE2                       "/sys/devices/system/cpu/cpu2/online"
-#define POWER_CLUSTER0_ONLINE_CORE3                       "/sys/devices/system/cpu/cpu3/online"
-#define POWER_CLUSTER0_SCALING_GOVERNOR                   "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
-#define POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE             "/sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse"
-#define POWER_CLUSTER0_INTERACTIVE_BOOSTPULSE_DURATION    "/sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse_duration"
-#define POWER_CLUSTER0_NEXUS_BOOSTPULSE                   "/sys/devices/system/cpu/cpu0/cpufreq/nexus/boostpulse"
+// CPU Cluster0
+#define POWER_CPU_CLUSTER0                             "/sys/devices/system/cpu/cpu0/cpufreq"
+#define POWER_CPU_CLUSTER0_INTERACTIVE                 POWER_CPU_CLUSTER0 "/interactive"
+#define POWER_CPU_CLUSTER0_INTERACTIVE_FREQ_MAX        POWER_CPU_CLUSTER0 "/interactive/freq_max"
+#define POWER_CPU_CLUSTER0_INTERACTIVE_FREQ_MIN        POWER_CPU_CLUSTER0 "/interactive/freq_min"
+#define POWER_CPU_CLUSTER0_INTERACTIVE_HISPEED_FREQ    POWER_CPU_CLUSTER0 "/interactive/hispeed_freq"
+#define POWER_CPU_CLUSTER0_NEXUS                       POWER_CPU_CLUSTER0 "/nexus"
+#define POWER_CPU_CLUSTER0_NEXUS_FREQ_MAX              POWER_CPU_CLUSTER0 "/nexus/freq_max"
+#define POWER_CPU_CLUSTER0_NEXUS_FREQ_MIN              POWER_CPU_CLUSTER0 "/nexus/freq_min"
+#define POWER_CPU_CLUSTER0_NEXUS_DOWN_LOAD             POWER_CPU_CLUSTER0 "/nexus/down_load"
+#define POWER_CPU_CLUSTER0_NEXUS_DOWN_STEP             POWER_CPU_CLUSTER0 "/nexus/down_step"
+#define POWER_CPU_CLUSTER0_NEXUS_UP_LOAD               POWER_CPU_CLUSTER0 "/nexus/up_load"
+#define POWER_CPU_CLUSTER0_NEXUS_UP_STEP               POWER_CPU_CLUSTER0 "/nexus/up_step"
 
-// cluster1
-#define POWER_CLUSTER1_ONLINE_CORE0                       "/sys/devices/system/cpu/cpu4/online"
-#define POWER_CLUSTER1_ONLINE_CORE1                       "/sys/devices/system/cpu/cpu5/online"
-#define POWER_CLUSTER1_ONLINE_CORE2                       "/sys/devices/system/cpu/cpu6/online"
-#define POWER_CLUSTER1_ONLINE_CORE3                       "/sys/devices/system/cpu/cpu7/online"
-#define POWER_CLUSTER1_SCALING_GOVERNOR                   "/sys/devices/system/cpu/cpu4/cpufreq/scaling_governor"
-#define POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE             "/sys/devices/system/cpu/cpu4/cpufreq/interactive/boostpulse"
-#define POWER_CLUSTER1_INTERACTIVE_BOOSTPULSE_DURATION    "/sys/devices/system/cpu/cpu4/cpufreq/interactive/boostpulse_duration"
-#define POWER_CLUSTER1_NEXUS_BOOSTPULSE                   "/sys/devices/system/cpu/cpu4/cpufreq/nexus/boostpulse"
+// CPU Cluster1
+#define POWER_CPU_CLUSTER1                             "/sys/devices/system/cpu/cpu4/cpufreq"
+#define POWER_CPU_CLUSTER1_INTERACTIVE                 POWER_CPU_CLUSTER1 "/interactive"
+#define POWER_CPU_CLUSTER1_INTERACTIVE_FREQ_MAX        POWER_CPU_CLUSTER1 "/interactive/freq_max"
+#define POWER_CPU_CLUSTER1_INTERACTIVE_FREQ_MIN        POWER_CPU_CLUSTER1 "/interactive/freq_min"
+#define POWER_CPU_CLUSTER1_INTERACTIVE_HISPEED_FREQ    POWER_CPU_CLUSTER1 "/interactive/hispeed_freq"
+#define POWER_CPU_CLUSTER1_NEXUS                       POWER_CPU_CLUSTER1 "/nexus"
+#define POWER_CPU_CLUSTER1_NEXUS_FREQ_MAX              POWER_CPU_CLUSTER1 "/nexus/freq_max"
+#define POWER_CPU_CLUSTER1_NEXUS_FREQ_MIN              POWER_CPU_CLUSTER1 "/nexus/freq_min"
+#define POWER_CPU_CLUSTER1_NEXUS_DOWN_LOAD             POWER_CPU_CLUSTER1 "/nexus/down_load"
+#define POWER_CPU_CLUSTER1_NEXUS_DOWN_STEP             POWER_CPU_CLUSTER1 "/nexus/down_step"
+#define POWER_CPU_CLUSTER1_NEXUS_UP_LOAD               POWER_CPU_CLUSTER1 "/nexus/up_load"
+#define POWER_CPU_CLUSTER1_NEXUS_UP_STEP               POWER_CPU_CLUSTER1 "/nexus/up_step"
+
+// GPU
+#define POWER_GPU_MAX_LOCK    "/sys/devices/14ac0000.mali/dvfs_max_lock"
+#define POWER_GPU_MIN_LOCK    "/sys/devices/14ac0000.mali/dvfs_min_lock"
+
+// Generic Settings
+#define POWER_ENABLE_DM_HOTPLUG            "/sys/power/enable_dm_hotplug"
+#define POWER_HMP_PACKING_ENABLE           "/sys/power/hmp/packing_enable"
+#define POWER_INPUT_BOOSTER_LEVEL          "/sys/class/input_booster/level"
+#define POWER_IPA_CONTROL_TEMP             "/sys/power/ipa/ipa_control_temp"
+#define POWER_WORKQUEUE_POWER_EFFICIENT    "/sys/module/workqueue/parameters/power_efficient"
 
 /***********************************
  * Initializing
@@ -105,19 +101,11 @@ static void power_init(struct power_module __unused * module);
  * Hinting
  */
 static void power_hint(struct power_module *module, power_hint_t hint, void *data);
-// static void power_hint_interaction_reset(int duration);
-
-/***********************************
- * Boost
- */
-static void power_cpu_boost(int duration);
 
 /***********************************
  * Profiles
  */
 static void power_set_profile(int profile);
-static void power_apply_profile();
-static void power_apply_boost_profile(bool boosted);
 
 /***********************************
  * Inputs
@@ -138,11 +126,6 @@ static bool pfwrite(string path, string str);
 static bool pfwrite(string path, bool flag);
 static bool pfwrite(string path, int value);
 static bool pfwrite(string path, unsigned int value);
-static bool pfwritegov(string path, string str);
-static bool pfwritegov(string path, bool flag);
-static bool pfwritegov(string path, int value);
-static bool pfwritegov(string file, unsigned int value);
-static bool pfwrite_input_booster(string file, struct power_profile_input_booster data);
 static bool pfread(string path, int *v);
 static bool is_dir(string path);
 static bool is_file(string path);
