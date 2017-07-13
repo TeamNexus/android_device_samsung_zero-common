@@ -229,10 +229,9 @@ static void power_set_profile(int profile) {
 	 * Generic Settings
 	 */
 	pfwrite(POWER_ENABLE_DM_HOTPLUG, data.enable_dm_hotplug);
-	pfwrite(POWER_HMP_PACKING_ENABLE, data.hmp_packing_enable);
 	pfwrite(POWER_INPUT_BOOSTER_LEVEL, (data.input_booster ? 2 : 0));
 	pfwrite(POWER_IPA_CONTROL_TEMP, data.ipa_control_temp);
-	pfwrite(POWER_ENABLE_DM_HOTPLUG, data.power_efficient_workqueue);
+	pfwrite(POWER_WORKQUEUE_POWER_EFFICIENT, data.power_efficient_workqueue);
 }
 
 /***********************************

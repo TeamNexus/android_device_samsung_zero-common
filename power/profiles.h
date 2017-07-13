@@ -58,7 +58,6 @@ struct power_profile {
 	} gpu;
 	
 	bool enable_dm_hotplug;
-	bool hmp_packing_enable;
 	int ipa_control_temp;
 	bool input_booster;
 	bool power_efficient_workqueue;
@@ -71,10 +70,10 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 300000,
+				.freq_max = 400000,
 				.freq_min = 200000,
 				.interactive = {
-					.hispeed_freq = 200000,
+					.hispeed_freq = 400000,
 				},
 				.nexus = {
 					.down_load = 79,
@@ -84,10 +83,10 @@ struct power_profile {
 				},
 			},
 			.cl1 = {
-				.freq_max = 300000,
+				.freq_max = 400000,
 				.freq_min = 200000,
 				.interactive = {
-					.hispeed_freq = 200000,
+					.hispeed_freq = 400000,
 				},
 				.nexus = {
 					.down_load = 79,
@@ -102,7 +101,6 @@ struct power_profile {
 			.min_lock = 266,
 		},
 		.enable_dm_hotplug = false,
-		.hmp_packing_enable = false,
 		.input_booster = false,
 		.ipa_control_temp = 35,
 		.power_efficient_workqueue = true,
@@ -114,10 +112,10 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 600000,
+				.freq_max = 800000,
 				.freq_min = 200000,
 				.interactive = {
-					.hispeed_freq = 400000,
+					.hispeed_freq = 500000,
 				},
 				.nexus = {
 					.down_load = 79,
@@ -145,7 +143,6 @@ struct power_profile {
 			.min_lock = 266,
 		},
 		.enable_dm_hotplug = false,
-		.hmp_packing_enable = false,
 		.input_booster = false,
 		.ipa_control_temp = 45,
 		.power_efficient_workqueue = true,
@@ -157,10 +154,10 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 1296000,
+				.freq_max = 1500000,
 				.freq_min = 400000,
 				.interactive = {
-					.hispeed_freq = 800000,
+					.hispeed_freq = 1500000,
 				},
 				.nexus = {
 					.down_load = 75,
@@ -170,10 +167,10 @@ struct power_profile {
 				},
 			},
 			.cl1 = {
-				.freq_max = 1200000,
+				.freq_max = 2100000,
 				.freq_min = 400000,
 				.interactive = {
-					.hispeed_freq = 800000,
+					.hispeed_freq = 2100000,
 				},
 				.nexus = {
 					.down_load = 75,
@@ -188,7 +185,6 @@ struct power_profile {
 			.min_lock = 350,
 		},
 		.enable_dm_hotplug = false,
-		.hmp_packing_enable = false,
 		.input_booster = true,
 		.ipa_control_temp = 65,
 		.power_efficient_workqueue = false,
@@ -231,7 +227,6 @@ struct power_profile {
 			.min_lock = 600,
 		},
 		.enable_dm_hotplug = false,
-		.hmp_packing_enable = true,
 		.input_booster = true,
 		.ipa_control_temp = 75,
 		.power_efficient_workqueue = false,
@@ -246,7 +241,7 @@ struct power_profile {
 				.freq_max = 1000000,
 				.freq_min = 400000,
 				.interactive = {
-					.hispeed_freq = 800000,
+					.hispeed_freq = 700000,
 				},
 				.nexus = {
 					.down_load = 65,
@@ -256,10 +251,10 @@ struct power_profile {
 				},
 			},
 			.cl1 = {
-				.freq_max = 800000,
+				.freq_max = 900000,
 				.freq_min = 300000,
 				.interactive = {
-					.hispeed_freq = 500000,
+					.hispeed_freq = 600000,
 				},
 				.nexus = {
 					.down_load = 65,
@@ -274,7 +269,6 @@ struct power_profile {
 			.min_lock = 350,
 		},
 		.enable_dm_hotplug = false,
-		.hmp_packing_enable = false,
 		.input_booster = false,
 		.ipa_control_temp = 55,
 		.power_efficient_workqueue = true,
@@ -287,9 +281,9 @@ struct power_profile {
 		.cpu = {
 			.cl0 = {
 				.freq_max = 1500000,
-				.freq_min = 700000,
+				.freq_min = 600000,
 				.interactive = {
-					.hispeed_freq = 1296000,
+					.hispeed_freq = 1100000,
 				},
 				.nexus = {
 					.down_load = 50,
@@ -300,9 +294,9 @@ struct power_profile {
 			},
 			.cl1 = {
 				.freq_max = 2100000,
-				.freq_min = 500000,
+				.freq_min = 600000,
 				.interactive = {
-					.hispeed_freq = 1000000,
+					.hispeed_freq = 1500000,
 				},
 				.nexus = {
 					.down_load = 50,
@@ -317,7 +311,6 @@ struct power_profile {
 			.min_lock = 420,
 		},
 		.enable_dm_hotplug = false,
-		.hmp_packing_enable = true,
 		.input_booster = true,
 		.ipa_control_temp = 70,
 		.power_efficient_workqueue = false,

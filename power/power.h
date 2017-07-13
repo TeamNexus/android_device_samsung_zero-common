@@ -86,7 +86,6 @@ using namespace std;
 
 // Generic Settings
 #define POWER_ENABLE_DM_HOTPLUG            "/sys/power/enable_dm_hotplug"
-#define POWER_HMP_PACKING_ENABLE           "/sys/power/hmp/packing_enable"
 #define POWER_INPUT_BOOSTER_LEVEL          "/sys/class/input_booster/level"
 #define POWER_IPA_CONTROL_TEMP             "/sys/power/ipa/ipa_control_temp"
 #define POWER_WORKQUEUE_POWER_EFFICIENT    "/sys/module/workqueue/parameters/power_efficient"
