@@ -222,8 +222,8 @@ static void power_set_profile(int profile) {
 	/*********************
 	 * GPU
 	 */
-	pfwrite(POWER_CPU_CLUSTER1_NEXUS_UP_LOAD, data.gpu.max_lock);
-	pfwrite(POWER_CPU_CLUSTER1_NEXUS_UP_STEP, data.gpu.min_lock);
+	pfwrite(POWER_GPU_MAX_LOCK, data.gpu.max_lock);
+	pfwrite(POWER_GPU_MIN_LOCK, data.gpu.min_lock);
 
 	/*********************
 	 * Generic Settings
