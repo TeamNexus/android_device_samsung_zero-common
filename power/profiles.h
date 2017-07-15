@@ -196,10 +196,10 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 2304000,
+				.freq_max = 1704000,
 				.freq_min = 800000,
 				.interactive = {
-					.hispeed_freq = 2100000,
+					.hispeed_freq = 1500000,
 				},
 				.nexus = {
 					.down_load = 55,
@@ -209,10 +209,10 @@ struct power_profile {
 				},
 			},
 			.cl1 = {
-				.freq_max = 1704000,
+				.freq_max = 2304000,
 				.freq_min = 800000,
 				.interactive = {
-					.hispeed_freq = 1500000,
+					.hispeed_freq = 2100000,
 				},
 				.nexus = {
 					.down_load = 55,
