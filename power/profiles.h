@@ -154,10 +154,10 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 1500000,
+				.freq_max = 1200000,
 				.freq_min = 200000,
 				.interactive = {
-					.hispeed_freq = 800000,
+					.hispeed_freq = 700000,
 				},
 				.nexus = {
 					.down_load = 75,
@@ -167,10 +167,10 @@ struct power_profile {
 				},
 			},
 			.cl1 = {
-				.freq_max = 2100000,
+				.freq_max = 1200000,
 				.freq_min = 200000,
 				.interactive = {
-					.hispeed_freq = 800000,
+					.hispeed_freq = 700000,
 				},
 				.nexus = {
 					.down_load = 75,
@@ -185,7 +185,7 @@ struct power_profile {
 			.min_lock = 420,
 		},
 		.enable_dm_hotplug = false,
-		.input_booster = true,
+		.input_booster = false,
 		.ipa_control_temp = 65,
 		.power_efficient_workqueue = true,
 	},
@@ -227,7 +227,7 @@ struct power_profile {
 			.min_lock = 600,
 		},
 		.enable_dm_hotplug = false,
-		.input_booster = true,
+		.input_booster = false,
 		.ipa_control_temp = 75,
 		.power_efficient_workqueue = false,
 	},
@@ -311,7 +311,7 @@ struct power_profile {
 			.min_lock = 544,
 		},
 		.enable_dm_hotplug = false,
-		.input_booster = true,
+		.input_booster = false,
 		.ipa_control_temp = 70,
 		.power_efficient_workqueue = false,
 	},
