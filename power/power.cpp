@@ -238,10 +238,13 @@ static void power_set_profile(int profile) {
  * Inputs
  */
 static void power_input_device_state(int state) {
-	int dt2w = 0, dt2w_sysfs = 0, always_on_fp = 0;
+	int dt2w = 0, dt2w_sysfs = 0,
+		always_on_fp = 0, keydisable_active = 0;
+	
 	pfread(POWER_CONFIG_DT2W, &dt2w);
 	pfread(POWER_DT2W_ENABLED, &dt2w_sysfs);
 	pfread(POWER_CONFIG_ALWAYS_ON_FP, &always_on_fp);
+	pfread(POWER_OS_KEYDISABLER, &keydisable_active);
 
 	switch (state) {
 		case INPUT_STATE_DISABLE:
@@ -253,7 +256,7 @@ static void power_input_device_state(int state) {
 			if (always_on_fp) {
 				pfwrite(POWER_FINGERPRINT_ENABLED, true);
 			} else {
-				pfwrite(POWER_FINGERPRINT_ENABLED, false);
+				// pfwrite(POWER_FINGERPRINT_ENABLED, false);
 			}
 
 			if (dt2w && !dt2w_sysfs) {
@@ -267,8 +270,11 @@ static void power_input_device_state(int state) {
 		case INPUT_STATE_ENABLE:
 
 			pfwrite(POWER_TOUCHSCREEN_ENABLED, true);
-			pfwrite(POWER_TOUCHKEYS_ENABLED, true);
 			pfwrite(POWER_FINGERPRINT_ENABLED, true);
+			
+			if (!keydisable_active) {
+				pfwrite(POWER_TOUCHKEYS_ENABLED, true);
+			}
 
 			if (!dt2w) {
 				pfwrite(POWER_DT2W_ENABLED, false);
