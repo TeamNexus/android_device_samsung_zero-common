@@ -89,16 +89,6 @@ static int power_open(const hw_module_t __unused * module, const char *name, hw_
 }
 
 static void power_init(struct power_module __unused * module) {
-	// set to normal power profile
-	power_set_profile(PROFILE_BALANCED);
-
-	// initialize all input-devices
-	power_input_device_state(1);
-
-	// set the default settings
-	if (!is_dir("/data/power"))
-		mkdir("/data/power", 0771);
-
 	if (!is_file(POWER_CONFIG_ALWAYS_ON_FP))
 		pfwrite(POWER_CONFIG_ALWAYS_ON_FP, false);
 
@@ -110,6 +100,16 @@ static void power_init(struct power_module __unused * module) {
 
 	if (!is_file(POWER_CONFIG_PROFILES))
 		pfwrite(POWER_CONFIG_PROFILES, true);
+
+	// set to normal power profile
+	power_set_profile(PROFILE_BALANCED);
+
+	// initialize all input-devices
+	power_input_device_state(1);
+
+	// set the default settings
+	if (!is_dir("/data/power"))
+		mkdir("/data/power", 0771);
 }
 
 /***********************************
