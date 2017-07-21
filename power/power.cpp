@@ -127,12 +127,12 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 		 * Profiles
 		 */
 		case POWER_HINT_LOW_POWER:
-			ALOGW("%s: hint(POWER_HINT_LOW_POWER, %d, %llu)", __func__, value, (unsigned long long)data);
+			ALOGI("%s: hint(POWER_HINT_LOW_POWER, %d, %llu)", __func__, value, (unsigned long long)data);
 			power_set_profile(value ? PROFILE_POWER_SAVE : requested_power_profile);
 			break;
 
 		case POWER_HINT_SET_PROFILE:
-			ALOGW("%s: hint(POWER_HINT_SET_PROFILE, %d, %llu)", __func__, value, (unsigned long long)data);
+			ALOGI("%s: hint(POWER_HINT_SET_PROFILE, %d, %llu)", __func__, value, (unsigned long long)data);
 			requested_power_profile = value;
 			power_set_profile(value);
 			break;
@@ -140,9 +140,9 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 		case POWER_HINT_SUSTAINED_PERFORMANCE:
 		case POWER_HINT_VR_MODE:
 			if (hint == POWER_HINT_SUSTAINED_PERFORMANCE)
-				ALOGW("%s: hint(POWER_HINT_SUSTAINED_PERFORMANCE, %d, %llu)", __func__, value, (unsigned long long)data);
+				ALOGI("%s: hint(POWER_HINT_SUSTAINED_PERFORMANCE, %d, %llu)", __func__, value, (unsigned long long)data);
 			else if (hint == POWER_HINT_VR_MODE)
-				ALOGW("%s: hint(POWER_HINT_VR_MODE, %d, %llu)", __func__, value, (unsigned long long)data);
+				ALOGI("%s: hint(POWER_HINT_VR_MODE, %d, %llu)", __func__, value, (unsigned long long)data);
 
 			power_set_profile(value ? PROFILE_HIGH_PERFORMANCE  - 1 : requested_power_profile);
 			break;
@@ -151,7 +151,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 		 * Inputs
 		 */
 		case POWER_HINT_DISABLE_TOUCH:
-			ALOGW("%s: hint(POWER_HINT_DISABLE_TOUCH, %d, %llu)", __func__, value, (unsigned long long)data);
+			ALOGI("%s: hint(POWER_HINT_DISABLE_TOUCH, %d, %llu)", __func__, value, (unsigned long long)data);
 			power_input_device_state(value ? 0 : 1);
 			break;
 
@@ -166,7 +166,10 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
  */
 static void power_set_profile(int profile) {
 	int profiles = 1;
-	if(pfread(POWER_CONFIG_PROFILES, &profiles) && !profiles) {
+	
+	pfread(POWER_CONFIG_PROFILES, &profiles);
+	if (!profiles) {
+		ALOGD("%s: profiles disabled (tried to apply profile %d)", __func__, profile);
 		return;
 	}
 
@@ -242,12 +245,18 @@ static void power_set_profile(int profile) {
  */
 static void power_input_device_state(int state) {
 	int dt2w = 0, dt2w_sysfs = 0,
-		always_on_fp = 0, keydisable_active = 0;
+		always_on_fp = 0, keydisabler_active = 0;
 
 	pfread(POWER_CONFIG_DT2W, &dt2w);
 	pfread(POWER_DT2W_ENABLED, &dt2w_sysfs);
 	pfread(POWER_CONFIG_ALWAYS_ON_FP, &always_on_fp);
-	pfread(POWER_CONFIG_KEYDISABLER_ACTIVE, &keydisable_active);
+	pfread(POWER_CONFIG_KEYDISABLER_ACTIVE, &keydisabler_active);
+
+	ALOGD("%s: state              = %d", __func__, state);
+	ALOGD("%s: dt2w               = %d", __func__, dt2w);
+	ALOGD("%s: dt2w_sysfs         = %d", __func__, dt2w_sysfs);
+	ALOGD("%s: always_on_fp       = %d", __func__, always_on_fp);
+	ALOGD("%s: keydisabler_active = %d", __func__, keydisabler_active);
 
 	switch (state) {
 		case INPUT_STATE_DISABLE:
@@ -259,7 +268,7 @@ static void power_input_device_state(int state) {
 			if (always_on_fp) {
 				pfwrite(POWER_FINGERPRINT_ENABLED, true);
 			} else {
-				// pfwrite(POWER_FINGERPRINT_ENABLED, false);
+				pfwrite(POWER_FINGERPRINT_ENABLED, false);
 			}
 
 			if (dt2w && !dt2w_sysfs) {
@@ -275,7 +284,7 @@ static void power_input_device_state(int state) {
 			pfwrite(POWER_TOUCHSCREEN_ENABLED, true);
 			pfwrite(POWER_FINGERPRINT_ENABLED, true);
 
-			if (!keydisable_active) {
+			if (!keydisabler_active) {
 				pfwrite(POWER_TOUCHKEYS_ENABLED, true);
 			}
 
@@ -292,6 +301,7 @@ static void power_input_device_state(int state) {
 
 static void power_set_interactive(struct power_module __unused * module, int on) {
 	int screen_is_on = (on != 0);
+	ALOGD("%s: on = %d", __func__, on);
 
 	if (!screen_is_on) {
 		power_set_profile(PROFILE_SCREEN_OFF);
@@ -308,9 +318,11 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 static int power_get_feature(struct power_module *module __unused, feature_t feature) {
 	switch (feature) {
 		case POWER_FEATURE_SUPPORTED_PROFILES:
+			ALOGD("%s: request for POWER_FEATURE_SUPPORTED_PROFILES = %d", __func__, PROFILE_MAX_USABLE);
 			return PROFILE_MAX_USABLE;
 		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE:
-			return is_file(POWER_DT2W_ENABLED);
+			ALOGD("%s: request for POWER_FEATURE_DOUBLE_TAP_TO_WAKE = 1", __func__);
+			return 1;
 		default:
 			return -EINVAL;
 	}
@@ -319,6 +331,7 @@ static int power_get_feature(struct power_module *module __unused, feature_t fea
 static void power_set_feature(struct power_module *module, feature_t feature, int state) {
 	switch (feature) {
 		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE:
+			ALOGD("%s: set POWER_FEATURE_DOUBLE_TAP_TO_WAKE to \"%d\"", __func__, state);
 			if (state) {
 				pfwrite(POWER_DT2W_ENABLED, "1");
 			} else {
