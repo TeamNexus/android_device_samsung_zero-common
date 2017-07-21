@@ -271,12 +271,6 @@ static void power_input_device_state(int state) {
 				pfwrite(POWER_FINGERPRINT_ENABLED, false);
 			}
 
-			if (dt2w && !dt2w_sysfs) {
-				pfwrite(POWER_DT2W_ENABLED, true);
-			} else {
-				pfwrite(POWER_DT2W_ENABLED, false);
-			}
-
 			break;
 
 		case INPUT_STATE_ENABLE:
@@ -286,13 +280,16 @@ static void power_input_device_state(int state) {
 
 			if (!keydisabler_active) {
 				pfwrite(POWER_TOUCHKEYS_ENABLED, true);
-			}
-
-			if (!dt2w) {
-				pfwrite(POWER_DT2W_ENABLED, false);
+				pfwrite(POWER_TOUCHKEYS_BRIGTHNESS, 255);
 			}
 
 			break;
+	}
+
+	if (dt2w) {
+		pfwrite_legacy(POWER_DT2W_ENABLED, true);
+	} else {
+		pfwrite_legacy(POWER_DT2W_ENABLED, false);
 	}
 
 	// give hw some milliseconds to properly boot up
@@ -333,10 +330,13 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
 		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE:
 			ALOGD("%s: set POWER_FEATURE_DOUBLE_TAP_TO_WAKE to \"%d\"", __func__, state);
 			if (state) {
-				pfwrite(POWER_DT2W_ENABLED, "1");
+				pfwrite(POWER_CONFIG_DT2W, false);
+				pfwrite_legacy(POWER_DT2W_ENABLED, true);
 			} else {
-				pfwrite(POWER_DT2W_ENABLED, "0");
+				pfwrite(POWER_CONFIG_DT2W, false);
+				pfwrite_legacy(POWER_DT2W_ENABLED, true);
 			}
+			break;
 
 		default:
 			ALOGW("Error setting the feature %d and state %d, it doesn't exist\n",
@@ -357,7 +357,7 @@ static bool pfwrite(string path, string str) {
 		return false;
 	}
 
-	// ALOGI("%s: store \"%s\" to %s", __func__, str.c_str(), path.c_str());
+	ALOGI("%s: store \"%s\" to %s", __func__, str.c_str(), path.c_str());
 	file << str;
 	file.close();
 
@@ -374,6 +374,26 @@ static bool pfwrite(string path, int value) {
 
 static bool pfwrite(string path, unsigned int value) {
 	return pfwrite(path, to_string(value));
+}
+
+static bool pfwrite_legacy(string path, bool flag) {
+	FILE *file = fopen(path.c_str(), "w");
+	bool ret = true;
+	
+	if (file == NULL) {
+		ALOGE("%s: failed to open %s", __func__, path.c_str());
+		return false;
+	}
+	
+	fprintf(file, "%d\n", (flag ? 1 : 0));
+	
+	if (ferror(file)) {
+		ALOGE("%s: failed to write to %s", __func__, path.c_str());
+		ret = false;
+	}
+		
+	fclose(file);
+	return ret;
 }
 
 static bool pfread(string path, int *v) {

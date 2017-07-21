@@ -124,6 +124,7 @@ static bool pfwrite(string path, string str);
 static bool pfwrite(string path, bool flag);
 static bool pfwrite(string path, int value);
 static bool pfwrite(string path, unsigned int value);
+static bool pfwrite_legacy(string path, bool flag);
 static bool pfread(string path, int *v);
 static bool is_dir(string path);
 static bool is_file(string path);
