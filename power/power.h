@@ -37,11 +37,10 @@ using namespace std;
 #define INPUT_STATE_DISABLE    0
 #define INPUT_STATE_ENABLE     1
 
-#define POWER_CONFIG_ALWAYS_ON_FP      "/data/power/always_on_fp"
-#define POWER_CONFIG_BOOST             "/data/power/boost"
-#define POWER_CONFIG_DT2W              "/data/power/dt2w"
-#define POWER_CONFIG_PROFILES          "/data/power/profiles"
-#define POWER_CONFIG_BOOST_PROFILES    "/data/power/boost_profiles"
+#define POWER_CONFIG_ALWAYS_ON_FP          "/data/power/always_on_fp"
+#define POWER_CONFIG_DT2W                  "/data/power/dt2w"
+#define POWER_CONFIG_PROFILES              "/data/power/profiles"
+#define POWER_CONFIG_KEYDISABLER_ACTIVE    "/data/power/keydisable_active" // keep in sync with cmhw/org/cyanogenmod/hardware/KeyDisabler.java:35
 
 #define POWER_DT2W_ENABLED            "/sys/android_touch/doubletap2wake"
 #define POWER_FINGERPRINT_ENABLED     "/sys/class/fingerprint/fingerprint/enabled"
@@ -89,9 +88,6 @@ using namespace std;
 #define POWER_INPUT_BOOSTER_LEVEL          "/sys/class/input_booster/level"
 #define POWER_IPA_CONTROL_TEMP             "/sys/power/ipa/control_temp"
 #define POWER_WORKQUEUE_POWER_EFFICIENT    "/sys/module/workqueue/parameters/power_efficient"
-
-// OS-Connections
-#define POWER_OS_KEYDISABLER    "/data/power/keydisabler"
 
 /***********************************
  * Initializing

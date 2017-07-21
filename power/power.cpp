@@ -105,6 +105,9 @@ static void power_init(struct power_module __unused * module) {
 	if (!is_file(POWER_CONFIG_DT2W))
 		pfwrite(POWER_CONFIG_DT2W, false);
 
+	if (!is_file(POWER_CONFIG_KEYDISABLER_ACTIVE))
+		pfwrite(POWER_CONFIG_KEYDISABLER_ACTIVE, false);
+
 	if (!is_file(POWER_CONFIG_PROFILES))
 		pfwrite(POWER_CONFIG_PROFILES, true);
 }
@@ -244,7 +247,7 @@ static void power_input_device_state(int state) {
 	pfread(POWER_CONFIG_DT2W, &dt2w);
 	pfread(POWER_DT2W_ENABLED, &dt2w_sysfs);
 	pfread(POWER_CONFIG_ALWAYS_ON_FP, &always_on_fp);
-	pfread(POWER_OS_KEYDISABLER, &keydisable_active);
+	pfread(POWER_CONFIG_KEYDISABLER_ACTIVE, &keydisable_active);
 
 	switch (state) {
 		case INPUT_STATE_DISABLE:
