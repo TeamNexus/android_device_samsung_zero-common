@@ -19,47 +19,29 @@ using namespace std;
 #ifndef EXYNOS5_POWER_HAL_PROFILES_INCLUDED
 #define EXYNOS5_POWER_HAL_PROFILES_INCLUDED
 
-struct power_profile_cpu_cluster {
-
-	unsigned int freq_min;
-	unsigned int freq_max;
-	
-	struct {
-
-		unsigned int hispeed_freq;
-
-	} interactive;
-	
-	struct {
-
-		unsigned int down_load;
-		unsigned int down_step;
-		unsigned int up_load;
-		unsigned int up_step;
-
-	} nexus;
-
-};
-
 struct power_profile {
 
 	struct {
 
-		struct power_profile_cpu_cluster cl0;
-		struct power_profile_cpu_cluster cl1;
+		struct {
+			unsigned int freq_min;
+			unsigned int freq_max;
+		} cl0;
+		
+		struct {
+			unsigned int freq_min;
+			unsigned int freq_max;
+		} cl1;
 
 	} cpu;
 
 	struct {
 
 		int max_lock;
-		int min_lock;
 
 	} gpu;
 	
-	bool enable_dm_hotplug;
 	int ipa_control_temp;
-	bool input_booster;
 	bool power_efficient_workqueue;
 
 } power_profiles[PROFILE_MAX_USABLE + 1] = {
@@ -70,38 +52,17 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 400000,
+				.freq_max = 200000,
 				.freq_min = 200000,
-				.interactive = {
-					.hispeed_freq = 400000,
-				},
-				.nexus = {
-					.down_load = 79,
-					.down_step = 3,
-					.up_load = 99,
-					.up_step = 1,
-				},
 			},
 			.cl1 = {
-				.freq_max = 400000,
+				.freq_max = 200000,
 				.freq_min = 200000,
-				.interactive = {
-					.hispeed_freq = 400000,
-				},
-				.nexus = {
-					.down_load = 79,
-					.down_step = 3,
-					.up_load = 99,
-					.up_step = 1,
-				},
 			},
 		},
 		.gpu = {
 			.max_lock = 266,
-			.min_lock = 266,
 		},
-		.enable_dm_hotplug = false,
-		.input_booster = false,
 		.ipa_control_temp = 35,
 		.power_efficient_workqueue = true,
 	},
@@ -114,36 +75,15 @@ struct power_profile {
 			.cl0 = {
 				.freq_max = 800000,
 				.freq_min = 200000,
-				.interactive = {
-					.hispeed_freq = 600000,
-				},
-				.nexus = {
-					.down_load = 79,
-					.down_step = 3,
-					.up_load = 99,
-					.up_step = 1,
-				},
 			},
 			.cl1 = {
-				.freq_max = 600000,
+				.freq_max = 800000,
 				.freq_min = 200000,
-				.interactive = {
-					.hispeed_freq = 600000,
-				},
-				.nexus = {
-					.down_load = 79,
-					.down_step = 3,
-					.up_load = 99,
-					.up_step = 1,
-				},
 			},
 		},
 		.gpu = {
 			.max_lock = 420,
-			.min_lock = 266,
 		},
-		.enable_dm_hotplug = false,
-		.input_booster = false,
 		.ipa_control_temp = 45,
 		.power_efficient_workqueue = true,
 	},
@@ -154,38 +94,17 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 1200000,
+				.freq_max = 1000000,
 				.freq_min = 200000,
-				.interactive = {
-					.hispeed_freq = 700000,
-				},
-				.nexus = {
-					.down_load = 75,
-					.down_step = 2,
-					.up_load = 85,
-					.up_step = 1,
-				},
 			},
 			.cl1 = {
-				.freq_max = 1200000,
+				.freq_max = 1000000,
 				.freq_min = 200000,
-				.interactive = {
-					.hispeed_freq = 700000,
-				},
-				.nexus = {
-					.down_load = 75,
-					.down_step = 3,
-					.up_load = 90,
-					.up_step = 1,
-				},
 			},
 		},
 		.gpu = {
-			.max_lock = 772,
-			.min_lock = 420,
+			.max_lock = 700,
 		},
-		.enable_dm_hotplug = false,
-		.input_booster = false,
 		.ipa_control_temp = 65,
 		.power_efficient_workqueue = true,
 	},
@@ -197,37 +116,16 @@ struct power_profile {
 		.cpu = {
 			.cl0 = {
 				.freq_max = 1704000,
-				.freq_min = 800000,
-				.interactive = {
-					.hispeed_freq = 1500000,
-				},
-				.nexus = {
-					.down_load = 55,
-					.down_step = 1,
-					.up_load = 75,
-					.up_step = 3,
-				},
+				.freq_min = 600000,
 			},
 			.cl1 = {
 				.freq_max = 2304000,
-				.freq_min = 800000,
-				.interactive = {
-					.hispeed_freq = 2100000,
-				},
-				.nexus = {
-					.down_load = 55,
-					.down_step = 1,
-					.up_load = 75,
-					.up_step = 2,
-				},
+				.freq_min = 600000,
 			},
 		},
 		.gpu = {
-			.max_lock = 772,
-			.min_lock = 600,
+			.max_lock = 852,
 		},
-		.enable_dm_hotplug = false,
-		.input_booster = false,
 		.ipa_control_temp = 75,
 		.power_efficient_workqueue = false,
 	},
@@ -238,38 +136,17 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 1000000,
+				.freq_max = 800000,
 				.freq_min = 200000,
-				.interactive = {
-					.hispeed_freq = 600000,
-				},
-				.nexus = {
-					.down_load = 65,
-					.down_step = 2,
-					.up_load = 85,
-					.up_step = 1,
-				},
 			},
 			.cl1 = {
-				.freq_max = 1000000,
+				.freq_max = 800000,
 				.freq_min = 200000,
-				.interactive = {
-					.hispeed_freq = 600000,
-				},
-				.nexus = {
-					.down_load = 65,
-					.down_step = 2,
-					.up_load = 85,
-					.up_step = 1,
-				},
 			},
 		},
 		.gpu = {
-			.max_lock = 600,
-			.min_lock = 350,
+			.max_lock = 544,
 		},
-		.enable_dm_hotplug = false,
-		.input_booster = false,
 		.ipa_control_temp = 55,
 		.power_efficient_workqueue = true,
 	},
@@ -280,38 +157,17 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 1500000,
-				.freq_min = 500000,
-				.interactive = {
-					.hispeed_freq = 1100000,
-				},
-				.nexus = {
-					.down_load = 50,
-					.down_step = 2,
-					.up_load = 75,
-					.up_step = 2,
-				},
+				.freq_max = 1296000,
+				.freq_min = 400000,
 			},
 			.cl1 = {
-				.freq_max = 2100000,
-				.freq_min = 500000,
-				.interactive = {
-					.hispeed_freq = 1100000,
-				},
-				.nexus = {
-					.down_load = 50,
-					.down_step = 2,
-					.up_load = 75,
-					.up_step = 2,
-				},
+				.freq_max = 1500000,
+				.freq_min = 400000,
 			},
 		},
 		.gpu = {
 			.max_lock = 772,
-			.min_lock = 544,
 		},
-		.enable_dm_hotplug = false,
-		.input_booster = false,
 		.ipa_control_temp = 70,
 		.power_efficient_workqueue = false,
 	},

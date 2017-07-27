@@ -40,7 +40,6 @@ using namespace std;
 #define POWER_CONFIG_ALWAYS_ON_FP          "/data/power/always_on_fp"
 #define POWER_CONFIG_DT2W                  "/data/power/dt2w"
 #define POWER_CONFIG_PROFILES              "/data/power/profiles"
-#define POWER_CONFIG_KEYDISABLER_ACTIVE    "/data/power/keydisable_active" // keep in sync with cmhw/org/cyanogenmod/hardware/KeyDisabler.java:35
 
 #define POWER_DT2W_ENABLED            "/sys/android_touch/doubletap2wake"
 #define POWER_FINGERPRINT_ENABLED     "/sys/class/fingerprint/fingerprint/enabled"
@@ -60,10 +59,6 @@ using namespace std;
 #define POWER_CPU_CLUSTER0_NEXUS                       POWER_CPU_CLUSTER0 "/nexus"
 #define POWER_CPU_CLUSTER0_NEXUS_FREQ_MAX              POWER_CPU_CLUSTER0 "/nexus/freq_max"
 #define POWER_CPU_CLUSTER0_NEXUS_FREQ_MIN              POWER_CPU_CLUSTER0 "/nexus/freq_min"
-#define POWER_CPU_CLUSTER0_NEXUS_DOWN_LOAD             POWER_CPU_CLUSTER0 "/nexus/down_load"
-#define POWER_CPU_CLUSTER0_NEXUS_DOWN_STEP             POWER_CPU_CLUSTER0 "/nexus/down_step"
-#define POWER_CPU_CLUSTER0_NEXUS_UP_LOAD               POWER_CPU_CLUSTER0 "/nexus/up_load"
-#define POWER_CPU_CLUSTER0_NEXUS_UP_STEP               POWER_CPU_CLUSTER0 "/nexus/up_step"
 
 // CPU Cluster1
 #define POWER_CPU_CLUSTER1                             "/sys/devices/system/cpu/cpu4/cpufreq"
@@ -74,14 +69,9 @@ using namespace std;
 #define POWER_CPU_CLUSTER1_NEXUS                       POWER_CPU_CLUSTER1 "/nexus"
 #define POWER_CPU_CLUSTER1_NEXUS_FREQ_MAX              POWER_CPU_CLUSTER1 "/nexus/freq_max"
 #define POWER_CPU_CLUSTER1_NEXUS_FREQ_MIN              POWER_CPU_CLUSTER1 "/nexus/freq_min"
-#define POWER_CPU_CLUSTER1_NEXUS_DOWN_LOAD             POWER_CPU_CLUSTER1 "/nexus/down_load"
-#define POWER_CPU_CLUSTER1_NEXUS_DOWN_STEP             POWER_CPU_CLUSTER1 "/nexus/down_step"
-#define POWER_CPU_CLUSTER1_NEXUS_UP_LOAD               POWER_CPU_CLUSTER1 "/nexus/up_load"
-#define POWER_CPU_CLUSTER1_NEXUS_UP_STEP               POWER_CPU_CLUSTER1 "/nexus/up_step"
 
 // GPU
 #define POWER_GPU_MAX_LOCK    "/sys/devices/14ac0000.mali/dvfs_max_lock"
-#define POWER_GPU_MIN_LOCK    "/sys/devices/14ac0000.mali/dvfs_min_lock"
 
 // Generic Settings
 #define POWER_ENABLE_DM_HOTPLUG            "/sys/power/enable_dm_hotplug"

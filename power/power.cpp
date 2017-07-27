@@ -53,6 +53,8 @@ struct sec_power_module {
 static int current_power_profile = PROFILE_BALANCED;
 static int requested_power_profile = PROFILE_BALANCED;
 
+static int input_state_touchkeys = 1;
+
 /***********************************
  * Initializing
  */
@@ -94,9 +96,6 @@ static void power_init(struct power_module __unused * module) {
 
 	if (!is_file(POWER_CONFIG_DT2W))
 		pfwrite(POWER_CONFIG_DT2W, false);
-
-	if (!is_file(POWER_CONFIG_KEYDISABLER_ACTIVE))
-		pfwrite(POWER_CONFIG_KEYDISABLER_ACTIVE, false);
 
 	if (!is_file(POWER_CONFIG_PROFILES))
 		pfwrite(POWER_CONFIG_PROFILES, true);
@@ -144,7 +143,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 			else if (hint == POWER_HINT_VR_MODE)
 				ALOGI("%s: hint(POWER_HINT_VR_MODE, %d, %llu)", __func__, value, (unsigned long long)data);
 
-			power_set_profile(value ? PROFILE_HIGH_PERFORMANCE  - 1 : requested_power_profile);
+			power_set_profile(value ? PROFILE_HIGH_PERFORMANCE : requested_power_profile);
 			break;
 
 		/***********************************
@@ -185,57 +184,36 @@ static void power_set_profile(int profile) {
 	 * CPU Cluster0
 	 */
 	if (is_cluster0_interactive()) {
-		// common
 		pfwrite(POWER_CPU_CLUSTER0_INTERACTIVE_FREQ_MAX, data.cpu.cl0.freq_max);
 		pfwrite(POWER_CPU_CLUSTER0_INTERACTIVE_FREQ_MIN, data.cpu.cl0.freq_min);
-
-		// interactive
-		pfwrite(POWER_CPU_CLUSTER0_INTERACTIVE_HISPEED_FREQ, data.cpu.cl0.interactive.hispeed_freq);
+		pfwrite(POWER_CPU_CLUSTER0_INTERACTIVE_HISPEED_FREQ, data.cpu.cl0.freq_max);
 	} else if (is_cluster0_nexus()) {
-		// common
 		pfwrite(POWER_CPU_CLUSTER0_NEXUS_FREQ_MAX, data.cpu.cl0.freq_max);
 		pfwrite(POWER_CPU_CLUSTER0_NEXUS_FREQ_MIN, data.cpu.cl0.freq_min);
-
-		// nexus
-		pfwrite(POWER_CPU_CLUSTER0_NEXUS_DOWN_LOAD, data.cpu.cl0.nexus.down_load);
-		pfwrite(POWER_CPU_CLUSTER0_NEXUS_DOWN_STEP, data.cpu.cl0.nexus.down_step);
-		pfwrite(POWER_CPU_CLUSTER0_NEXUS_UP_LOAD, data.cpu.cl0.nexus.up_load);
-		pfwrite(POWER_CPU_CLUSTER0_NEXUS_UP_STEP, data.cpu.cl0.nexus.up_step);
 	}
 
 	/*********************
 	 * CPU Cluster1
 	 */
 	if (is_cluster1_interactive()) {
-		// common
 		pfwrite(POWER_CPU_CLUSTER1_INTERACTIVE_FREQ_MAX, data.cpu.cl1.freq_max);
 		pfwrite(POWER_CPU_CLUSTER1_INTERACTIVE_FREQ_MIN, data.cpu.cl1.freq_min);
-
-		// interactive
-		pfwrite(POWER_CPU_CLUSTER1_INTERACTIVE_HISPEED_FREQ, data.cpu.cl1.interactive.hispeed_freq);
+		pfwrite(POWER_CPU_CLUSTER1_INTERACTIVE_HISPEED_FREQ, data.cpu.cl1.freq_max);
 	} else if (is_cluster1_nexus()) {
-		// common
 		pfwrite(POWER_CPU_CLUSTER1_NEXUS_FREQ_MAX, data.cpu.cl1.freq_max);
 		pfwrite(POWER_CPU_CLUSTER1_NEXUS_FREQ_MIN, data.cpu.cl1.freq_min);
-
-		// nexus
-		pfwrite(POWER_CPU_CLUSTER1_NEXUS_DOWN_LOAD, data.cpu.cl1.nexus.down_load);
-		pfwrite(POWER_CPU_CLUSTER1_NEXUS_DOWN_STEP, data.cpu.cl1.nexus.down_step);
-		pfwrite(POWER_CPU_CLUSTER1_NEXUS_UP_LOAD, data.cpu.cl1.nexus.up_load);
-		pfwrite(POWER_CPU_CLUSTER1_NEXUS_UP_STEP, data.cpu.cl1.nexus.up_step);
 	}
 
 	/*********************
 	 * GPU
 	 */
 	pfwrite(POWER_GPU_MAX_LOCK, data.gpu.max_lock);
-	pfwrite(POWER_GPU_MIN_LOCK, data.gpu.min_lock);
 
 	/*********************
 	 * Generic Settings
 	 */
-	pfwrite(POWER_ENABLE_DM_HOTPLUG, data.enable_dm_hotplug);
-	pfwrite(POWER_INPUT_BOOSTER_LEVEL, (data.input_booster ? 2 : 0));
+	pfwrite(POWER_ENABLE_DM_HOTPLUG, false);
+	pfwrite(POWER_INPUT_BOOSTER_LEVEL, 0);
 	pfwrite(POWER_IPA_CONTROL_TEMP, data.ipa_control_temp);
 	pfwrite(POWER_WORKQUEUE_POWER_EFFICIENT, data.power_efficient_workqueue);
 }
@@ -244,22 +222,22 @@ static void power_set_profile(int profile) {
  * Inputs
  */
 static void power_input_device_state(int state) {
-	int dt2w = 0, dt2w_sysfs = 0,
-		always_on_fp = 0, keydisabler_active = 0;
+	int dt2w = 0, dt2w_sysfs = 0, always_on_fp = 0;
 
 	pfread(POWER_CONFIG_DT2W, &dt2w);
 	pfread(POWER_DT2W_ENABLED, &dt2w_sysfs);
 	pfread(POWER_CONFIG_ALWAYS_ON_FP, &always_on_fp);
-	pfread(POWER_CONFIG_KEYDISABLER_ACTIVE, &keydisabler_active);
 
 	ALOGD("%s: state              = %d", __func__, state);
 	ALOGD("%s: dt2w               = %d", __func__, dt2w);
 	ALOGD("%s: dt2w_sysfs         = %d", __func__, dt2w_sysfs);
 	ALOGD("%s: always_on_fp       = %d", __func__, always_on_fp);
-	ALOGD("%s: keydisabler_active = %d", __func__, keydisabler_active);
 
 	switch (state) {
 		case INPUT_STATE_DISABLE:
+		
+			// save to current state to prevent enabling
+			pfread(POWER_TOUCHKEYS_ENABLED, &input_state_touchkeys);
 
 			pfwrite(POWER_TOUCHSCREEN_ENABLED, false);
 			pfwrite(POWER_TOUCHKEYS_ENABLED, false);
@@ -278,7 +256,7 @@ static void power_input_device_state(int state) {
 			pfwrite(POWER_TOUCHSCREEN_ENABLED, true);
 			pfwrite(POWER_FINGERPRINT_ENABLED, true);
 
-			if (!keydisabler_active) {
+			if (input_state_touchkeys) {
 				pfwrite(POWER_TOUCHKEYS_ENABLED, true);
 				pfwrite(POWER_TOUCHKEYS_BRIGTHNESS, 255);
 			}
