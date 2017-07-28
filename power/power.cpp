@@ -190,6 +190,7 @@ static void power_set_profile(int profile) {
 	} else if (is_cluster0_nexus()) {
 		pfwrite(POWER_CPU_CLUSTER0_NEXUS_FREQ_MAX, data.cpu.cl0.freq_max);
 		pfwrite(POWER_CPU_CLUSTER0_NEXUS_FREQ_MIN, data.cpu.cl0.freq_min);
+		pfwrite(POWER_CPU_CLUSTER0_NEXUS_FREQ_BOOST, data.cpu.cl0.freq_max);
 	}
 
 	/*********************
@@ -202,6 +203,7 @@ static void power_set_profile(int profile) {
 	} else if (is_cluster1_nexus()) {
 		pfwrite(POWER_CPU_CLUSTER1_NEXUS_FREQ_MAX, data.cpu.cl1.freq_max);
 		pfwrite(POWER_CPU_CLUSTER1_NEXUS_FREQ_MIN, data.cpu.cl1.freq_min);
+		pfwrite(POWER_CPU_CLUSTER1_NEXUS_FREQ_BOOST, data.cpu.cl1.freq_max);
 	}
 
 	/*********************
@@ -213,7 +215,7 @@ static void power_set_profile(int profile) {
 	 * Generic Settings
 	 */
 	pfwrite(POWER_ENABLE_DM_HOTPLUG, false);
-	pfwrite(POWER_INPUT_BOOSTER_LEVEL, 0);
+	pfwrite(POWER_INPUT_BOOSTER_LEVEL, (data.input_booster ? 2 : 0));
 	pfwrite(POWER_IPA_CONTROL_TEMP, data.ipa_control_temp);
 	pfwrite(POWER_WORKQUEUE_POWER_EFFICIENT, data.power_efficient_workqueue);
 }

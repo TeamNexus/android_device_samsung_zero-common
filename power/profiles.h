@@ -42,6 +42,7 @@ struct power_profile {
 	} gpu;
 	
 	int ipa_control_temp;
+	bool input_booster;
 	bool power_efficient_workqueue;
 
 } power_profiles[PROFILE_MAX_USABLE + 1] = {
@@ -52,11 +53,11 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 200000,
+				.freq_max = 400000,
 				.freq_min = 200000,
 			},
 			.cl1 = {
-				.freq_max = 200000,
+				.freq_max = 400000,
 				.freq_min = 200000,
 			},
 		},
@@ -64,6 +65,7 @@ struct power_profile {
 			.max_lock = 266,
 		},
 		.ipa_control_temp = 35,
+		.input_booster = false,
 		.power_efficient_workqueue = true,
 	},
 
@@ -73,18 +75,19 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 800000,
+				.freq_max = 1300000,
 				.freq_min = 200000,
 			},
 			.cl1 = {
-				.freq_max = 800000,
+				.freq_max = 1900000,
 				.freq_min = 200000,
 			},
 		},
 		.gpu = {
-			.max_lock = 420,
+			.max_lock = 544,
 		},
 		.ipa_control_temp = 45,
+		.input_booster = true,
 		.power_efficient_workqueue = true,
 	},
 
@@ -94,11 +97,11 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 1000000,
+				.freq_max = 1500000,
 				.freq_min = 200000,
 			},
 			.cl1 = {
-				.freq_max = 1000000,
+				.freq_max = 2100000,
 				.freq_min = 200000,
 			},
 		},
@@ -106,6 +109,7 @@ struct power_profile {
 			.max_lock = 700,
 		},
 		.ipa_control_temp = 65,
+		.input_booster = true,
 		.power_efficient_workqueue = true,
 	},
 
@@ -127,6 +131,7 @@ struct power_profile {
 			.max_lock = 852,
 		},
 		.ipa_control_temp = 75,
+		.input_booster = true,
 		.power_efficient_workqueue = false,
 	},
 
@@ -136,18 +141,19 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 800000,
+				.freq_max = 1400000,
 				.freq_min = 200000,
 			},
 			.cl1 = {
-				.freq_max = 800000,
+				.freq_max = 2000000,
 				.freq_min = 200000,
 			},
 		},
 		.gpu = {
-			.max_lock = 544,
+			.max_lock = 600,
 		},
 		.ipa_control_temp = 55,
+		.input_booster = true,
 		.power_efficient_workqueue = true,
 	},
 
@@ -157,11 +163,11 @@ struct power_profile {
 	{
 		.cpu = {
 			.cl0 = {
-				.freq_max = 1296000,
+				.freq_max = 1600000,
 				.freq_min = 400000,
 			},
 			.cl1 = {
-				.freq_max = 1500000,
+				.freq_max = 2200000,
 				.freq_min = 400000,
 			},
 		},
@@ -169,6 +175,7 @@ struct power_profile {
 			.max_lock = 772,
 		},
 		.ipa_control_temp = 70,
+		.input_booster = true,
 		.power_efficient_workqueue = false,
 	},
 

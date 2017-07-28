@@ -59,6 +59,7 @@ using namespace std;
 #define POWER_CPU_CLUSTER0_NEXUS                       POWER_CPU_CLUSTER0 "/nexus"
 #define POWER_CPU_CLUSTER0_NEXUS_FREQ_MAX              POWER_CPU_CLUSTER0 "/nexus/freq_max"
 #define POWER_CPU_CLUSTER0_NEXUS_FREQ_MIN              POWER_CPU_CLUSTER0 "/nexus/freq_min"
+#define POWER_CPU_CLUSTER0_NEXUS_FREQ_BOOST            POWER_CPU_CLUSTER0 "/nexus/freq_boost"
 
 // CPU Cluster1
 #define POWER_CPU_CLUSTER1                             "/sys/devices/system/cpu/cpu4/cpufreq"
@@ -69,6 +70,7 @@ using namespace std;
 #define POWER_CPU_CLUSTER1_NEXUS                       POWER_CPU_CLUSTER1 "/nexus"
 #define POWER_CPU_CLUSTER1_NEXUS_FREQ_MAX              POWER_CPU_CLUSTER1 "/nexus/freq_max"
 #define POWER_CPU_CLUSTER1_NEXUS_FREQ_MIN              POWER_CPU_CLUSTER1 "/nexus/freq_min"
+#define POWER_CPU_CLUSTER1_NEXUS_FREQ_BOOST            POWER_CPU_CLUSTER1 "/nexus/freq_boost"
 
 // GPU
 #define POWER_GPU_MAX_LOCK    "/sys/devices/14ac0000.mali/dvfs_max_lock"
