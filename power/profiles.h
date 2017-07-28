@@ -96,7 +96,7 @@ struct power_profile {
 			.max_lock = 544,
 		},
 		.input = {
-			.booster = true,
+			.booster = false,
 			.booster_table = "300 0 800000 0 0 0"
 		},
 		.ipa_control_temp = 45,
@@ -121,7 +121,7 @@ struct power_profile {
 			.max_lock = 700,
 		},
 		.input = {
-			.booster = true,
+			.booster = false,
 			.booster_table = "300 0 800000 0 0 0"
 		},
 		.ipa_control_temp = 65,
@@ -146,8 +146,8 @@ struct power_profile {
 			.max_lock = 852,
 		},
 		.input = {
-			.booster = true,
-			.booster_table = "300 0 800000 0 0 0"
+			.booster = false,
+			.booster_table = "300 0 1200000 0 0 0"
 		},
 		.ipa_control_temp = 75,
 		.power_efficient_workqueue = false,
@@ -171,7 +171,7 @@ struct power_profile {
 			.max_lock = 600,
 		},
 		.input = {
-			.booster = true,
+			.booster = false,
 			.booster_table = "300 0 800000 0 0 0"
 		},
 		.ipa_control_temp = 55,
