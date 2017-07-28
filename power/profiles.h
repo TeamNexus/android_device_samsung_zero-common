@@ -40,9 +40,15 @@ struct power_profile {
 		int max_lock;
 
 	} gpu;
+
+	struct {
+
+		bool booster;
+		string booster_table;
+
+	} input;
 	
 	int ipa_control_temp;
-	bool input_booster;
 	bool power_efficient_workqueue;
 
 } power_profiles[PROFILE_MAX_USABLE + 1] = {
@@ -64,8 +70,11 @@ struct power_profile {
 		.gpu = {
 			.max_lock = 266,
 		},
+		.input = {
+			.booster = false,
+			.booster_table = "0 0 0 0 0 0"
+		},
 		.ipa_control_temp = 35,
-		.input_booster = false,
 		.power_efficient_workqueue = true,
 	},
 
@@ -86,8 +95,11 @@ struct power_profile {
 		.gpu = {
 			.max_lock = 544,
 		},
+		.input = {
+			.booster = true,
+			.booster_table = "300 0 800000 0 0 0"
+		},
 		.ipa_control_temp = 45,
-		.input_booster = true,
 		.power_efficient_workqueue = true,
 	},
 
@@ -108,8 +120,11 @@ struct power_profile {
 		.gpu = {
 			.max_lock = 700,
 		},
+		.input = {
+			.booster = true,
+			.booster_table = "300 0 800000 0 0 0"
+		},
 		.ipa_control_temp = 65,
-		.input_booster = true,
 		.power_efficient_workqueue = true,
 	},
 
@@ -130,8 +145,11 @@ struct power_profile {
 		.gpu = {
 			.max_lock = 852,
 		},
+		.input = {
+			.booster = true,
+			.booster_table = "300 0 800000 0 0 0"
+		},
 		.ipa_control_temp = 75,
-		.input_booster = true,
 		.power_efficient_workqueue = false,
 	},
 
@@ -152,8 +170,11 @@ struct power_profile {
 		.gpu = {
 			.max_lock = 600,
 		},
+		.input = {
+			.booster = true,
+			.booster_table = "300 0 800000 0 0 0"
+		},
 		.ipa_control_temp = 55,
-		.input_booster = true,
 		.power_efficient_workqueue = true,
 	},
 
@@ -174,8 +195,11 @@ struct power_profile {
 		.gpu = {
 			.max_lock = 772,
 		},
+		.input = {
+			.booster = true,
+			.booster_table = "300 0 800000 0 0 0"
+		},
 		.ipa_control_temp = 70,
-		.input_booster = true,
 		.power_efficient_workqueue = false,
 	},
 

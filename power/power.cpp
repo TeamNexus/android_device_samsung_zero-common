@@ -212,10 +212,16 @@ static void power_set_profile(int profile) {
 	pfwrite(POWER_GPU_MAX_LOCK, data.gpu.max_lock);
 
 	/*********************
+	 * Input
+	 */
+	pfwrite_legacy(POWER_INPUT_BOOSTER_LEVEL, (data.input.booster ? 2 : 0));
+	pfwrite_legacy(POWER_INPUT_BOOSTER_HEAD, data.input.booster_table);
+	pfwrite_legacy(POWER_INPUT_BOOSTER_TAIL, data.input.booster_table);
+	 
+	/*********************
 	 * Generic Settings
 	 */
 	pfwrite(POWER_ENABLE_DM_HOTPLUG, false);
-	pfwrite(POWER_INPUT_BOOSTER_LEVEL, (data.input_booster ? 2 : 0));
 	pfwrite(POWER_IPA_CONTROL_TEMP, data.ipa_control_temp);
 	pfwrite(POWER_WORKQUEUE_POWER_EFFICIENT, data.power_efficient_workqueue);
 }
@@ -356,7 +362,7 @@ static bool pfwrite(string path, unsigned int value) {
 	return pfwrite(path, to_string(value));
 }
 
-static bool pfwrite_legacy(string path, bool flag) {
+static bool pfwrite_legacy(string path, string str) {
 	FILE *file = fopen(path.c_str(), "w");
 	bool ret = true;
 	
@@ -365,7 +371,7 @@ static bool pfwrite_legacy(string path, bool flag) {
 		return false;
 	}
 	
-	fprintf(file, "%d\n", (flag ? 1 : 0));
+	fprintf(file, "%s\n", str.c_str());
 	
 	if (ferror(file)) {
 		ALOGE("%s: failed to write to %s", __func__, path.c_str());
@@ -374,6 +380,14 @@ static bool pfwrite_legacy(string path, bool flag) {
 		
 	fclose(file);
 	return ret;
+}
+
+static bool pfwrite_legacy(string path, int value) {
+	return pfwrite_legacy(path, to_string(value));
+}
+
+static bool pfwrite_legacy(string path, bool flag) {
+	return pfwrite_legacy(path, flag ? 1 : 0);
 }
 
 static bool pfread(string path, int *v) {

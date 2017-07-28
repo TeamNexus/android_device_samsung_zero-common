@@ -78,6 +78,8 @@ using namespace std;
 // Generic Settings
 #define POWER_ENABLE_DM_HOTPLUG            "/sys/power/enable_dm_hotplug"
 #define POWER_INPUT_BOOSTER_LEVEL          "/sys/class/input_booster/level"
+#define POWER_INPUT_BOOSTER_HEAD           "/sys/class/input_booster/head"
+#define POWER_INPUT_BOOSTER_TAIL           "/sys/class/input_booster/tail"
 #define POWER_IPA_CONTROL_TEMP             "/sys/power/ipa/control_temp"
 #define POWER_WORKQUEUE_POWER_EFFICIENT    "/sys/module/workqueue/parameters/power_efficient"
 
@@ -112,12 +114,19 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
 /***********************************
  * Utilities
  */
+// C++ I/O
 static bool pfwrite(string path, string str);
 static bool pfwrite(string path, bool flag);
 static bool pfwrite(string path, int value);
 static bool pfwrite(string path, unsigned int value);
-static bool pfwrite_legacy(string path, bool flag);
 static bool pfread(string path, int *v);
+
+// legacy I/O
+static bool pfwrite_legacy(string path, string str);
+static bool pfwrite_legacy(string path, int value);
+static bool pfwrite_legacy(string path, bool flag);
+
+// existence-helpers
 static bool is_dir(string path);
 static bool is_file(string path);
 static bool is_cluster0_interactive();
