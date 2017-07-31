@@ -340,6 +340,7 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
 /***********************************
  * Utilities
  */
+// C++ I/O
 static bool pfwrite(string path, string str) {
 	ofstream file;
 
@@ -368,6 +369,27 @@ static bool pfwrite(string path, unsigned int value) {
 	return pfwrite(path, to_string(value));
 }
 
+static bool pfread(string path, int *v) {
+	ifstream file(path);
+	string line;
+
+	if (!file.is_open()) {
+		ALOGE("%s: failed to open %s", __func__, path.c_str());
+		return false;
+	}
+
+	if (!getline(file, line)) {
+		ALOGE("%s: failed to read from %s", __func__, path.c_str());
+		return false;
+	}
+
+	file.close();
+	*v = stoi(line);
+
+	return true;
+}
+
+// legacy I/O
 static bool pfwrite_legacy(string path, string str) {
 	FILE *file = fopen(path.c_str(), "w");
 	bool ret = true;
@@ -396,26 +418,7 @@ static bool pfwrite_legacy(string path, bool flag) {
 	return pfwrite_legacy(path, flag ? 1 : 0);
 }
 
-static bool pfread(string path, int *v) {
-	ifstream file(path);
-	string line;
-
-	if (!file.is_open()) {
-		ALOGE("%s: failed to open %s", __func__, path.c_str());
-		return false;
-	}
-
-	if (!getline(file, line)) {
-		ALOGE("%s: failed to read from %s", __func__, path.c_str());
-		return false;
-	}
-
-	file.close();
-	*v = stoi(line);
-
-	return true;
-}
-
+// existence-helpers
 static bool is_dir(string path) {
 	struct stat fstat;
 	const char *cpath = path.c_str();
@@ -432,27 +435,27 @@ static bool is_file(string path) {
 		(fstat.st_mode & S_IFREG) == S_IFREG;
 }
 
-static bool is_cluster0_interactive() {
+static inline bool is_cluster0_interactive() {
 	return is_dir(POWER_CPU_CLUSTER0_INTERACTIVE);
 }
 
-static bool is_cluster0_nexus() {
+static inline bool is_cluster0_nexus() {
 	return is_dir(POWER_CPU_CLUSTER0_NEXUS);
 }
 
-static bool is_cluster0_sched() {
+static inline bool is_cluster0_sched() {
 	return is_dir(POWER_CPU_CLUSTER0_SCHED);
 }
 
-static bool is_cluster1_interactive() {
+static inline bool is_cluster1_interactive() {
 	return is_dir(POWER_CPU_CLUSTER1_INTERACTIVE);
 }
 
-static bool is_cluster1_nexus() {
+static inline bool is_cluster1_nexus() {
 	return is_dir(POWER_CPU_CLUSTER1_NEXUS);
 }
 
-static bool is_cluster1_sched() {
+static inline bool is_cluster1_sched() {
 	return is_dir(POWER_CPU_CLUSTER1_SCHED);
 }
 

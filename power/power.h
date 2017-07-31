@@ -48,7 +48,7 @@ using namespace std;
 #define POWER_TOUCHKEYS_BRIGTHNESS    "/sys/class/sec/sec_touchkey/brightness"
 
 /***********************************
- * Interactive cpugov-settings
+ * Settings
  */
 // CPU Cluster0
 #define POWER_CPU_CLUSTER0                             "/sys/devices/system/cpu/cpu0/cpufreq"
@@ -132,14 +132,14 @@ static bool pfwrite_legacy(string path, string str);
 static bool pfwrite_legacy(string path, int value);
 static bool pfwrite_legacy(string path, bool flag);
 
-// existence-helpers
+// I/O-helpers
 static bool is_dir(string path);
 static bool is_file(string path);
-static bool is_cluster0_interactive();
-static bool is_cluster0_nexus();
-static bool is_cluster0_sched();
-static bool is_cluster1_interactive();
-static bool is_cluster1_nexus();
-static bool is_cluster1_sched();
+static inline bool is_cluster0_interactive();
+static inline bool is_cluster0_nexus();
+static inline bool is_cluster0_sched();
+static inline bool is_cluster1_interactive();
+static inline bool is_cluster1_nexus();
+static inline bool is_cluster1_sched();
 
 #endif // EXYNOS5_POWER_HAL_H_INCLUDED

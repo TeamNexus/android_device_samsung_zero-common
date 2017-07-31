@@ -19,19 +19,20 @@ using namespace std;
 #ifndef EXYNOS5_POWER_HAL_PROFILES_INCLUDED
 #define EXYNOS5_POWER_HAL_PROFILES_INCLUDED
 
+struct power_profile_cpucluster {
+	
+	unsigned int freq_min;
+	unsigned int freq_max;
+
+};
+
 struct power_profile {
 
 	struct {
 
-		struct {
-			unsigned int freq_min;
-			unsigned int freq_max;
-		} cl0;
+		struct power_profile_cpucluster cl0;
 		
-		struct {
-			unsigned int freq_min;
-			unsigned int freq_max;
-		} cl1;
+		struct power_profile_cpucluster cl1;
 
 	} cpu;
 
