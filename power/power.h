@@ -53,24 +53,30 @@ using namespace std;
 // CPU Cluster0
 #define POWER_CPU_CLUSTER0                             "/sys/devices/system/cpu/cpu0/cpufreq"
 #define POWER_CPU_CLUSTER0_INTERACTIVE                 POWER_CPU_CLUSTER0 "/interactive"
-#define POWER_CPU_CLUSTER0_INTERACTIVE_FREQ_MAX        POWER_CPU_CLUSTER0 "/interactive/freq_max"
-#define POWER_CPU_CLUSTER0_INTERACTIVE_FREQ_MIN        POWER_CPU_CLUSTER0 "/interactive/freq_min"
-#define POWER_CPU_CLUSTER0_INTERACTIVE_HISPEED_FREQ    POWER_CPU_CLUSTER0 "/interactive/hispeed_freq"
+#define POWER_CPU_CLUSTER0_INTERACTIVE_FREQ_MAX        POWER_CPU_CLUSTER0_INTERACTIVE "/freq_max"
+#define POWER_CPU_CLUSTER0_INTERACTIVE_FREQ_MIN        POWER_CPU_CLUSTER0_INTERACTIVE "/freq_min"
+#define POWER_CPU_CLUSTER0_INTERACTIVE_HISPEED_FREQ    POWER_CPU_CLUSTER0_INTERACTIVE "/hispeed_freq"
 #define POWER_CPU_CLUSTER0_NEXUS                       POWER_CPU_CLUSTER0 "/nexus"
-#define POWER_CPU_CLUSTER0_NEXUS_FREQ_MAX              POWER_CPU_CLUSTER0 "/nexus/freq_max"
-#define POWER_CPU_CLUSTER0_NEXUS_FREQ_MIN              POWER_CPU_CLUSTER0 "/nexus/freq_min"
-#define POWER_CPU_CLUSTER0_NEXUS_FREQ_BOOST            POWER_CPU_CLUSTER0 "/nexus/freq_boost"
+#define POWER_CPU_CLUSTER0_NEXUS_FREQ_MAX              POWER_CPU_CLUSTER0_NEXUS "/freq_max"
+#define POWER_CPU_CLUSTER0_NEXUS_FREQ_MIN              POWER_CPU_CLUSTER0_NEXUS "/freq_min"
+#define POWER_CPU_CLUSTER0_NEXUS_FREQ_BOOST            POWER_CPU_CLUSTER0_NEXUS "/freq_boost"
+#define POWER_CPU_CLUSTER0_SCHED                       POWER_CPU_CLUSTER0 "/sched"
+#define POWER_CPU_CLUSTER0_SCHED_FREQ_MAX              POWER_CPU_CLUSTER0_SCHED "/freq_max"
+#define POWER_CPU_CLUSTER0_SCHED_FREQ_MIN              POWER_CPU_CLUSTER0_SCHED "/freq_min"
 
 // CPU Cluster1
 #define POWER_CPU_CLUSTER1                             "/sys/devices/system/cpu/cpu4/cpufreq"
 #define POWER_CPU_CLUSTER1_INTERACTIVE                 POWER_CPU_CLUSTER1 "/interactive"
-#define POWER_CPU_CLUSTER1_INTERACTIVE_FREQ_MAX        POWER_CPU_CLUSTER1 "/interactive/freq_max"
-#define POWER_CPU_CLUSTER1_INTERACTIVE_FREQ_MIN        POWER_CPU_CLUSTER1 "/interactive/freq_min"
-#define POWER_CPU_CLUSTER1_INTERACTIVE_HISPEED_FREQ    POWER_CPU_CLUSTER1 "/interactive/hispeed_freq"
+#define POWER_CPU_CLUSTER1_INTERACTIVE_FREQ_MAX        POWER_CPU_CLUSTER1_INTERACTIVE "/freq_max"
+#define POWER_CPU_CLUSTER1_INTERACTIVE_FREQ_MIN        POWER_CPU_CLUSTER1_INTERACTIVE "/freq_min"
+#define POWER_CPU_CLUSTER1_INTERACTIVE_HISPEED_FREQ    POWER_CPU_CLUSTER1_INTERACTIVE "/hispeed_freq"
 #define POWER_CPU_CLUSTER1_NEXUS                       POWER_CPU_CLUSTER1 "/nexus"
-#define POWER_CPU_CLUSTER1_NEXUS_FREQ_MAX              POWER_CPU_CLUSTER1 "/nexus/freq_max"
-#define POWER_CPU_CLUSTER1_NEXUS_FREQ_MIN              POWER_CPU_CLUSTER1 "/nexus/freq_min"
-#define POWER_CPU_CLUSTER1_NEXUS_FREQ_BOOST            POWER_CPU_CLUSTER1 "/nexus/freq_boost"
+#define POWER_CPU_CLUSTER1_NEXUS_FREQ_MAX              POWER_CPU_CLUSTER1_NEXUS "/freq_max"
+#define POWER_CPU_CLUSTER1_NEXUS_FREQ_MIN              POWER_CPU_CLUSTER1_NEXUS "/freq_min"
+#define POWER_CPU_CLUSTER1_NEXUS_FREQ_BOOST            POWER_CPU_CLUSTER1_NEXUS "/freq_boost"
+#define POWER_CPU_CLUSTER1_SCHED                       POWER_CPU_CLUSTER1 "/sched"
+#define POWER_CPU_CLUSTER1_SCHED_FREQ_MAX              POWER_CPU_CLUSTER1_SCHED "/freq_max"
+#define POWER_CPU_CLUSTER1_SCHED_FREQ_MIN              POWER_CPU_CLUSTER1_SCHED "/freq_min"
 
 // GPU
 #define POWER_GPU_MAX_LOCK    "/sys/devices/14ac0000.mali/dvfs_max_lock"
@@ -131,7 +137,9 @@ static bool is_dir(string path);
 static bool is_file(string path);
 static bool is_cluster0_interactive();
 static bool is_cluster0_nexus();
+static bool is_cluster0_sched();
 static bool is_cluster1_interactive();
 static bool is_cluster1_nexus();
+static bool is_cluster1_sched();
 
 #endif // EXYNOS5_POWER_HAL_H_INCLUDED

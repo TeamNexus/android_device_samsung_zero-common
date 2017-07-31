@@ -191,6 +191,9 @@ static void power_set_profile(int profile) {
 		pfwrite(POWER_CPU_CLUSTER0_NEXUS_FREQ_MAX, data.cpu.cl0.freq_max);
 		pfwrite(POWER_CPU_CLUSTER0_NEXUS_FREQ_MIN, data.cpu.cl0.freq_min);
 		pfwrite(POWER_CPU_CLUSTER0_NEXUS_FREQ_BOOST, data.cpu.cl0.freq_max);
+	} else if (is_cluster0_sched()) {
+		pfwrite(POWER_CPU_CLUSTER0_SCHED_FREQ_MAX, data.cpu.cl0.freq_max);
+		pfwrite(POWER_CPU_CLUSTER0_SCHED_FREQ_MIN, data.cpu.cl0.freq_min);
 	}
 
 	/*********************
@@ -204,6 +207,9 @@ static void power_set_profile(int profile) {
 		pfwrite(POWER_CPU_CLUSTER1_NEXUS_FREQ_MAX, data.cpu.cl1.freq_max);
 		pfwrite(POWER_CPU_CLUSTER1_NEXUS_FREQ_MIN, data.cpu.cl1.freq_min);
 		pfwrite(POWER_CPU_CLUSTER1_NEXUS_FREQ_BOOST, data.cpu.cl1.freq_max);
+	} else if (is_cluster1_sched()) {
+		pfwrite(POWER_CPU_CLUSTER1_SCHED_FREQ_MAX, data.cpu.cl1.freq_max);
+		pfwrite(POWER_CPU_CLUSTER1_SCHED_FREQ_MIN, data.cpu.cl1.freq_min);
 	}
 
 	/*********************
@@ -434,12 +440,20 @@ static bool is_cluster0_nexus() {
 	return is_dir(POWER_CPU_CLUSTER0_NEXUS);
 }
 
+static bool is_cluster0_sched() {
+	return is_dir(POWER_CPU_CLUSTER0_SCHED);
+}
+
 static bool is_cluster1_interactive() {
 	return is_dir(POWER_CPU_CLUSTER1_INTERACTIVE);
 }
 
 static bool is_cluster1_nexus() {
 	return is_dir(POWER_CPU_CLUSTER1_NEXUS);
+}
+
+static bool is_cluster1_sched() {
+	return is_dir(POWER_CPU_CLUSTER1_SCHED);
 }
 
 static struct hw_module_methods_t power_module_methods = {
