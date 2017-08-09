@@ -79,6 +79,7 @@ using namespace std;
 #define POWER_CPU_CLUSTER1_SCHED_FREQ_MIN              POWER_CPU_CLUSTER1_SCHED "/freq_min"
 
 // GPU
+#define POWER_GPU_MIN_LOCK    "/sys/devices/14ac0000.mali/dvfs_min_lock"
 #define POWER_GPU_MAX_LOCK    "/sys/devices/14ac0000.mali/dvfs_max_lock"
 
 // Generic Settings

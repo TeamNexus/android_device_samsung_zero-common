@@ -215,6 +215,7 @@ static void power_set_profile(int profile) {
 	/*********************
 	 * GPU
 	 */
+	pfwrite(POWER_GPU_MIN_LOCK, data.gpu.min_lock);
 	pfwrite(POWER_GPU_MAX_LOCK, data.gpu.max_lock);
 
 	/*********************
