@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016 The CyanogenMod Project
+# Copyright (C) 2017 TeamNexus
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,6 @@
 # limitations under the License.
 #
 
-# Seccomp filters
-BOARD_SECCOMP_POLICY += device/samsung/zero-common/seccomp
-
-# Sepolicy
-BOARD_SEPOLICY_DIRS := $(LOCAL_PATH)/sepolicy
+# ART
+PRODUCT_PACKAGES += \
+	libandroid_runtime_shim
