@@ -21,12 +21,6 @@
 # - copied from https://killertricks.com/build-prop-tweaks-for-android-devices/
 
 ###############################
-# ADB
-PRODUCT_PROPERTY_OVERRIDES += \
-	ro.debuggable=1 \
-	persist.service.adb.enable=1
-
-###############################
 # Common
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.chipname=exynos7420 \
@@ -35,7 +29,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	ro.sys.sdcardfs=1 \
     af.fast_track_multiplier=1 \
     audio_hal.force_voice_config=wide \
-	persist.sys.usb.config=mtp \
     wifi.interface=wlan0
 
 ###############################
