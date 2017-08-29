@@ -17,6 +17,9 @@
 # FIMG2D
 BOARD_USES_SKIA_FIMGAPI := true
 
+# Gralloc
+TARGET_USES_GRALLOC1_ADAPTER := true
+
 # Graphics
 USE_OPENGL_RENDERER := true
 BOARD_USES_VIRTUAL_DISPLAY := true
@@ -29,6 +32,9 @@ BOARD_USES_DT := true
 # HDMI
 BOARD_HDMI_INCAPABLE := true
 BOARD_USES_GSC_VIDEO := true
+
+# ION
+TARGET_USES_ION := true
 
 # OpenMAX video
 BOARD_USE_DMA_BUF := true
