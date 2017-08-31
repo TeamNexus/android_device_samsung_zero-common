@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2016 The CyanogenMod Project
+# Copyright (C) 2017 TeamNexus
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,27 +14,20 @@
 # limitations under the License.
 #
 
-# FIMG2D
-BOARD_USES_SKIA_FIMGAPI := true
+# Samsung OpenMAX Audio
+BOARD_USE_WMA_CODEC := true
+BOARD_USE_ALP_AUDIO := true
+BOARD_USE_SEIREN_AUDIO := true
 
-# Gralloc
-TARGET_USES_GRALLOC1_ADAPTER := true
-
-# Graphics
-USE_OPENGL_RENDERER := true
-BOARD_USES_VIRTUAL_DISPLAY := true
-NUM_FRAMEBUFFER_SURFACE_BUFFERS := 3
-
-# (G)SCALER
-BOARD_USES_SCALER := true
-BOARD_USES_DT := true
-
-# HDMI
-BOARD_HDMI_INCAPABLE := true
-BOARD_USES_GSC_VIDEO := true
-
-# ION
-TARGET_USES_ION := true
-
-# Samsung LSI OpenMAX
-# COMMON_GLOBAL_CFLAGS += -DUSE_NATIVE_SEC_NV12TILED
+# Samsung OpenMAX Video
+BOARD_USE_ANB := true
+BOARD_USE_CSC_HW := true
+BOARD_USE_DMA_BUF := true
+BOARD_USE_GSC_RGB_ENCODER := true
+BOARD_USE_HEVCDEC_SUPPORT := true
+BOARD_USE_IMPROVED_BUFFER := true
+BOARD_USE_METADATABUFFERTYPE := true
+BOARD_USE_QOS_CTRL := true
+BOARD_USE_S3D_SUPPORT := true
+BOARD_USE_STOREMETADATA := true
+BOARD_USE_VP8ENC_SUPPORT := true
