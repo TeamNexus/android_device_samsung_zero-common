@@ -114,7 +114,7 @@ struct power_profile {
 		.cpu = {
 			.cl0 = {
 				.freq_max = 1500000,
-				.freq_min = 400000,
+				.freq_min = 800000,
 			},
 			.cl1 = {
 				.freq_max = 2100000,
@@ -140,7 +140,7 @@ struct power_profile {
 		.cpu = {
 			.cl0 = {
 				.freq_max = 1704000,
-				.freq_min = 800000,
+				.freq_min = 1200000,
 			},
 			.cl1 = {
 				.freq_max = 2304000,
@@ -166,7 +166,7 @@ struct power_profile {
 		.cpu = {
 			.cl0 = {
 				.freq_max = 1400000,
-				.freq_min = 400000,
+				.freq_min = 600000,
 			},
 			.cl1 = {
 				.freq_max = 2000000,
@@ -192,7 +192,7 @@ struct power_profile {
 		.cpu = {
 			.cl0 = {
 				.freq_max = 1600000,
-				.freq_min = 600000,
+				.freq_min = 1000000,
 			},
 			.cl1 = {
 				.freq_max = 2200000,
