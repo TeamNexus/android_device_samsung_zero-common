@@ -24,6 +24,13 @@ struct power_profile_cpucluster {
 	unsigned int freq_min;
 	unsigned int freq_max;
 
+    struct {
+        bool cpu0;
+        bool cpu1;
+        bool cpu2;
+        bool cpu3;
+    } cores;
+
 };
 
 struct power_profile {
@@ -63,10 +70,22 @@ struct power_profile {
 			.cl0 = {
 				.freq_max = 400000,
 				.freq_min = 200000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 			.cl1 = {
-				.freq_max = 400000,
+				.freq_max = 200000,
 				.freq_min = 200000,
+                .cores = {
+                    .cpu0 = false,
+                    .cpu1 = false,
+                    .cpu2 = false,
+                    .cpu3 = false,
+                },
 			},
 		},
 		.gpu = {
@@ -89,10 +108,22 @@ struct power_profile {
 			.cl0 = {
 				.freq_max = 400000,
 				.freq_min = 200000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 			.cl1 = {
 				.freq_max = 200000,
 				.freq_min = 200000,
+                .cores = {
+                    .cpu0 = false,
+                    .cpu1 = false,
+                    .cpu2 = false,
+                    .cpu3 = false,
+                },
 			},
 		},
 		.gpu = {
@@ -115,10 +146,22 @@ struct power_profile {
 			.cl0 = {
 				.freq_max = 1300000,
 				.freq_min = 400000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 			.cl1 = {
 				.freq_max = 1900000,
 				.freq_min = 200000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 		},
 		.gpu = {
@@ -141,10 +184,22 @@ struct power_profile {
 			.cl0 = {
 				.freq_max = 1500000,
 				.freq_min = 600000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 			.cl1 = {
 				.freq_max = 2100000,
 				.freq_min = 400000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 		},
 		.gpu = {
@@ -167,10 +222,22 @@ struct power_profile {
 			.cl0 = {
 				.freq_max = 1704000,
 				.freq_min = 1000000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 			.cl1 = {
 				.freq_max = 2304000,
 				.freq_min = 800000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 		},
 		.gpu = {
@@ -193,10 +260,22 @@ struct power_profile {
 			.cl0 = {
 				.freq_max = 1400000,
 				.freq_min = 400000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 			.cl1 = {
 				.freq_max = 2000000,
 				.freq_min = 200000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 		},
 		.gpu = {
@@ -219,10 +298,22 @@ struct power_profile {
 			.cl0 = {
 				.freq_max = 1600000,
 				.freq_min = 800000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 			.cl1 = {
 				.freq_max = 2200000,
 				.freq_min = 600000,
+                .cores = {
+                    .cpu0 = true,
+                    .cpu1 = true,
+                    .cpu2 = true,
+                    .cpu3 = true,
+                },
 			},
 		},
 		.gpu = {

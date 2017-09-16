@@ -212,6 +212,12 @@ static void power_set_profile(int profile) {
 	/*********************
 	 * CPU Cluster0
 	 */
+    // cores
+	pfwrite("/sys/devices/system/cpu/cpu0/online", data.cpu.cl0.cores.cpu0);
+	pfwrite("/sys/devices/system/cpu/cpu1/online", data.cpu.cl0.cores.cpu1);
+	pfwrite("/sys/devices/system/cpu/cpu2/online", data.cpu.cl0.cores.cpu2);
+	pfwrite("/sys/devices/system/cpu/cpu3/online", data.cpu.cl0.cores.cpu3);
+    // settings
 	pfwritegov(0, "freq_min",     data.cpu.cl0.freq_min); /* Core, File, Value */
 	pfwritegov(0, "freq_max",     data.cpu.cl0.freq_max);
 	pfwritegov(0, "hispeed_freq", data.cpu.cl0.freq_max);
@@ -219,6 +225,12 @@ static void power_set_profile(int profile) {
 	/*********************
 	 * CPU Cluster1
 	 */
+    // cores
+	pfwrite("/sys/devices/system/cpu/cpu4/online", data.cpu.cl1.cores.cpu0);
+	pfwrite("/sys/devices/system/cpu/cpu5/online", data.cpu.cl1.cores.cpu1);
+	pfwrite("/sys/devices/system/cpu/cpu6/online", data.cpu.cl1.cores.cpu2);
+	pfwrite("/sys/devices/system/cpu/cpu7/online", data.cpu.cl1.cores.cpu3);
+    // settings
 	pfwritegov(4, "freq_min",     data.cpu.cl1.freq_min); /* Core, File, Value */
 	pfwritegov(4, "freq_max",     data.cpu.cl1.freq_max);
 	pfwritegov(4, "hispeed_freq", data.cpu.cl1.freq_max);
