@@ -480,6 +480,7 @@ static bool pfread(string path, int *v) {
 	ifstream file(path);
 	string line;
 
+	file.open(path);
 	if (!file.is_open()) {
 		ALOGE("%s: failed to open %s", __func__, path.c_str());
 		return false;
@@ -499,6 +500,7 @@ static bool pfread(string path, int *v) {
 static bool pfread(string path, string &str) {
 	ifstream file(path);
 
+	file.open(path);
 	if (!file.is_open()) {
 		ALOGE("%s: failed to open %s", __func__, path.c_str());
 		return false;
