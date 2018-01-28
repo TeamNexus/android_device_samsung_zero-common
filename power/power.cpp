@@ -273,6 +273,7 @@ static void power_set_profile(struct sec_power_module *sec, int profile) {
 /***********************************
  * Boost
  */
+#ifdef POWER_HAS_LINEAGE_HINTS
 static void power_boostpulse(int duration) {
 	// ALOGD("%s: duration     = %d", __func__, duration);
 
@@ -284,6 +285,7 @@ static void power_boostpulse(int duration) {
 	pfwritegov(0, "boostpulse", true);
 	pfwritegov(1, "boostpulse", true);
 }
+#endif
 
 /***********************************
  * Inputs

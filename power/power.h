@@ -64,7 +64,9 @@ static void power_set_profile(struct sec_power_module *sec, int profile);
 /***********************************
  * Boost
  */
+#ifdef POWER_HAS_LINEAGE_HINTS
 static void power_boostpulse(int duration);
+#endif
 
 /***********************************
  * Inputs
