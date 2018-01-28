@@ -59,6 +59,8 @@ static string input_touchscreen_path = POWER_TOUCHSCREEN_ENABLED_FLAT;
 static power_module_t *shared_instance = nullptr;
 static bool power_was_initialized = false;
 
+static bool power_dt2w = false;
+
 /***********************************
  * Initializing
  */
@@ -105,21 +107,6 @@ static void power_init(struct power_module __unused * module) {
 	if (power_was_initialized)
 		return;
 
-	if (!is_file(POWER_CONFIG_FP_ALWAYS_ON))
-		pfwrite(POWER_CONFIG_FP_ALWAYS_ON, false);
-
-	if (!is_file(POWER_CONFIG_FP_WAKELOCKS))
-		pfwrite(POWER_CONFIG_FP_WAKELOCKS, false);
-
-	if (!is_file(POWER_CONFIG_DT2W))
-		pfwrite(POWER_CONFIG_DT2W, false);
-
-	if (!is_file(POWER_CONFIG_BOOST))
-		pfwrite(POWER_CONFIG_BOOST, true);
-
-	if (!is_file(POWER_CONFIG_PROFILES))
-		pfwrite(POWER_CONFIG_PROFILES, true);
-
 	// get correct touchkeys/enabled-file
 	// reads from input1/name:
 	//   - flat will return sec_touchscreen
@@ -135,10 +122,6 @@ static void power_init(struct power_module __unused * module) {
 
 	// initialize all input-devices
 	power_input_device_state(1);
-
-	// set the default settings
-	if (!is_dir("/data/power"))
-		mkdir("/data/power", 0771);
 
 	power_was_initialized = true;
 }
@@ -226,14 +209,6 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
  * Profiles
  */
 static void power_set_profile(int profile) {
-	int profiles = 1;
-
-	pfread(POWER_CONFIG_PROFILES, &profiles);
-	if (!profiles) {
-		ALOGD("%s: profiles disabled (tried to apply profile %d)", __func__, profile);
-		return;
-	}
-
  	ALOGD("%s: apply profile %d", __func__, profile);
 
 	// store it
@@ -311,13 +286,6 @@ static void power_set_profile(int profile) {
  * Boost
  */
 static void power_boostpulse(int duration) {
-	int boost = 0;
-
-	pfread(POWER_CONFIG_BOOST, &boost);
-	if (!boost) {
-		return;
-	}
-
 	// ALOGD("%s: duration     = %d", __func__, duration);
 
 	if (duration > 0) {
@@ -333,15 +301,6 @@ static void power_boostpulse(int duration) {
  * Inputs
  */
 static void power_fingerprint_state(bool state) {
-	int fp_always_on = 0, fp_wakelocks = 1;
-
-	pfread(POWER_CONFIG_FP_ALWAYS_ON, &fp_always_on);
-	if (fp_always_on) {
-		return;
-	}
-
-	pfread(POWER_CONFIG_FP_WAKELOCKS, &fp_wakelocks);
-
 	/*
 	 * Ordered power toggling:
 	 *    Turn on:   +Wakelocks  ->  +Regulator
@@ -352,22 +311,22 @@ static void power_fingerprint_state(bool state) {
 		pfwrite(POWER_FINGERPRINT_REGULATOR, true);
 	} else {
 		pfwrite(POWER_FINGERPRINT_REGULATOR, false);
+		pfwrite(POWER_FINGERPRINT_WAKELOCKS, false);
+	}
+}
 
-		if (!fp_wakelocks)
-			pfwrite(POWER_FINGERPRINT_WAKELOCKS, false);
+static void power_dt2w_state(bool state) {
+	power_dt2w = !!state;
+	if (state) {
+		pfwrite_legacy(POWER_DT2W_ENABLED, true);
+	} else {
+		pfwrite_legacy(POWER_DT2W_ENABLED, false);
 	}
 }
  
 static void power_input_device_state(int state) {
-	int dt2w = 0, dt2w_sysfs = 0;
-
-	pfread(POWER_CONFIG_DT2W, &dt2w);
-	pfread(POWER_DT2W_ENABLED, &dt2w_sysfs);
-
 #if LOG_NDEBUG
-	ALOGD("%s: state         = %d", __func__, state);
-	ALOGD("%s: dt2w          = %d", __func__, dt2w);
-	ALOGD("%s: dt2w_sysfs    = %d", __func__, dt2w_sysfs);
+	ALOGD("%s: state = %d", __func__, state);
 #endif
 
 	switch (state) {
@@ -381,6 +340,7 @@ static void power_input_device_state(int state) {
 			pfwrite(POWER_TOUCHKEYS_BRIGTHNESS, 0);
 
 			power_fingerprint_state(false);
+			power_dt2w_state(power_dt2w);
 
 			break;
 
@@ -394,18 +354,10 @@ static void power_input_device_state(int state) {
 			}
 
 			power_fingerprint_state(true);
+			power_dt2w_state(power_dt2w);
 
 			break;
 	}
-
-	if (dt2w) {
-		pfwrite_legacy(POWER_DT2W_ENABLED, true);
-	} else {
-		pfwrite_legacy(POWER_DT2W_ENABLED, false);
-	}
-
-	// give hw some milliseconds to properly boot up
-	usleep(100 * 1000); // 100ms
 }
 
 static void power_set_interactive(struct power_module __unused * module, int on) {
@@ -446,13 +398,7 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
 	switch (feature) {
 		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE:
 			ALOGD("%s: set POWER_FEATURE_DOUBLE_TAP_TO_WAKE to \"%d\"", __func__, state);
-			if (state) {
-				pfwrite(POWER_CONFIG_DT2W, true);
-				pfwrite_legacy(POWER_DT2W_ENABLED, true);
-			} else {
-				pfwrite(POWER_CONFIG_DT2W, false);
-				pfwrite_legacy(POWER_DT2W_ENABLED, false);
-			}
+			power_dt2w_state(state);
 			break;
 
 		default:

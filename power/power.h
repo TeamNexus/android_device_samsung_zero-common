@@ -61,6 +61,7 @@ static void power_boostpulse(int duration);
  * Inputs
  */
 static void power_fingerprint_state(bool state);
+static void power_dt2w_state(bool state);
 static void power_input_device_state(int state);
 static void power_set_interactive(struct power_module __unused * module, int on);
 
