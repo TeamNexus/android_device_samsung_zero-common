@@ -69,7 +69,7 @@ static int power_open(const hw_module_t __unused * module, const char *name, hw_
 
 				dev->init = power_init;
 				dev->powerHint = power_hint;
-#ifdef POWER_HAS_POWER_PROFILES
+#ifdef POWER_HAS_LINEAGE_HINTS
 				dev->getFeature = power_get_feature;
 #endif
 				dev->setFeature = power_set_feature;
@@ -133,7 +133,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 			power_set_profile(sec, value ? PROFILE_POWER_SAVE : sec->profile.requested);
 			break;
 
-#ifdef POWER_HAS_POWER_PROFILES
+#ifdef POWER_HAS_LINEAGE_HINTS
 		case POWER_HINT_SET_PROFILE:
 			ALOGI("%s: hint(POWER_HINT_SET_PROFILE, %d, %llu)", __func__, value, (unsigned long long)data);
 			sec->profile.requested = value;
@@ -169,7 +169,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 
 			break;
 
-#ifdef POWER_HAS_CPU_BOOST
+#ifdef POWER_HAS_LINEAGE_HINTS
         case POWER_HINT_CPU_BOOST:
 			// ALOGI("%s: hint(POWER_HINT_CPU_BOOST, %d, %llu)", __func__, value, (unsigned long long)data);
 
@@ -368,7 +368,7 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 /***********************************
  * Features
  */
-#ifdef POWER_HAS_POWER_PROFILES
+#ifdef POWER_HAS_LINEAGE_HINTS
 static int power_get_feature(struct power_module *module __unused, feature_t feature) {
 	switch (feature) {
 		case POWER_FEATURE_SUPPORTED_PROFILES:
@@ -590,7 +590,7 @@ struct sec_power_module HAL_MODULE_INFO_SYM = {
 
 		.init = power_init,
 		.powerHint = power_hint,
-#ifdef POWER_HAS_POWER_PROFILES
+#ifdef POWER_HAS_LINEAGE_HINTS
 		.getFeature = power_get_feature,
 #endif
 		.setFeature = power_set_feature,

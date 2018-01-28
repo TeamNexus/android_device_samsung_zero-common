@@ -30,6 +30,10 @@ LOCAL_MODULE_TAGS          := optional
 LOCAL_CFLAGS               := -Wall -Werror -Wno-unused-parameter
 LOCAL_PROPRIETARY_MODULE   := true
 
+ifneq (,$(wildcard lineage-sdk/))
+  LOCAL_CFLAGS := -DPOWER_HAS_LINEAGE_HINTS
+endif
+
 LOCAL_SHARED_LIBRARIES := \
 	libhardware \
 	liblog \
