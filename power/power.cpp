@@ -59,7 +59,7 @@ static power_module_t *shared_instance = nullptr;
 static int power_open(const hw_module_t __unused * module, const char *name, hw_device_t **device) {
 	int retval = 0; // 0 is ok; -1 is error
 
-	ALOGDD("%s: enter; name=%s", __func__);
+	ALOGDD("%s: enter; name=%s", __func__, name);
 
 	if (strcmp(name, POWER_HARDWARE_MODULE_ID) == 0) {
 		if (shared_instance) {
@@ -114,7 +114,10 @@ static void power_init(struct power_module __unused * module) {
 	//   - edge won't
 	string touchscreen_input_name;
 	pfread(POWER_TOUCHSCREEN_NAME, touchscreen_input_name);
-	if (touchscreen_input_name != POWER_TOUCHSCREEN_NAME_EXPECT) {
+	ALOGDD("%s: '%s' == '%s'", __func__, touchscreen_input_name.c_str(), POWER_TOUCHSCREEN_NAME_EXPECT);
+	if (touchscreen_input_name == POWER_TOUCHSCREEN_NAME_EXPECT) {
+		sec->input.touchscreen_control_path = POWER_TOUCHSCREEN_ENABLED_FLAT;
+	} else {
 		sec->input.touchscreen_control_path = POWER_TOUCHSCREEN_ENABLED_EDGE;
 	}
 
@@ -636,7 +639,7 @@ struct sec_power_module HAL_MODULE_INFO_SYM = {
 
 	.input = {
 		.touchkeys_enabled = true,
-		.touchscreen_control_path = POWER_TOUCHSCREEN_ENABLED_FLAT,
+		.touchscreen_control_path = "",
 	},
 
 };
