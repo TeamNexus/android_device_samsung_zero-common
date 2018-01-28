@@ -100,6 +100,7 @@ static void power_init(struct power_module __unused * module) {
 	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
 
 	ALOGDD("%s: enter;", __func__);
+	pthread_mutex_lock(&sec->lock);
 
 	if (sec->initialized) {
 		ALOGDD("%s: exit; (already initialized)", __func__);
@@ -124,6 +125,7 @@ static void power_init(struct power_module __unused * module) {
 
 	sec->initialized = true;
 
+	pthread_mutex_unlock(&sec->lock);
 	ALOGDD("%s: exit;", __func__);
 }
 
@@ -368,6 +370,7 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 	int screen_is_on = (on != 0);
 
 	ALOGDD("%s: enter; on=%d", __func__, on);
+	pthread_mutex_lock(&sec->lock);
 
 	if (!screen_is_on) {
 		power_set_profile(sec, PROFILE_SCREEN_OFF);
@@ -377,6 +380,7 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 
 	power_input_device_state(sec, screen_is_on ? INPUT_STATE_ENABLE : INPUT_STATE_DISABLE);
 
+	pthread_mutex_unlock(&sec->lock);
 	ALOGDD("%s: exit;", __func__);
 }
 
@@ -388,6 +392,7 @@ static int power_get_feature(struct power_module *module __unused, feature_t fea
 	int retval = -EINVAL;
 	
 	ALOGDD("%s: enter; feature=%d", __func__, feature);
+	pthread_mutex_lock(&sec->lock);
 
 	switch (feature) {
 		case POWER_FEATURE_SUPPORTED_PROFILES:
@@ -398,6 +403,7 @@ static int power_get_feature(struct power_module *module __unused, feature_t fea
 			retval = 1;
 	}
 
+	pthread_mutex_unlock(&sec->lock);
 	ALOGDD("%s: exit; rc=%d", __func__, retval);
 
 	return retval;
@@ -408,6 +414,7 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
 	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
 	
 	ALOGDD("%s: enter; feature=%d, state=%d", __func__, feature, state);
+	pthread_mutex_lock(&sec->lock);
 
 	switch (feature) {
 		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE:
@@ -421,6 +428,7 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
 		break;
 	}
 
+	pthread_mutex_unlock(&sec->lock);
 	ALOGDD("%s: exit", __func__);
 }
 
