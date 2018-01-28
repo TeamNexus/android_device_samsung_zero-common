@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "power.exynos5"
 #define LOG_NDEBUG 1
 
 #include <atomic>
@@ -44,6 +43,12 @@ using namespace std;
 
 #define container_of(addr, struct_name, field_name) \
 	((struct_name *)((char *)(addr) - offsetof(struct_name, field_name)))
+	
+#if LOG_NDEBUG
+  #define ALOGDD  ALOGD
+#else
+  #define ALOGDD  do { } while(0)
+#endif
 
 static power_module_t *shared_instance = nullptr;
 
@@ -53,14 +58,16 @@ static power_module_t *shared_instance = nullptr;
 static int power_open(const hw_module_t __unused * module, const char *name, hw_device_t **device) {
 	int retval = 0; // 0 is ok; -1 is error
 
-	ALOGD("%s: enter; name=%s", __func__, name);
+	ALOGDD("%s: enter; name=%s", __func__);
 
 	if (strcmp(name, POWER_HARDWARE_MODULE_ID) == 0) {
 		if (shared_instance) {
+			ALOGDD("%s: using shared instance", __func__);
 			*device = (hw_device_t *)shared_instance;
 		} else {
 			power_module_t *dev = (power_module_t *)calloc(1, sizeof(power_module_t));
 
+			ALOGDD("%s: generating new instance", __func__);
 			if (dev) {
 				// Common hw_device_t fields
 				dev->common.tag = HARDWARE_DEVICE_TAG;
@@ -85,15 +92,19 @@ static int power_open(const hw_module_t __unused * module, const char *name, hw_
 		retval = -EINVAL;
 	}
 
-	ALOGD("%s: exit %d", __func__, retval);
+	ALOGDD("%s: exit; rc=%d", __func__, retval);
 	return retval;
 }
 
 static void power_init(struct power_module __unused * module) {
 	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
 
-	if (sec->initialized)
+	ALOGDD("%s: enter;", __func__);
+
+	if (sec->initialized) {
+		ALOGDD("%s: exit; (already initialized)", __func__);
 		return;
+	}
 
 	// get correct touchkeys/enabled-file
 	// reads from input1/name:
@@ -112,6 +123,8 @@ static void power_init(struct power_module __unused * module) {
 	power_input_device_state(sec, INPUT_STATE_ENABLE);
 
 	sec->initialized = true;
+
+	ALOGDD("%s: exit;", __func__);
 }
 
 /***********************************
@@ -121,6 +134,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
 	int value = (data ? *((intptr_t *)data) : 0);
 
+	ALOGDD("%s: enter; hint=%d", __func__, hint);
 	pthread_mutex_lock(&sec->lock);
 
 	switch (hint) {
@@ -191,13 +205,14 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 	}
 
 	pthread_mutex_unlock(&sec->lock);
+	ALOGDD("%s: exit;", __func__);
 }
 
 /***********************************
  * Profiles
  */
 static void power_set_profile(struct sec_power_module *sec, int profile) {
- 	ALOGD("%s: apply profile %d", __func__, profile);
+ 	ALOGI("%s: apply profile %d", __func__, profile);
 
 	// store it
 	sec->profile.current = profile;
@@ -275,7 +290,7 @@ static void power_set_profile(struct sec_power_module *sec, int profile) {
  */
 #ifdef POWER_HAS_LINEAGE_HINTS
 static void power_boostpulse(int duration) {
-	// ALOGD("%s: duration     = %d", __func__, duration);
+	// ALOGDD("%s: duration     = %d", __func__, duration);
 
 	if (duration > 0) {
 		pfwritegov(0, "boostpulse_duration", duration);
@@ -315,9 +330,7 @@ static void power_dt2w_state(struct sec_power_module *sec, bool state) {
 }
  
 static void power_input_device_state(struct sec_power_module *sec, int state) {
-#if LOG_NDEBUG
-	ALOGD("%s: state = %d", __func__, state);
-#endif
+	ALOGDD("%s: state = %d", __func__, state);
 
 	switch (state) {
 		case INPUT_STATE_DISABLE:
@@ -354,9 +367,7 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
 	int screen_is_on = (on != 0);
 
-#if LOG_NDEBUG
-	ALOGD("%s: on = %d", __func__, on);
-#endif
+	ALOGDD("%s: enter; on=%d", __func__, on);
 
 	if (!screen_is_on) {
 		power_set_profile(sec, PROFILE_SCREEN_OFF);
@@ -365,6 +376,8 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 	}
 
 	power_input_device_state(sec, screen_is_on ? INPUT_STATE_ENABLE : INPUT_STATE_DISABLE);
+
+	ALOGDD("%s: exit;", __func__);
 }
 
 /***********************************
@@ -372,25 +385,33 @@ static void power_set_interactive(struct power_module __unused * module, int on)
  */
 #ifdef POWER_HAS_LINEAGE_HINTS
 static int power_get_feature(struct power_module *module __unused, feature_t feature) {
+	int retval = -EINVAL;
+	
+	ALOGDD("%s: enter; feature=%d", __func__, feature);
+
 	switch (feature) {
 		case POWER_FEATURE_SUPPORTED_PROFILES:
-			ALOGD("%s: request for POWER_FEATURE_SUPPORTED_PROFILES = %d", __func__, PROFILE_MAX_USABLE);
-			return PROFILE_MAX_USABLE;
+			ALOGDD("%s: request for POWER_FEATURE_SUPPORTED_PROFILES = %d", __func__, PROFILE_MAX_USABLE);
+			retval = PROFILE_MAX_USABLE;
 		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE:
-			ALOGD("%s: request for POWER_FEATURE_DOUBLE_TAP_TO_WAKE = 1", __func__);
-			return 1;
-		default:
-			return -EINVAL;
+			ALOGDD("%s: request for POWER_FEATURE_DOUBLE_TAP_TO_WAKE = 1", __func__);
+			retval = 1;
 	}
+
+	ALOGDD("%s: exit; rc=%d", __func__, retval);
+
+	return retval;
 }
 #endif
 
 static void power_set_feature(struct power_module *module, feature_t feature, int state) {
 	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
+	
+	ALOGDD("%s: enter; feature=%d, state=%d", __func__, feature, state);
 
 	switch (feature) {
 		case POWER_FEATURE_DOUBLE_TAP_TO_WAKE:
-			ALOGD("%s: set POWER_FEATURE_DOUBLE_TAP_TO_WAKE to \"%d\"", __func__, state);
+			ALOGDD("%s: set POWER_FEATURE_DOUBLE_TAP_TO_WAKE to \"%d\"", __func__, state);
 			power_dt2w_state(sec, state);
 			break;
 
@@ -399,6 +420,8 @@ static void power_set_feature(struct power_module *module, feature_t feature, in
 				  feature, state);
 		break;
 	}
+
+	ALOGDD("%s: exit", __func__);
 }
 
 /***********************************
@@ -410,13 +433,11 @@ static bool pfwrite(string path, string str) {
 
 	file.open(path);
 	if (!file.is_open()) {
-		ALOGE("%s: failed to open %s", __func__, path.c_str());
+		ALOGE("%s: failed to open \"%s\"", __func__, path.c_str());
 		return false;
 	}
 
-#if LOG_NDEBUG
-	ALOGI("%s: store \"%s\" to %s", __func__, str.c_str(), path.c_str());
-#endif
+	ALOGDD("%s: store \"%s\" to \"%s\"", __func__, str.c_str(), path.c_str());
 
 	file << str;
 	file.close();
@@ -486,18 +507,16 @@ static bool pfread(string path, string &str) {
 	ifstream file(path);
 
 	if (!file.is_open()) {
-		ALOGE("%s: failed to open %s", __func__, path.c_str());
+		ALOGE("%s: failed to open \"%s\"", __func__, path.c_str());
 		return false;
 	}
 
 	if (!getline(file, str)) {
-		ALOGE("%s: failed to read from %s", __func__, path.c_str());
+		ALOGE("%s: failed to read from \"%s\"", __func__, path.c_str());
 		return false;
 	}
 
-#if LOG_NDEBUG
-	ALOGI("%s: read from %s", __func__, path.c_str());
-#endif
+	ALOGDD("%s: read \"%s\" from \"%s\"", __func__, str, path.c_str());
 
 	file.close();
 	return true;
@@ -530,10 +549,7 @@ static bool pfread(string path, int *v) {
 	file.close();
 	*v = stoi(line);
 
-#if LOG_NDEBUG
-	ALOGI("%s: read from %s", __func__, path.c_str());
-#endif
-
+	ALOGDD("%s: read \"%s\" from \"%s\"", __func__, line, path.c_str());
 	return true;
 }
 
