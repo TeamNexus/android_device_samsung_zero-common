@@ -468,9 +468,11 @@ static bool pfwritegov(int core, string file, string str) {
 	return pfwrite(path.str(), str);
 }
 
+#ifdef POWER_HAS_LINEAGE_HINTS
 static bool pfwritegov(int core, string file, bool flag) {
 	return pfwritegov(core, file, flag ? 1 : 0);
 }
+#endif
 
 static bool pfwritegov(int core, string file, int value) {
 	return pfwritegov(core, file, to_string(value));

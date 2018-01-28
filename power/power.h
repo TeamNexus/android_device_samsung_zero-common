@@ -94,7 +94,9 @@ static bool pfwrite(string path, int value);
 static bool pfwrite(string path, unsigned int value);
 static bool pfassertgov(int core, string asserted_cpugov);
 static bool pfwritegov(int core, string file, string str);
+#ifdef POWER_HAS_LINEAGE_HINTS
 static bool pfwritegov(int core, string file, bool flag);
+#endif
 static bool pfwritegov(int core, string file, int value);
 static bool pfwritegov(int core, string file, unsigned int value);
 static bool pfread(string path, string &str);
