@@ -56,6 +56,8 @@ static int requested_power_profile = PROFILE_BALANCED;
 static int input_state_touchkeys = 1;
 static string input_touchscreen_path = POWER_TOUCHSCREEN_ENABLED_FLAT;
 
+static power_module_t *shared_instance = nullptr;
+
 /***********************************
  * Initializing
  */
@@ -65,25 +67,30 @@ static int power_open(const hw_module_t __unused * module, const char *name, hw_
 	ALOGD("%s: enter; name=%s", __func__, name);
 
 	if (strcmp(name, POWER_HARDWARE_MODULE_ID) == 0) {
-		power_module_t *dev = (power_module_t *)calloc(1, sizeof(power_module_t));
-
-		if (dev) {
-			// Common hw_device_t fields
-			dev->common.tag = HARDWARE_DEVICE_TAG;
-			dev->common.module_api_version = POWER_MODULE_API_VERSION_0_5;
-			dev->common.hal_api_version = HARDWARE_HAL_API_VERSION;
-
-			dev->init = power_init;
-			dev->powerHint = power_hint;
-#ifdef POWER_HAS_POWER_PROFILES
-			dev->getFeature = power_get_feature;
-#endif
-			dev->setFeature = power_set_feature;
-			dev->setInteractive = power_set_interactive;
-
+		if (shared_instance) {
 			*device = (hw_device_t *)dev;
 		} else {
-			retval = -ENOMEM;
+			power_module_t *dev = (power_module_t *)calloc(1, sizeof(power_module_t));
+
+			if (dev) {
+				// Common hw_device_t fields
+				dev->common.tag = HARDWARE_DEVICE_TAG;
+				dev->common.module_api_version = POWER_MODULE_API_VERSION_0_5;
+				dev->common.hal_api_version = HARDWARE_HAL_API_VERSION;
+
+				dev->init = power_init;
+				dev->powerHint = power_hint;
+#ifdef POWER_HAS_POWER_PROFILES
+				dev->getFeature = power_get_feature;
+#endif
+				dev->setFeature = power_set_feature;
+				dev->setInteractive = power_set_interactive;
+
+				*device = (hw_device_t *)dev;
+				shared_instance = dev;
+			} else {
+				retval = -ENOMEM;
+			}
 		}
 	} else {
 		retval = -EINVAL;
