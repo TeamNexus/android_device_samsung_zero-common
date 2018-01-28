@@ -57,6 +57,7 @@ static int input_state_touchkeys = 1;
 static string input_touchscreen_path = POWER_TOUCHSCREEN_ENABLED_FLAT;
 
 static power_module_t *shared_instance = nullptr;
+static bool power_was_initialized = false;
 
 /***********************************
  * Initializing
@@ -101,6 +102,9 @@ static int power_open(const hw_module_t __unused * module, const char *name, hw_
 }
 
 static void power_init(struct power_module __unused * module) {
+	if (power_was_initialized)
+		return;
+
 	if (!is_file(POWER_CONFIG_FP_ALWAYS_ON))
 		pfwrite(POWER_CONFIG_FP_ALWAYS_ON, false);
 
@@ -135,6 +139,8 @@ static void power_init(struct power_module __unused * module) {
 	// set the default settings
 	if (!is_dir("/data/power"))
 		mkdir("/data/power", 0771);
+
+	power_was_initialized = true;
 }
 
 /***********************************
