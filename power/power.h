@@ -28,6 +28,13 @@ using namespace std;
 /*
  * Macros
  */
+#ifdef POWER_HINT_SET_PROFILE
+  #define POWER_HAS_POWER_PROFILES
+#endif
+
+#ifdef POWER_HINT_CPU_BOOST
+  #define POWER_HAS_CPU_BOOST
+#endif
 
 /***********************************
  * Initializing
@@ -60,7 +67,9 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 /***********************************
  * Features
  */
+#ifdef POWER_HAS_POWER_PROFILES
 static int power_get_feature(struct power_module *module __unused, feature_t feature);
+#endif
 static void power_set_feature(struct power_module *module, feature_t feature, int state);
 
 /***********************************

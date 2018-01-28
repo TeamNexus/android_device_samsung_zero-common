@@ -75,7 +75,9 @@ static int power_open(const hw_module_t __unused * module, const char *name, hw_
 
 			dev->init = power_init;
 			dev->powerHint = power_hint;
+#ifdef POWER_HAS_POWER_PROFILES
 			dev->getFeature = power_get_feature;
+#endif
 			dev->setFeature = power_set_feature;
 			dev->setInteractive = power_set_interactive;
 
@@ -147,11 +149,13 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 			power_set_profile(value ? PROFILE_POWER_SAVE : requested_power_profile);
 			break;
 
+#ifdef POWER_HAS_POWER_PROFILES
 		case POWER_HINT_SET_PROFILE:
 			ALOGI("%s: hint(POWER_HINT_SET_PROFILE, %d, %llu)", __func__, value, (unsigned long long)data);
 			requested_power_profile = value;
 			power_set_profile(value);
 			break;
+#endif
 
 		case POWER_HINT_SUSTAINED_PERFORMANCE:
 		case POWER_HINT_VR_MODE:
@@ -181,6 +185,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 
 			break;
 
+#ifdef POWER_HAS_CPU_BOOST
         case POWER_HINT_CPU_BOOST:
 			// ALOGI("%s: hint(POWER_HINT_CPU_BOOST, %d, %llu)", __func__, value, (unsigned long long)data);
 
@@ -188,6 +193,7 @@ static void power_hint(struct power_module *module, power_hint_t hint, void *dat
 			power_boostpulse(value);
 
 			break;
+#endif
 
 		/***********************************
 		 * Inputs
@@ -408,6 +414,7 @@ static void power_set_interactive(struct power_module __unused * module, int on)
 /***********************************
  * Features
  */
+#ifdef POWER_HAS_POWER_PROFILES
 static int power_get_feature(struct power_module *module __unused, feature_t feature) {
 	switch (feature) {
 		case POWER_FEATURE_SUPPORTED_PROFILES:
@@ -420,6 +427,7 @@ static int power_get_feature(struct power_module *module __unused, feature_t fea
 			return -EINVAL;
 	}
 }
+#endif
 
 static void power_set_feature(struct power_module *module, feature_t feature, int state) {
 	switch (feature) {
@@ -629,7 +637,9 @@ struct sec_power_module HAL_MODULE_INFO_SYM = {
 
 		.init = power_init,
 		.powerHint = power_hint,
+#ifdef POWER_HAS_POWER_PROFILES
 		.getFeature = power_get_feature,
+#endif
 		.setFeature = power_set_feature,
 		.setInteractive = power_set_interactive,
 	},
