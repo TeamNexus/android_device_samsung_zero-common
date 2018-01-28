@@ -389,6 +389,7 @@ static void power_set_interactive(struct power_module __unused * module, int on)
  */
 #ifdef POWER_HAS_LINEAGE_HINTS
 static int power_get_feature(struct power_module *module __unused, feature_t feature) {
+	struct sec_power_module *sec = container_of(module, struct sec_power_module, base);
 	int retval = -EINVAL;
 	
 	ALOGDD("%s: enter; feature=%d", __func__, feature);
@@ -524,7 +525,7 @@ static bool pfread(string path, string &str) {
 		return false;
 	}
 
-	ALOGDD("%s: read \"%s\" from \"%s\"", __func__, str, path.c_str());
+	ALOGDD("%s: read \"%s\" from \"%s\"", __func__, str.c_str(), path.c_str());
 
 	file.close();
 	return true;
@@ -557,7 +558,7 @@ static bool pfread(string path, int *v) {
 	file.close();
 	*v = stoi(line);
 
-	ALOGDD("%s: read \"%s\" from \"%s\"", __func__, line, path.c_str());
+	ALOGDD("%s: read \"%s\" from \"%s\"", __func__, line.c_str(), path.c_str());
 	return true;
 }
 
