@@ -27,7 +27,7 @@ LOCAL_SRC_FILES := \
 LOCAL_MODULE               := power.$(TARGET_BOARD_PLATFORM)
 LOCAL_MODULE_RELATIVE_PATH := hw
 LOCAL_MODULE_TAGS          := optional
-LOCAL_CFLAGS               := -Wall -Werror -Wno-unused-parameter -DLOG_TAG=\"$(LOCAL_MODULE)\"
+LOCAL_CFLAGS               := -Wall -Werror -Wno-unused-parameter
 LOCAL_PROPRIETARY_MODULE   := true
 
 ifneq (,$(wildcard lineage-sdk/))

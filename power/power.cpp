@@ -16,7 +16,8 @@
  * limitations under the License.
  */
 
-#define LOG_NDEBUG 1
+#define LOG_TAG "power.exynos5"
+#define LOG_NDEBUG 0
 
 #include <atomic>
 #include <cutils/properties.h>
@@ -47,7 +48,7 @@ using namespace std;
 #if LOG_NDEBUG
   #define ALOGDD  ALOGD
 #else
-  #define ALOGDD  do { } while(0)
+  #define ALOGDD(...)  do { } while(0)
 #endif
 
 static power_module_t *shared_instance = nullptr;
